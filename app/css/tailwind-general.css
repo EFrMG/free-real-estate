@@ -3,6 +3,10 @@
   ::selection {
   }
 
+  body {
+    background-color: var(--color-amber-50);
+  }
+
   nav {
     font-family: var(--ff-extra);
   }
