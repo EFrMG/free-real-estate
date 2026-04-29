@@ -1,0 +1,49 @@
+@layer base {
+  /* Elements */
+  ::selection {
+  }
+
+  nav {
+    font-family: var(--ff-extra);
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+@custom-variant hocus {
+  &:hover,
+  &:focus {
+    @slot;
+  }
+}
+
+@utility btn-click-soft {
+  @apply active:scale-98 transition-transform ease-in duration-85;
+}
+
+@utility opacity-less {
+  opacity: 0.7;
+}
+
+@utility stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+@utility stack-* {
+  display: flex;
+  flex-direction: column;
+  gap: --spacing(--value(number));
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: --spacing(5);
+    box-shadow: var(--shadow-xl);
+  }
+}
