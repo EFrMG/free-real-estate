@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GoHome } from "react-icons/go";
 
 interface NavLinks {
   name: string;
@@ -39,16 +40,12 @@ export default function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
 
   return (
-    <header className="grid grid-cols-[40%_60%] sm:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
+    <header className="relative z-50 grid grid-cols-[40%_60%] sm:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
       <div className="bg-amber-50">
         <div className="flex items-center gap-12 text-xl  px-2 py-4">
           {" "}
-          <a href="/">
-            <img
-              src="https://picsum.photos/240/240"
-              alt="Company logo"
-              className="w-12 h-12 inline-block mr-2"
-            />
+          <a href="/" className="flex items-center gap-2">
+            <GoHome size={38} />
             <span className="max-xs:inline-block hidden lg:inline-block">
               FreeRealEstate
             </span>
@@ -92,7 +89,7 @@ export default function Header() {
           />
         </button>
         <nav
-          className={`absolute top-0 right-0 bottom-0
+          className={`fixed top-0 right-0 bottom-0
           bg-amber-600 text-white sm:hidden z-40
           transition-transform duration-500 ease-out-swift
           ${!isBurgerOpen ? "translate-x-full" : "translate-x-0"}`}

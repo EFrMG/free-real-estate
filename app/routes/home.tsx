@@ -15,8 +15,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <main className="grid grid-cols-[60%_40%] max-w-7xl w-full min-h-screen mx-auto">
-      <div className="my-auto mr-[13.5%]">
+    <main className="grid md:grid-cols-[60%_40%] z-5 max-w-7xl w-full grow mx-auto">
+      <div className="relative my-auto mr-[13.5%] pl-3">
         <h1 className="text-5xl">
           Find the place of your dreams at unmatched discounts
         </h1>
@@ -44,11 +44,17 @@ export default function Home() {
           </hgroup>
         </div>
       </div>
-      <div className="relative flex items-center sm:bg-amber-100">
+
+      <div
+        className="relative max-md:absolute max-md:top-0 max-md:right-0 max-md:bottom-0
+        max-md:opacity-35 max-md:w-[50%]
+        w-full h-full md:flex items-center md:bg-amber-100 -z-1"
+      >
         <img
           src="https://picsum.photos/1080/1920"
           alt="Hero image"
-          className="absolute right-0 max-w-none w-[120%] h-[80%]"
+          draggable={false}
+          className="absolute right-0 max-w-none w-[120%] h-[80%] object-cover"
         />
       </div>
     </main>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GoSearch } from "react-icons/go";
 
 interface Query {
   type: "buy" | "rent";
@@ -23,7 +24,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="py-12">
+    <div className="py-12 px-3">
       <div className="*:px-6 *:py-2 *:text-lg *:border-2 *:border-amber-500 ">
         <button
           className={`[border-right-style:none]! [border-bottom-style:none]! rounded-tl-lg ${searchQuery.type === "buy" ? "bg-amber-500 text-white" : ""}`}
@@ -45,7 +46,7 @@ export default function SearchInput() {
           placeholder="City Location"
           value={searchQuery.location}
           onChange={(e) => updateQuery({ location: e.target.value })}
-          className="[border-right-style:none]! rounded-bl-lg"
+          className="[border-right-style:none]! rounded-bl-lg bg-amber-50"
         />
         <input
           type="number"
@@ -55,7 +56,7 @@ export default function SearchInput() {
           placeholder="Min Price"
           value={searchQuery.minPrice}
           onChange={(e) => updateQuery({ minPrice: +e.target.value })}
-          className="[border-right-style:none]!"
+          className="[border-right-style:none]! bg-amber-50"
         />
         <input
           type="number"
@@ -65,14 +66,10 @@ export default function SearchInput() {
           placeholder="Max Price"
           value={searchQuery.maxPrice}
           onChange={(e) => updateQuery({ maxPrice: +e.target.value })}
-          className="[border-right-style:none]!"
+          className="[border-right-style:none]! bg-amber-50"
         />
-        <button className="px-1! rounded-tr-lg rounded-br-lg">
-          <img
-            src="https://picsum.photos/240/240"
-            alt="Search Icon"
-            className="w-12 h-12"
-          />
+        <button className="px-2! py-2 rounded-tr-lg rounded-br-lg bg-amber-500">
+          <GoSearch size={38} color="white" />
         </button>
       </form>
     </div>
