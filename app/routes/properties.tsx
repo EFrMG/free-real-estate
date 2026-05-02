@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import propertyData from "~/data/propertyData";
 import FilterInput from "~/components/PropertiesFilterInput";
 import PropertyCard from "~/components/PropertyCard";
+import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -19,6 +20,14 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function LogIn() {
+  const mapFallback = (
+    <div className="sticky top-[7.5vh] h-[85vh] w-[95%] mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+      <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+        Loading Map...
+      </p>
+    </div>
+  );
+
   return (
     <main className="gen-main">
       <div>
@@ -39,17 +48,13 @@ export default function LogIn() {
         ))}
       </div>
       <div className="bg-amber-100">
-        <Suspense
-          fallback={
-            <div className="sticky top-[7.5vh] h-[85vh] w-[95%] mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-              <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
-                Loading Map...
-              </p>
-            </div>
-          }
-        >
-          <Map marginTop={24} viewportHeight={85} />
-        </Suspense>
+        <ClientOnly fallback={mapFallback}>
+          {() => (
+            <Suspense fallback={mapFallback}>
+              <Map marginTop={24} viewportHeight={85} />
+            </Suspense>
+          )}
+        </ClientOnly>
       </div>
     </main>
   );

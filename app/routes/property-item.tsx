@@ -7,6 +7,7 @@ import {
   GoBookmarkSlash,
   GoCommentDiscussion,
 } from "react-icons/go";
+import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -45,6 +46,14 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
     latitude,
     longitude,
   } = loaderData;
+
+  const mapFallback = (
+    <div className="sticky top-[7.5vh] h-[75vh] w-[95%] mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+      <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+        Loading Map...
+      </p>
+    </div>
+  );
 
   return (
     <main className="gen-main">
@@ -105,17 +114,13 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="md:bg-amber-100">
-        <Suspense
-          fallback={
-            <div className="sticky top-[7.5vh] h-[75vh] w-[95%] mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-              <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
-                Loading Map...
-              </p>
-            </div>
-          }
-        >
-          <Map marginTop={12} viewportHeight={75} />
-        </Suspense>
+        <ClientOnly fallback={mapFallback}>
+          {() => (
+            <Suspense fallback={mapFallback}>
+              <Map marginTop={12} viewportHeight={75} />
+            </Suspense>
+          )}
+        </ClientOnly>
       </div>
     </main>
   );
