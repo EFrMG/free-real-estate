@@ -1,5 +1,14 @@
 import type { Route } from "./+types/property-item";
+
+import { lazy, Suspense } from "react";
 import propertyData from "~/data/propertyData";
+import {
+  GoBookmark,
+  GoBookmarkSlash,
+  GoCommentDiscussion,
+} from "react-icons/go";
+
+const Map = lazy(() => import("~/components/Map"));
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const { id } = params;
@@ -46,11 +55,30 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
         <img
           src={img}
           alt={title}
+          draggable="false"
           className="property-img-outline w-full max-h-84 mb-12 shadow-lg rounded-lg"
         />
 
         <div className="grid md:grid-cols-[2fr_1fr] gap-8">
-          <p className="text-lg text-gray-700">{description}</p>
+          <div>
+            <p className="text-lg text-gray-700">{description}</p>
+            <div className="w-fit mt-12 ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
+              <button className="mr-4">
+                <GoCommentDiscussion size={28} color="var(--color-amber-500)" />
+              </button>
+
+              {true ? (
+                <button>
+                  <GoBookmark size={28} color="var(--color-amber-500)" />
+                </button>
+              ) : (
+                <button>
+                  <GoBookmarkSlash size={28} color="var(--color-amber-500)" />
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="h-fit p-4 bg-amber-100/18 rounded-lg shadow-md inset-shadow-xs">
             <h2 className="mb-4 text-center font-semibold text-xl">Details</h2>
             <div className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&>p]:border-b [&>p]:border-amber-300/74">
@@ -76,7 +104,19 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
 
-      <div className="md:bg-amber-100">MAP</div>
+      <div className="md:bg-amber-100">
+        <Suspense
+          fallback={
+            <div className="sticky top-[5vh] h-[90vh] w-[95%] mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+              <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+                Loading Map...
+              </p>
+            </div>
+          }
+        >
+          <Map />
+        </Suspense>
+      </div>
     </main>
   );
 }

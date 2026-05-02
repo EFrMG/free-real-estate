@@ -1,4 +1,6 @@
 import { Link } from "react-router";
+import { GoLocation } from "react-icons/go";
+import { LuBed, LuBath } from "react-icons/lu";
 
 interface PropertyCardProps {
   id: number;
@@ -27,13 +29,14 @@ export default function PropertyCard({
       className="m-4 block hover:opacity-100 group"
     >
       <div
-        className="flex gap-4 p-4 rounded-lg shadow-lg inset-shadow-sm
+        className="flex gap-4 pl-3 pr-4 py-3 rounded-lg shadow-lg inset-shadow-sm
         hover:shadow-md transition-shadow duration-250"
       >
         <img
           src={img}
           alt={title}
-          className="w-full max-h-48 object-cover rounded-md"
+          draggable="false"
+          className="w-full max-h-48 my-auto object-cover rounded-md"
         />
 
         <div className="stack-2">
@@ -43,18 +46,30 @@ export default function PropertyCard({
           >
             {title}
           </h2>
-          <p className="text-gray-500 text-sm">{address}</p>
+          <div className="flex items-center gap-[0.5ex]">
+            <GoLocation size={18} color="var(--color-amber-800)" />
+            <p className="text-gray-600 text-sm">{address}</p>
+          </div>
           <p className="text-gray-700 line-clamp-3">{description}</p>
           <div className="mt-auto flex justify-between items-center">
-            <div className="flex gap-4 text-sm text-gray-600">
-              <span>
-                <b>{bedrooms}</b> beds
-              </span>
-              <span>
-                <b>{bathrooms}</b> baths
-              </span>
+            <div
+              className="flex gap-4 ml-2 text-sm text-gray-600
+              [&_div]:stack-0 [&_div]:items-center [&_div]:rounded-sm [&_div]:p-0.75 [&_div]:bg-amber-100/36"
+            >
+              <div>
+                <LuBed size={18} color="var(--color-gray-600)" />{" "}
+                <span>
+                  <b>{bedrooms}</b> beds
+                </span>
+              </div>
+              <div>
+                <LuBath size={18} color="var(--color-gray-600)" />{" "}
+                <span>
+                  <b>{bathrooms}</b> baths
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center self-end gap-2">
               <span
                 className="text-xl font-bold text-emerald-700/86
                 line-through decoration-2 decoration-gray-500/64"

@@ -1,8 +1,11 @@
 import type { Route } from "./+types/properties";
 
+import { lazy, Suspense } from "react";
 import propertyData from "~/data/propertyData";
 import FilterInput from "~/components/PropertiesFilterInput";
 import PropertyCard from "~/components/PropertyCard";
+
+const Map = lazy(() => import("~/components/Map"));
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -35,7 +38,19 @@ export default function LogIn() {
           />
         ))}
       </div>
-      <div className="bg-amber-100">MAP</div>
+      <div className="bg-amber-100">
+        <Suspense
+          fallback={
+            <div className="sticky top-[5vh] h-[90vh] w-[95%] mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+              <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+                Loading Map...
+              </p>
+            </div>
+          }
+        >
+          <Map />
+        </Suspense>
+      </div>
     </main>
   );
 }
