@@ -1,6 +1,8 @@
 @layer base {
   /* Elements */
   ::selection {
+    background-color: hsl(from var(--color-lime-200) h s l / 0.42);
+    color: var(--color-slate-600);
   }
 
   body {
@@ -23,10 +25,6 @@
   }
 }
 
-@utility btn-click-soft {
-  @apply active:scale-98 transition-transform ease-in duration-85;
-}
-
 @utility opacity-less {
   opacity: 0.7;
 }
@@ -44,10 +42,15 @@
 }
 
 @layer components {
-  .card {
-    background-color: var(--color-white);
-    border-radius: var(--radius-lg);
-    padding: --spacing(5);
-    box-shadow: var(--shadow-xl);
+  .btn-click-soft {
+    @apply active:scale-98 transition-transform ease-in duration-85;
+  }
+
+  .gen-main {
+    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-sm:p-4 max-md:p-6 z-5 grow;
+  }
+
+  .filter-input-group {
+    @apply stack-0 justify-around px-1 rounded-lg shadow-lg shadow-amber-100/48 border-2 border-amber-500;
   }
 }

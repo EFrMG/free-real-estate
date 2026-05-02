@@ -70,7 +70,7 @@ export default function Header() {
               key={link.key}
               href={`/${link.key}`}
               className={`px-4 py-2 text-base md:text-lg hidden sm:inline-block
-              ${link.key === "log-in" ? "" : "bg-amber-300 rounded-lg"}`}
+              ${link.key === "log-in" ? "" : "bg-amber-300 rounded-sm"}`}
             >
               {link.name}
             </a>

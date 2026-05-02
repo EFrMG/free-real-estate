@@ -8,7 +8,7 @@ interface Query {
   maxPrice: number | undefined;
 }
 
-export default function SearchInput() {
+export default function HomeSearchInput() {
   const [searchQuery, setSearchQuery] = useState<Query>({
     type: "buy",
     location: "",
@@ -39,7 +39,7 @@ export default function SearchInput() {
           Rent
         </button>
       </div>
-      <form className="flex max-sm:flex-wrap *:max-sm:w-[80%] *:min-h-16 *:pl-2 *:border-2 *:border-amber-500">
+      <form className="flex max-sm:flex-wrap rounded-lg shadow-2xl shadow-amber-100/94 *:max-sm:w-[80%] *:min-h-16 *:pl-2 *:border-2 *:border-amber-500">
         <input
           type="text"
           name="location"

@@ -10,7 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 
-import Header from "~/components/header";
+import Header from "~/components/Header";
 
 export const links: Route.LinksFunction = () => [
   {

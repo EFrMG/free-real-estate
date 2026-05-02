@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 
-import SearchInput from "~/components/homeSearchInput";
+import SearchInput from "~/components/HomeSearchInput";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,11 +15,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <main
-      className="grid md:grid-cols-[60%_40%]
-      max-w-7xl w-full mx-auto max-sm:p-4 max-md:p-6
-      z-5 grow"
-    >
+    <main className="gen-main">
       <div className="relative my-auto md:mr-[18.5%] md:pl-6">
         <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl">
           Find the place of your dreams at unmatched discounts
