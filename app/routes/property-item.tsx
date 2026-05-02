@@ -1,4 +1,17 @@
 import type { Route } from "./+types/property-item";
+import propertyData from "~/data/propertyData";
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const { id } = params;
+
+  const property = propertyData.find((el) => String(el.id) === id);
+
+  if (!property) {
+    throw new Response("Property Not Found", { status: 404 });
+  }
+
+  return property;
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,6 +24,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function LogIn() {
+export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   return <div>PROPERTY ITEM</div>;
 }

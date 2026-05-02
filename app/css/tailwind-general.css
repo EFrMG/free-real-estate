@@ -1,8 +1,8 @@
 @layer base {
   /* Elements */
   ::selection {
-    background-color: hsl(from var(--color-lime-200) h s l / 0.42);
-    color: var(--color-slate-600);
+    background-color: hsl(from var(--color-lime-300) h s l / 0.38);
+    color: var(--color-slate-500);
   }
 
   body {

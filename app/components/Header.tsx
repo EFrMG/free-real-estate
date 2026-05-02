@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
+import { Link, NavLink } from "react-router";
 
 interface NavLinks {
   name: string;
@@ -44,17 +45,25 @@ export default function Header() {
     <header className="max-sm:bg-amber-100 relative z-50 grid grid-cols-[65%_35%] md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
       <div className="max-sm:bg-amber-100 bg-amber-50 z-1">
         <div className="flex items-center gap-4 lg:gap-6 text-xl px-2 py-4">
-          <a href="/" className="flex items-center gap-2 max-sm:ml-2">
+          <Link to="/" className="flex items-center gap-2 max-sm:ml-2">
             <GoHome size={38} />
             <span className="self-end max-sm:inline-block hidden lg:inline-block">
               FreeRealEstate
             </span>
-          </a>
+          </Link>
+
           <nav className="md:self-end max-sm:hidden">
             <ul className="flex gap-4 md:gap-6 text-base md:text-lg">
               {headerLinks.map((link: NavLinks) => (
                 <li key={`nav-link-${link.key}`} className="text-nowrap">
-                  <a href={`/${link.key}`}>{link.name}</a>
+                  <NavLink
+                    to={`/${link.key}`}
+                    className={({ isActive }) =>
+                      `inline-block transition-all duration-175 ${isActive ? "text-emerald-800 scale-105" : ""}`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
                 </li>
               ))}
             </ul>

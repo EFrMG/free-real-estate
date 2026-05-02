@@ -2,12 +2,16 @@ import { GoSearch } from "react-icons/go";
 
 export default function PropertiesFilterInput() {
   return (
-    <div className="[&_input]:pr-2 [&_input]:pb-2 [&_label]:text-lg [&_label]:px-2 [&_label]:py-1">
+    <div
+      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0 [&_label]:text-lg
+      [&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2
+      [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
+    >
       <h1 className="my-8 text-center text-2xl">
         Search Results for <b>LOCATION</b>
       </h1>
 
-      <div className="max-w-[80%] mx-auto my-6 filter-input-group">
+      <div className="max-w-[80%] mx-auto my-4 filter-input-group">
         <label htmlFor="city" className="text-xl! pl-6!">
           Location
         </label>
@@ -20,7 +24,7 @@ export default function PropertiesFilterInput() {
         />
       </div>
 
-      <div className="flex gap-4 flex-wrap justify-center my-6">
+      <div className="flex gap-2 flex-wrap justify-center items-center my-4">
         <div className="filter-input-group">
           <label htmlFor="type">Type</label>
           <select name="type" id="type">
@@ -85,7 +89,7 @@ export default function PropertiesFilterInput() {
             className="min-w-[16ch]"
           />
         </div>
-        <button className="px-2 py-2 rounded-lg bg-amber-500">
+        <button className="px-2 py-2.5 max-h-fit rounded-lg bg-amber-500">
           <GoSearch size={38} color="white" />
         </button>
       </div>
