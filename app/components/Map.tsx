@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { LuBed, LuBath } from "react-icons/lu";
 
 interface MapPopover {
   title: string;
@@ -62,14 +63,16 @@ export default function Map({
                       draggable={false}
                       className="w-full h-full object-cover rounded-lg"
                     />
-                    <div className="stack-0 justify-around text-sm [&_p]:my-2!">
-                      <p>
-                        bedrooms: <b>{bedrooms}</b>
-                      </p>
-                      <p>
-                        bathrooms: <b>{bathrooms}</b>
-                      </p>
+                    <div className="stack-0 justify-around items-center text-sm text-gray-600 [&_p]:flex [&_p]:gap-2 [&_p]:my-2!">
                       <p>{address}</p>
+                      <div className="flex gap-4 text-gray-500">
+                        <p>
+                          <LuBed size={18} /> <b>{bedrooms}</b>
+                        </p>
+                        <p>
+                          <LuBath size={18} /> <b>{bathrooms}</b>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
