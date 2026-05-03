@@ -3,3 +3,5 @@
 @import "./css/tailwind-reset.css";
 @import "./css/tailwind-theme.css";
 @import "./css/tailwind-general.css";
+
+@import "./css/leaflet-overrides.css";

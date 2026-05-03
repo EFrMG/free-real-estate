@@ -81,9 +81,9 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
         />
 
         <div className="grid md:grid-cols-[2fr_1fr] gap-8">
-          <div>
+          <div className="stack-12 justify-between">
             <p className="text-lg text-gray-700">{description}</p>
-            <div className="w-fit mt-12 ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
+            <div className="w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
               <button className="mr-4">
                 <GoCommentDiscussion size={28} color="var(--color-amber-500)" />
               </button>

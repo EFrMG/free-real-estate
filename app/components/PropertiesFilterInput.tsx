@@ -39,7 +39,7 @@ export default function PropertiesFilterInput() {
         Search Results for <b>LOCATION</b>
       </h1>
 
-      <div className="max-w-[80%] mx-auto my-4 filter-input-group">
+      <div className="max-w-[80%] mx-auto my-6 filter-input-group">
         <label htmlFor="city" className="text-xl! pl-6!">
           Location
         </label>
@@ -54,7 +54,7 @@ export default function PropertiesFilterInput() {
         />
       </div>
 
-      <div className="flex gap-2 flex-wrap justify-center items-center my-4">
+      <div className="flex gap-2 flex-wrap justify-center items-center mt-6 mb-12">
         <div className="filter-input-group">
           <label htmlFor="type">Type</label>
           <select

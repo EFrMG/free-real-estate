@@ -59,7 +59,8 @@ export default function Map({
                     <img
                       src={img}
                       alt="Property popover image"
-                      className="w-full h-full object-cover pt-2 pb-1 rounded-xl"
+                      draggable={false}
+                      className="w-full h-full object-cover rounded-lg"
                     />
                     <div className="stack-0 justify-around text-sm [&_p]:my-2!">
                       <p>
