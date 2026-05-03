@@ -1,5 +1,7 @@
 import type { Route } from "./+types/log-in";
 
+import HeroRightSide from "~/components/HeroRightSide";
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Log In | Free Real State" },
@@ -12,5 +14,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function LogIn() {
-  return <div>LOG IN</div>;
+  return (
+    <main className="gen-main">
+      <div></div>
+      <HeroRightSide />
+    </main>
+  );
 }

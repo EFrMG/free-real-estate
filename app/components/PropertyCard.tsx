@@ -49,7 +49,7 @@ export default function PropertyCard({
 
         <div className="stack-2">
           <h2
-            className="text-xl text-center font-bold text-amber-900
+            className="text-lg sm:text-xl text-center font-bold text-amber-900
             group-hover:text-amber-700 transition-colors duration-425"
           >
             {title}
@@ -58,14 +58,16 @@ export default function PropertyCard({
             <div className="shrink-0">
               <GoLocation size={18} color="var(--color-amber-800)" />
             </div>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-xs sm:text-sm">
               {province}, {city}, {address}
             </p>
           </div>
-          <p className="text-gray-700 line-clamp-3">{description}</p>
+          <p className="max-sm:text-sm text-gray-700 line-clamp-3">
+            {description}
+          </p>
           <div className="mt-auto flex justify-between items-center">
             <div
-              className="flex gap-4 ml-2 text-sm text-gray-600
+              className="hidden xs:flex flex-wrap gap-2 sm:gap-4 ml-2 text-xs sm:text-sm text-gray-600
               [&_div]:stack-0 [&_div]:items-center [&_div]:rounded-sm [&_div]:p-0.75 [&_div]:bg-amber-100/36"
             >
               <div>
@@ -81,14 +83,16 @@ export default function PropertyCard({
                 </span>
               </div>
             </div>
-            <div className="flex items-center self-end gap-2">
+            <div className="flex items-center self-end gap-2 w-fit ml-auto">
               <span
-                className="text-xl font-bold text-emerald-700/86
+                className="text-lg sm:text-xl font-bold text-emerald-700/86
                 line-through decoration-2 decoration-gray-500/64"
               >
                 ${price}
               </span>
-              <span className="text-2xl font-bold text-emerald-700">$0</span>
+              <span className="text-xl sm:text-2xl font-bold text-emerald-700">
+                $0
+              </span>
             </div>
           </div>
         </div>

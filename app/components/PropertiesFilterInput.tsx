@@ -31,16 +31,16 @@ export default function PropertiesFilterInput() {
 
   return (
     <div
-      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0 [&_label]:text-lg
+      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0 [&_label]:sm:text-lg
       [&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2
       [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
     >
-      <h1 className="my-8 text-center text-2xl">
+      <h1 className="my-8 text-center text-xl sm:text-2xl">
         Search Results for <b>LOCATION</b>
       </h1>
 
       <div className="max-w-[80%] mx-auto my-6 filter-input-group">
-        <label htmlFor="city" className="text-xl! pl-6!">
+        <label htmlFor="city" className="text-lg sm:text-xl! pl-6!">
           Location
         </label>
         <input
@@ -54,7 +54,7 @@ export default function PropertiesFilterInput() {
         />
       </div>
 
-      <div className="flex gap-2 flex-wrap justify-center items-center mt-6 mb-12">
+      <div className="flex gap-2 flex-wrap justify-center items-center mt-6 mx-2 md:mx-4 mb-12">
         <div className="filter-input-group">
           <label htmlFor="type">Type</label>
           <select

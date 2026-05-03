@@ -47,7 +47,7 @@
   }
 
   .gen-main {
-    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-sm:p-4 max-md:p-6 z-5 grow;
+    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 z-5 grow;
   }
 
   .filter-input-group {

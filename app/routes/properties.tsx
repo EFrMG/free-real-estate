@@ -21,7 +21,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Properties() {
   const mapFallback = (
-    <div className="sticky top-[7.5vh] h-[85vh] w-[95%] mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+    <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
       <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
         Loading Map...
       </p>
@@ -52,7 +52,8 @@ export default function Properties() {
 
   return (
     <main className="gen-main">
-      <div>
+      {/* Left side */}
+      <div className="max-md:order-1">
         <FilterInput />
 
         {propertyData.map((property) => (
@@ -62,7 +63,8 @@ export default function Properties() {
           />
         ))}
       </div>
-      <div className="bg-amber-100">
+      {/* Right side */}
+      <div className="max-md:order-0 md:bg-amber-100">
         <ClientOnly>
           {() => (
             <Suspense fallback={mapFallback}>

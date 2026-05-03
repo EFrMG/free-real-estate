@@ -30,7 +30,7 @@ export default function Map({
 }: MapProps) {
   return (
     <div
-      className={`sticky top-[7.5vh] h-[${viewportHeight}vh] w-[95%] mt-${marginTop} mx-auto`}
+      className={`md:sticky md:top-[7.5vh] h-[35vh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
     >
       <MapContainer
         center={[+`${mapPopovers[0].latitude}`, +`${mapPopovers[0].longitude}`]}
@@ -66,18 +66,18 @@ export default function Map({
                   <h3 className="pb-2 text-base text-center leading-none text-amber-900 font-medium">
                     {title}
                   </h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="md:grid md:grid-cols-2 gap-4">
                     <img
                       src={img}
                       alt="Property popover image"
                       draggable={false}
-                      className="place-self-center w-full h-[calc(max(var(--spacing)*32,100%)-10%)] object-cover rounded-lg"
+                      className="max-md:hidden place-self-center w-full h-[calc(max(var(--spacing)*32,100%)-10%)] object-cover rounded-lg"
                     />
-                    <div className="stack-0 justify-around items-center text-sm text-gray-600 [&_p]:flex [&_p]:gap-2 [&_p]:my-2!">
+                    <div className="flex md:stack-0 justify-around items-center text-sm text-gray-600 [&_p]:flex [&_p]:gap-2 [&_p]:my-2!">
                       <p>
                         {city}, {address}
                       </p>
-                      <div className="flex gap-4 text-gray-500">
+                      <div className="flex max-md:flex-col gap-2 md:gap-4 text-gray-500">
                         <p>
                           <LuBed size={18} /> <b>{bedrooms}</b>
                         </p>

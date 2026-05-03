@@ -1,5 +1,7 @@
 import type { Route } from "./+types/about";
 
+import HeroRightSide from "~/components/HeroRightSide";
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "About | Free Real State" },
@@ -12,5 +14,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function About() {
-  return <div>ABOUT</div>;
+  return (
+    <main className="gen-main">
+      <div></div>
+      <HeroRightSide />
+    </main>
+  );
 }

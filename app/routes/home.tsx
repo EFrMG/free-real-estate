@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 
 import SearchInput from "~/components/HomeSearchInput";
+import HeroRightSide from "~/components/HeroRightSide";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,6 +17,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <main className="gen-main">
+      {/* Left side */}
       <div className="relative my-auto md:mr-[18.5%] md:pl-6">
         <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl">
           Find the place of your dreams at unmatched discounts
@@ -45,18 +47,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div
-        className="relative max-md:absolute max-md:top-0 max-md:right-0 max-md:bottom-0
-        max-md:opacity-35 max-md:w-[50%]
-        w-full h-full md:flex items-center md:bg-amber-100 -z-1"
-      >
-        <img
-          src="/app/assets/images/hero.webp"
-          alt="Hero image"
-          draggable={false}
-          className="absolute right-4 max-md:right-2 max-w-none w-[120%] h-[95%] object-contain"
-        />
-      </div>
+      {/* Right side */}
+      <HeroRightSide />
     </main>
   );
 }
