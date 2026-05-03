@@ -55,6 +55,15 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
     </div>
   );
 
+  const mapPopover = {
+    title,
+    img,
+    bedrooms,
+    address,
+    latitude,
+    longitude,
+  };
+
   return (
     <main className="gen-main">
       <div className="p-4">
@@ -117,7 +126,12 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
         <ClientOnly>
           {() => (
             <Suspense fallback={mapFallback}>
-              <Map marginTop={12} viewportHeight={75} />
+              <Map
+                marginTop={12}
+                viewportHeight={75}
+                zoomLevel={9}
+                mapPopovers={[mapPopover]}
+              />
             </Suspense>
           )}
         </ClientOnly>

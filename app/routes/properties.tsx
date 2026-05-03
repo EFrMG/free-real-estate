@@ -28,6 +28,17 @@ export default function LogIn() {
     </div>
   );
 
+  const mapPopovers = propertyData.map(
+    ({ title, img, bedrooms, address, latitude, longitude }) => ({
+      title,
+      img,
+      bedrooms,
+      address,
+      latitude,
+      longitude,
+    }),
+  );
+
   return (
     <main className="gen-main">
       <div>
@@ -51,7 +62,12 @@ export default function LogIn() {
         <ClientOnly>
           {() => (
             <Suspense fallback={mapFallback}>
-              <Map marginTop={24} viewportHeight={85} />
+              <Map
+                marginTop={24}
+                viewportHeight={85}
+                zoomLevel={4}
+                mapPopovers={mapPopovers}
+              />
             </Suspense>
           )}
         </ClientOnly>
