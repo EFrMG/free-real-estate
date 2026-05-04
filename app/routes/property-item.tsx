@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
 
 import { propertyData, userData } from "~/data/propertyData";
+import PropertyGallery from "~/components/PropertyGallery";
 import {
   GoBookmark,
   GoBookmarkSlash,
@@ -44,6 +45,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
     description,
     longDescription,
     exteriorImage,
+    interiorGallery,
     sizes,
     bedrooms,
     bathrooms,
@@ -81,12 +83,16 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="p-2 md:p-4">
-        <img
-          src={exteriorImage}
-          alt={title}
-          draggable="false"
-          className="property-img-outline w-full h-[35vh] mt-8 shadow-lg rounded-lg"
-        />
+        {interiorGallery ? (
+          <PropertyGallery interiorGallery={interiorGallery} />
+        ) : (
+          <img
+            src={exteriorImage}
+            alt={title}
+            draggable="false"
+            className="property-img-outline w-full h-[35vh] mt-8 shadow-lg rounded-lg object-cover"
+          />
+        )}
 
         <h1 className="my-6 text-center font-bold text-xl sm:text-2xl md:text-3xl text-amber-900">
           {title}
