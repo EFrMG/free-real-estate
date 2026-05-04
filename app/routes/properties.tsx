@@ -1,7 +1,7 @@
 import type { Route } from "./+types/properties";
 
 import { lazy, Suspense } from "react";
-import { propertyData, type PropertyData } from "~/data/propertyData";
+import { propertyData, type PropertyData } from "~/data/generalData";
 import FilterInput from "~/components/PropertiesFilterInput";
 import PropertyCard from "~/components/PropertyCard";
 import ClientOnly from "~/components/ClientOnly";

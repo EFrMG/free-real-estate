@@ -9,4 +9,5 @@ export default [
   route("sign-up", "routes/sign-up.tsx"),
   route("properties", "routes/properties.tsx"),
   route("properties/:id", "routes/property-item.tsx"),
+  route("user-profile/:id", "routes/user-profile.tsx"),
 ] satisfies RouteConfig;

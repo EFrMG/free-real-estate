@@ -8,6 +8,8 @@ interface NavLinks {
   key: string;
 }
 
+const IS_USER = true;
+
 const headerLinks: NavLinks[] = [
   {
     name: "Properties",
@@ -74,16 +76,41 @@ export default function Header() {
       {/* Login buttons */}
       <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
         <div className="space-x-2 md:space-x-6">
-          {signingLinks.map((link: NavLinks) => (
-            <a
-              key={link.key}
-              href={`/${link.key}`}
-              className={`px-4 py-2 text-base md:text-lg hidden sm:inline-block
+          {IS_USER ? (
+            <Link to="/user-profile/ID">
+              <div className="flex items-center gap-2">
+                <span>USERNAME</span>
+                <div className="relative">
+                  <img
+                    src="/app/assets/images/profile-pictures/man_1.jpeg"
+                    alt=""
+                    draggable={false}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  {true && (
+                    <span
+                      className="absolute top-[-0.75ch] left-[-0.5ch]
+                    px-1.5 py-1 bg-rose-700 rounded-full
+                    text-yellow-50 leading-none font-bold"
+                    >
+                      <span className="translate-y-px inline-block">N</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ) : (
+            signingLinks.map((link: NavLinks) => (
+              <Link
+                key={link.key}
+                to={`/${link.key}`}
+                className={`px-4 py-2 text-base md:text-lg hidden sm:inline-block
               ${link.key === "log-in" ? "" : "bg-amber-300 rounded-sm"}`}
-            >
-              {link.name}
-            </a>
-          ))}
+              >
+                {link.name}
+              </Link>
+            ))
+          )}
         </div>
 
         {/* Burger menu */}
@@ -106,14 +133,16 @@ export default function Header() {
           <ul className="stack-6 pt-24 px-12 text-lg">
             {headerLinks.map((link: NavLinks) => (
               <li key={`nav-link-${link.key}`}>
-                <a href={`/${link.key}`}>{link.name}</a>
+                <Link to={`/${link.key}`}>{link.name}</Link>
               </li>
             ))}
-            {signingLinks.map((link: NavLinks) => (
-              <a key={link.key} href={`/${link.key}`}>
-                {link.name}
-              </a>
-            ))}
+
+            {!IS_USER &&
+              signingLinks.map((link: NavLinks) => (
+                <Link key={link.key} to={`/${link.key}`}>
+                  {link.name}
+                </Link>
+              ))}
           </ul>
         </nav>
       </div>

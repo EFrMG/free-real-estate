@@ -2,7 +2,7 @@ import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
 
-import { propertyData, userData } from "~/data/propertyData";
+import { propertyData, userData } from "~/data/generalData";
 import PropertyGallery from "~/components/PropertyGallery";
 import {
   GoBookmark,
@@ -19,9 +19,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
   const property = propertyData.find((el) => String(el.id) === id);
 
-  if (!property) {
-    throw new Response("Property Not Found", { status: 404 });
-  }
+  if (!property) throw new Response("Property Not Found", { status: 404 });
 
   const userPoster = userData.find((el) => el.id === property.userId);
 
