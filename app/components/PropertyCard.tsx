@@ -5,6 +5,7 @@ import { LuBed, LuBath } from "react-icons/lu";
 interface PropertyCardProps {
   property: {
     id: number;
+    type: "buy" | "rent";
     title: string;
     description: string;
     exteriorImage: string;
@@ -20,6 +21,7 @@ interface PropertyCardProps {
 export default function PropertyCard({
   property: {
     id,
+    type,
     title,
     description,
     exteriorImage,
@@ -37,9 +39,25 @@ export default function PropertyCard({
       className="m-4 block hover:opacity-100 group"
     >
       <div
-        className="flex gap-4 pl-3 pr-4 py-3 rounded-lg shadow-lg inset-shadow-sm
-        hover:shadow-md transition-shadow duration-250"
+        className="relative flex gap-4 pl-3 pr-4 py-3 rounded-lg shadow-lg inset-shadow-sm
+        hover:shadow-md transition-shadow duration-250 delay-75"
       >
+        <div
+          className={`absolute bottom-6 -left-2.75 z-10
+          group-hover:rotate-y-12 perspective-normal
+          transition-transform duration-425 delay-75
+          shadow-md text-shadow-sm px-4 py-1.5 rounded-r-md
+          after:absolute after:top-full after:left-0
+          after:border-t-10 after:border-l-10 after:border-l-transparent
+          ${
+            type === "buy"
+              ? "bg-emerald-300 after:border-t-emerald-500 [&_span:text-emerald-900]"
+              : "bg-sky-300 after:border-t-sky-500 [&_span:text-sky-900]"
+          }`}
+        >
+          <span className="text-sm font-bold uppercase">{type}</span>
+        </div>
+
         <img
           src={exteriorImage}
           alt={title}
@@ -50,7 +68,7 @@ export default function PropertyCard({
         <div className="stack-2">
           <h2
             className="text-lg sm:text-xl text-center font-bold text-amber-900
-            group-hover:text-amber-700 transition-colors duration-425"
+            group-hover:text-amber-700 transition-colors duration-425 delay-75"
           >
             {title}
           </h2>

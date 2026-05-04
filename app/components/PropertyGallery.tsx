@@ -75,7 +75,7 @@ export default function PropertyGallery({
       className="relative w-full h-[35vh] mt-8 shadow-lg rounded-lg overflow-hidden
       [&_button]:absolute [&_button]:bg-amber-300/36 [&_button]:rounded-full
       [&_button]:p-3 [&_button]:backdrop-blur-sm [&_button]:hover:bg-amber-200/36
-      [&_button]:transition-colors [&_button]:duration-150"
+      [&_button]:transition-colors [&_button]:duration-150 [&_button]:shadow-md"
     >
       <button
         className="top-[50%] left-10 translate-[-50%] z-10"

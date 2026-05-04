@@ -10,6 +10,7 @@ import {
   GoCommentDiscussion,
   GoLocation,
 } from "react-icons/go";
+import { LiaHandshake } from "react-icons/lia";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -41,6 +42,7 @@ export function meta({}: Route.MetaArgs) {
 export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   const { property, userPoster } = loaderData;
   const {
+    type,
     title,
     description,
     longDescription,
@@ -100,10 +102,21 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
         <div className="grid md:grid-cols-[2fr_1fr] gap-12 md:gap-8">
           <div className="stack-8 md:stack-12 justify-between">
-            <p className="flex items-center gap-[1ex]">
-              <GoLocation size={24} color="var(--color-amber-700)" />
-              <span className="text-gray-600">Address: {address}</span>
-            </p>
+            <div>
+              <p className="flex items-center gap-[1ex] translate-x-px mb-4">
+                <GoLocation size={24} color="var(--color-amber-700)" />
+                <span className="text-gray-600">
+                  Address: <span className="text-lg">{address}</span>
+                </span>
+              </p>
+              <p className="flex items-center gap-[0.75ex]">
+                <LiaHandshake size={26} color="var(--color-amber-700)" />
+                <span className="text-gray-600 capitalize">
+                  Transaction type: <span className="text-lg">{type}</span>
+                </span>
+              </p>
+            </div>
+
             <p className="max-xs:text-sm lg:text-lg text-gray-700">
               {longDescription || description}
             </p>
