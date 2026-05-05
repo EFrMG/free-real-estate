@@ -1,5 +1,11 @@
 {
   "name": "@free-real-estate/shared",
   "version": "0.0.1",
-  "main": "./index.ts"
+  "description": "Shared types and schemas.",
+  "author": "EFrMG",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

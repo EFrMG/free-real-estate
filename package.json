@@ -7,11 +7,14 @@
     "backends/*"
   ],
   "scripts": {
-    "build:frontend": "pnpm --filter @free-real-estate/frontend run build",
-    "dev:frontend": "pnpm --filter @free-real-estate/frontend run dev",
-    "start:frontend": "pnpm --filter @free-real-estate/frontend run start",
-    "preview:frontend": "pnpm --filter @free-real-estate/frontend run preview",
-    "typecheck:frontend": "pnpm --filter @free-real-estate/frontend run typecheck",
-    "dev:backend": "pnpm --filter @free-real-estate/node-drizzle run dev"
+    "dev": "pnpm --filter \"*\" --parallel run dev",
+    "build:fe": "pnpm --filter @free-real-estate/frontend run build",
+    "dev:fe": "pnpm --filter @free-real-estate/frontend run dev",
+    "start:fe": "pnpm --filter @free-real-estate/frontend run start",
+    "preview:fe": "pnpm --filter @free-real-estate/frontend run preview",
+    "typecheck:fe": "pnpm --filter @free-real-estate/frontend run typecheck",
+    "generate:be": "pnpm --filter @free-real-estate/node-drizzle run generate",
+    "push:be": "pnpm --filter @free-real-estate/node-drizzle run push",
+    "studio:be": "pnpm --filter @free-real-estate/node-drizzle run studio"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "name": "@free-real-estate/node-drizzle",
+  "version": "0.0.1",
+  "description": "Local backend to be used with SQLite",
+  "author": "EFrMG",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "push": "drizzle-kit push",
+    "migrate": "tsx src/db/migrate.ts",
+    "studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0"
+  }
+}
