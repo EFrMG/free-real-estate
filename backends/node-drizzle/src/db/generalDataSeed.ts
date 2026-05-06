@@ -1,0 +1,533 @@
+import type {
+  PropertyData,
+  UserData,
+  PostData,
+} from "@free-real-estate/shared";
+
+export type { PropertyData, UserData, PostData };
+
+// Some of the frontend code will change once data is fetched in one go, regarding clientLoader
+
+export const propertyData: PropertyData[] = [
+  {
+    id: 1,
+    userId: 1,
+    type: "buy",
+    title: "Modern Loft in Palermo Soho",
+    description:
+      "A trendy loft in the heart of Palermo Soho, surrounded by the best boutiques and restaurants in the city. Features high ceilings and a private balcony.",
+    longDescription:
+      "This stunning loft in Palermo Soho offers a unique living experience in one of Buenos Aires' most vibrant neighborhoods. The open-plan design features double-height ceilings, exposed brick walls, and large windows that flood the space with natural light. The kitchen is fully equipped with modern appliances, and the mezzanine bedroom provides a cozy retreat. Located just steps away from Plaza Serrano, you'll have the city's best cafes, bars, and designer shops right at your doorstep.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_013.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_030.webp",
+      "/app/assets/images/properties/interior/property_031.webp",
+      "/app/assets/images/properties/interior/property_032.webp",
+    ],
+    sizes: [80, 20],
+    bedrooms: 1,
+    bathrooms: 1,
+    price: 245000,
+    province: "CABA",
+    city: "Buenos Aires",
+    address: "Thames 1234",
+    nearbyPlaces: {
+      school: "400m",
+      bus: "200m",
+      restaurant: "50m",
+    },
+    latitude: -34.5833,
+    longitude: -58.4333,
+  },
+  {
+    id: 2,
+    userId: 2,
+    type: "rent",
+    title: "Elegant Apartment in Nueva Córdoba",
+    description:
+      "Spacious apartment perfect for students or young professionals. Located just steps away from Sarmiento Park and the university campus.",
+    longDescription:
+      "This bright and modern apartment is located in the heart of Nueva Córdoba, the most sought-after neighborhood for students and young professionals. Featuring two comfortable bedrooms, a spacious living area, and a fully equipped kitchen, it's perfect for those who want to be close to the university and the vibrant nightlife of the city. The building offers 24/7 security and a communal laundry room.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_019.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_033.webp",
+      "/app/assets/images/properties/interior/property_034.webp",
+      "/app/assets/images/properties/interior/property_035.webp",
+    ],
+    bedrooms: 2,
+    bathrooms: 2,
+    price: 850,
+    province: "Córdoba",
+    city: "Córdoba",
+    address: "Estrada 456",
+    nearbyPlaces: {
+      university: "300m",
+      park: "150m",
+      supermarket: "100m",
+    },
+    latitude: -31.43,
+    longitude: -64.188,
+  },
+  {
+    id: 3,
+    type: "rent",
+    title: "Riverside View Studio",
+    description:
+      "Charming studio with an incredible view of the Paraná River. Modern finishes and located in the coolest neighborhood of Rosario.",
+    longDescription:
+      "Located in the trendy Pichincha neighborhood, this studio apartment offers breathtaking views of the Paraná River and the Rosario skyline. The space is efficiently designed with high-quality finishes, a modern kitchenette, and a private balcony. Perfect for a single professional or a couple looking to enjoy the best of Rosario's gastronomy and culture.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_012.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_076.webp",
+      "/app/assets/images/properties/interior/property_079.webp",
+    ],
+    bedrooms: 1,
+    bathrooms: 1,
+    price: 600,
+    province: "Santa Fe",
+    city: "Rosario",
+    address: "Wheelwright 789",
+    latitude: -32.9333,
+    longitude: -60.65,
+  },
+  {
+    id: 4,
+    type: "buy",
+    title: "Luxury Vineyard Villa",
+    description:
+      "Experience the wine country in style. This luxury villa features a private vineyard, swimming pool, and breathtaking views of the Andes.",
+    longDescription:
+      "Nestled in the heart of Chacras de Coria, Mendoza, this magnificent villa offers the ultimate luxury experience. The property features its own small Malbec vineyard, a large infinity pool overlooking the Andes mountains, and five spacious en-suite bedrooms. The interior is a blend of traditional rustic charm and modern sophistication, with a professional-grade kitchen and a private wine cellar. An ideal retreat for wine lovers and those seeking tranquility.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_006.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_036.webp",
+      "/app/assets/images/properties/interior/property_037.webp",
+    ],
+    bedrooms: 5,
+    bathrooms: 4,
+    price: 1250000,
+    province: "Mendoza",
+    city: "Luján de Cuyo",
+    address: "Darragueira 101",
+    nearbyPlaces: {
+      winery: "500m",
+      mountain: "2000m",
+      airport: "25000m",
+    },
+    latitude: -32.99,
+    longitude: -68.87,
+  },
+  {
+    id: 5,
+    type: "rent",
+    title: "Lakeside Cabin in Bariloche",
+    description:
+      "Cozy wooden cabin with direct access to Lake Nahuel Huapi. Perfect for winter skiing or summer hiking adventures.",
+    longDescription:
+      "This authentic Patagonian cabin is built with local cypress wood and stone, offering a warm and inviting atmosphere. Located right on the shores of Lake Nahuel Huapi, it provides stunning water views from every room. With a large stone fireplace, three cozy bedrooms, and a private deck, it's the perfect base for exploring the surrounding mountains or simply relaxing by the lake. Just a short drive from Cerro Catedral ski resort.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_004.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_038.webp",
+      "/app/assets/images/properties/interior/property_039.webp",
+      "/app/assets/images/properties/interior/property_040.webp",
+    ],
+    bedrooms: 3,
+    bathrooms: 2,
+    price: 1500,
+    province: "Río Negro",
+    city: "San Carlos de Bariloche",
+    address: "Bustillo Km 7",
+    nearbyPlaces: {
+      lake: "20m",
+      ski_resort: "12000m",
+      downtown: "7000m",
+    },
+    latitude: -41.12,
+    longitude: -71.4,
+  },
+  {
+    id: 6,
+    userId: 2,
+    type: "buy",
+    title: "Colonial Estate in San Lorenzo",
+    description:
+      "Traditional colonial-style home in the peaceful hills of Salta. Features a large garden and a clay oven for authentic empanadas.",
+    longDescription:
+      "This beautiful estate captures the essence of Northern Argentina's colonial architecture. Set on a sprawling acre of lush gardens in San Lorenzo, the house features thick adobe walls, hand-painted tiles, and a wide gallery perfect for siestas. The property includes a large swimming pool, a traditional clay oven (horno de barro), and a guest cottage. Experience the peace and tradition of the Salteño hills in this unique home.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_003.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_041.webp",
+      "/app/assets/images/properties/interior/property_042.webp",
+      "/app/assets/images/properties/interior/property_043.webp",
+      "/app/assets/images/properties/interior/property_044.webp",
+      "/app/assets/images/properties/interior/property_045.webp",
+      "/app/assets/images/properties/interior/property_046.webp",
+    ],
+    bedrooms: 4,
+    bathrooms: 3,
+    price: 380000,
+    province: "Salta",
+    city: "San Lorenzo",
+    address: "Calle de los Juncos 22",
+    nearbyPlaces: {
+      hill: "100m",
+      church: "600m",
+      market: "800m",
+    },
+    latitude: -24.73,
+    longitude: -65.48,
+  },
+  {
+    id: 7,
+    type: "buy",
+    title: "Classic Mansion in Los Troncos",
+    description:
+      "Exclusive residence in the most prestigious neighborhood of Mar del Plata. Elegant architecture with high-end details and a beautiful garden.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_028.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_047.webp",
+      "/app/assets/images/properties/interior/property_048.webp",
+      "/app/assets/images/properties/interior/property_049.webp",
+      "/app/assets/images/properties/interior/property_050.webp",
+      "/app/assets/images/properties/interior/property_051.webp",
+      "/app/assets/images/properties/interior/property_052.webp",
+    ],
+    bedrooms: 5,
+    bathrooms: 4,
+    price: 650000,
+    province: "Buenos Aires",
+    city: "Mar del Plata",
+    address: "Viamonte 2345",
+    nearbyPlaces: {
+      beach: "1200m",
+      golf_club: "800m",
+      shopping: "500m",
+    },
+    latitude: -38.02,
+    longitude: -57.54,
+  },
+  {
+    id: 8,
+    userId: 4,
+    type: "rent",
+    title: "Beagle Channel View Apartment",
+    description:
+      "Cozy apartment at the end of the world. Enjoy stunning views of the Beagle Channel and easy access to the Martial Glacier.",
+    longDescription:
+      "Experience life in Ushuaia from this modern and well-heated apartment. The large living room windows offer an unobstructed view of the Beagle Channel and the surrounding snow-capped peaks. Featuring two bedrooms, a modern bathroom, and a fully equipped kitchen, it's an ideal base for adventurers looking to explore Tierra del Fuego National Park or take a boat trip to see the penguins. High-speed internet included, perfect for digital nomads.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_011.webp",
+    bedrooms: 2,
+    bathrooms: 1,
+    price: 1100,
+    province: "Tierra del Fuego",
+    city: "Ushuaia",
+    address: "Camino del Glaciar 88",
+    nearbyPlaces: {
+      channel: "1500m",
+      glacier: "3000m",
+      museum: "1000m",
+    },
+    latitude: -54.83,
+    longitude: -68.35,
+  },
+  {
+    id: 9,
+    userId: 4,
+    type: "buy",
+    title: "Skyscraper Penthouse in Puerto Madero",
+    description:
+      "The pinnacle of luxury in Buenos Aires. Ultra-modern penthouse with 360-degree views of the city and the river.",
+    longDescription:
+      "This exclusive penthouse occupies the top two floors of one of Puerto Madero's most iconic towers. Featuring floor-to-ceiling windows, private elevator access, and a massive terrace with a private plunge pool, it offers the best views in the city. The interior design is minimalist and sophisticated, utilizing the finest materials like Carrara marble and smoked glass. Residents have access to the building's world-class amenities, including a spa, gym, and 24-hour concierge.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_010.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_053.webp",
+      "/app/assets/images/properties/interior/property_054.webp",
+    ],
+    bedrooms: 3,
+    bathrooms: 4,
+    price: 2100000,
+    province: "CABA",
+    city: "Buenos Aires",
+    address: "Juana Manso 1500",
+    nearbyPlaces: {
+      reserve: "200m",
+      yacht_club: "300m",
+      fine_dining: "100m",
+    },
+    latitude: -34.61,
+    longitude: -58.36,
+  },
+  {
+    id: 10,
+    userId: 2,
+    type: "buy",
+    title: "Garden Estate in San Isidro",
+    description:
+      "Classic family home in the traditional northern suburbs. Features a huge swimming pool and ancient trees.",
+    longDescription:
+      "Located in the heart of San Isidro, this traditional English-style house is the perfect family home. The property is set on a 1500sqm lot with a lush garden, century-old trees, and a large swimming pool. Inside, you'll find a grand living room with a fireplace, a formal dining room, and four spacious bedrooms upstairs. The neighborhood is quiet and residential, yet close to the train station and the best schools in the area.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_014.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_055.webp",
+      "/app/assets/images/properties/interior/property_056.webp",
+      "/app/assets/images/properties/interior/property_057.webp",
+    ],
+    bedrooms: 4,
+    bathrooms: 3,
+    price: 890000,
+    province: "Buenos Aires",
+    city: "San Isidro",
+    address: "Libertador 14000",
+    nearbyPlaces: {
+      "train station": "500m",
+      river: "1000m",
+      school: "300m",
+    },
+    latitude: -34.47,
+    longitude: -58.51,
+  },
+  {
+    id: 11,
+    userId: 3,
+    type: "rent",
+    title: "Alpine Chalet in Villa General Belgrano",
+    description:
+      "Charming Bavarian-style chalet in the hills of Córdoba. Perfect for a family getaway or a peaceful retreat.",
+    longDescription:
+      "Experience the European charm of Villa General Belgrano in this beautiful alpine chalet. Built with traditional wood and stone, the house features a cozy interior with a wood-burning stove and large windows overlooking the Sierras de Córdoba. The property includes a private garden with a barbecue area and access to a shared swimming pool. Located just a short walk from the town center, where you can enjoy local craft beer and traditional German pastries.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_029.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_058.webp",
+      "/app/assets/images/properties/interior/property_059.webp",
+    ],
+    bedrooms: 3,
+    bathrooms: 2,
+    price: 950,
+    province: "Córdoba",
+    city: "Villa General Belgrano",
+    address: "Ruta 5 Km 78",
+    nearbyPlaces: {
+      brewery: "400m",
+      hill: "200m",
+      creek: "100m",
+    },
+    latitude: -31.97,
+    longitude: -64.55,
+  },
+  {
+    id: 12,
+    userId: 4,
+    type: "rent",
+    title: "Adobe Boutique Inn in Purmamarca",
+    description:
+      "Stay in the heart of the Quebrada de Humahuaca. Traditional adobe construction with modern comforts and stunning mountain views.",
+    longDescription:
+      "This unique property in Purmamarca offers an authentic experience in the Argentine Northwest. Built using traditional adobe and cactus wood, it harmonizes perfectly with the surrounding Seven-Colored Hill. The rooms are decorated with local handicrafts and offer all modern amenities. Guests can enjoy a traditional breakfast on the patio while taking in the breathtaking colors of the mountains. A magical place where time seems to stand still.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_026.webp",
+    bedrooms: 1,
+    bathrooms: 1,
+    price: 750,
+    province: "Jujuy",
+    city: "Purmamarca",
+    address: "Calle Rivadavia s/n",
+    nearbyPlaces: {
+      mountain: "50m",
+      craft_market: "200m",
+      restaurant: "150m",
+    },
+    latitude: -23.74,
+    longitude: -65.49,
+  },
+  {
+    id: 13,
+    type: "buy",
+    title: "Modern Glaciar View House",
+    description:
+      "Contemporary architecture meets Patagonian wilderness. Eco-friendly home with views of Lake Argentino.",
+    longDescription:
+      "Designed by an award-winning architect, this home in El Calafate is a masterpiece of sustainable design. The structure is built into the hillside to minimize environmental impact and maximize thermal efficiency. Large triple-pane windows offer panoramic views of Lake Argentino and the surrounding glaciers. The interior features polished concrete floors, recycled wood details, and state-of-the-art heating. A truly unique home for those who value modern design and nature.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_027.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_060.webp",
+      "/app/assets/images/properties/interior/property_061.webp",
+      "/app/assets/images/properties/interior/property_062.webp",
+      "/app/assets/images/properties/interior/property_063.webp",
+      "/app/assets/images/properties/interior/property_064.webp",
+      "/app/assets/images/properties/interior/property_065.webp",
+    ],
+    bedrooms: 2,
+    bathrooms: 2,
+    price: 520000,
+    province: "Santa Cruz",
+    city: "El Calafate",
+    address: "Camino de los Glaciares 400",
+    latitude: -50.33,
+    longitude: -72.27,
+  },
+  {
+    id: 14,
+    userId: 2,
+    type: "rent",
+    title: "Delta Island Hideaway in Tigre",
+    description:
+      "Escape to the islands. Charming riverfront house accessible only by boat, surrounded by lush vegetation.",
+    longDescription:
+      "Discover the unique lifestyle of the Paraná Delta in this charming stilt house. Located on a private island, the property offers complete privacy and a direct connection with nature. The house features a large deck overlooking the river, a private pier, and a garden filled with native plants. Perfect for those who enjoy kayaking, birdwatching, or simply relaxing to the sound of the water. Boat taxi service available from Tigre station.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_022.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_066.webp",
+      "/app/assets/images/properties/interior/property_067.webp",
+      "/app/assets/images/properties/interior/property_068.webp",
+      "/app/assets/images/properties/interior/property_069.webp",
+      "/app/assets/images/properties/interior/property_070.webp",
+    ],
+    bedrooms: 2,
+    bathrooms: 1,
+    price: 800,
+    province: "Buenos Aires",
+    city: "Tigre",
+    address: "Río Sarmiento s/n",
+    nearbyPlaces: {
+      river: "0m",
+      nature_reserve: "100m",
+      boat_stop: "50m",
+    },
+    latitude: -34.42,
+    longitude: -58.57,
+  },
+  {
+    id: 15,
+    userId: 3,
+    type: "buy",
+    title: "Country Club Residence in Yerba Buena",
+    description:
+      "Modern family home in the most exclusive gated community of Tucumán. Security, nature, and comfort.",
+    longDescription:
+      "This contemporary home is located in a prestigious country club at the foot of the San Javier hills in Yerba Buena. The house features an open-concept living area that flows seamlessly into a large gallery with a barbecue (parrilla). With four bedrooms, a private pool, and views of the surrounding green hills, it's the ideal place for a family looking for security and a high quality of life. The community offers golf, tennis, and 24-hour security.",
+    exteriorImage: "/app/assets/images/properties/exterior/property_021.webp",
+    interiorGallery: [
+      "/app/assets/images/properties/interior/property_071.webp",
+      "/app/assets/images/properties/interior/property_072.webp",
+      "/app/assets/images/properties/interior/property_073.webp",
+      "/app/assets/images/properties/interior/property_074.webp",
+      "/app/assets/images/properties/interior/property_075.webp",
+      "/app/assets/images/properties/interior/property_077.webp",
+      "/app/assets/images/properties/interior/property_078.webp",
+    ],
+    bedrooms: 4,
+    bathrooms: 3,
+    price: 450000,
+    province: "Tucumán",
+    city: "Yerba Buena",
+    address: "Av. Perón 3000",
+    latitude: -26.81,
+    longitude: -65.29,
+  },
+];
+
+export const userData: UserData[] = [
+  {
+    id: 1,
+    email: "john@me.com",
+    name: "Johnathan Doebanne",
+    profilePicture: "/app/assets/images/profile-pictures/man_1.jpeg",
+  },
+  {
+    id: 2,
+    email: "marti@me.com",
+    name: "Martina Rossi",
+    profilePicture: "/app/assets/images/profile-pictures/woman_1.jpeg",
+  },
+  {
+    id: 3,
+    email: "facu@me.com",
+    name: "Facundo Gomez",
+    profilePicture: "/app/assets/images/profile-pictures/man_2.jpeg",
+  },
+  {
+    id: 4,
+    email: "sofi@me.com",
+    name: "Sofia Martinez",
+    profilePicture: "/app/assets/images/profile-pictures/woman_2.jpeg",
+  },
+];
+
+export const postData: PostData[] = [
+  {
+    id: 1,
+    authorId: 1,
+    title: "How to choose your first home in Argentina",
+    excerpt:
+      "Navigating the real estate market in Argentina can be challenging. Here are some tips for first-time buyers.",
+    content:
+      "Buying your first home is a significant milestone, especially in a dynamic market like Argentina's. From understanding the difference between 'escritura' and 'boleto de compraventa' to choosing the right neighborhood, there's a lot to consider. We recommend starting with a clear budget, research on local market trends, and finding a trustworthy real estate agent who knows the area well.",
+    postImage: "https://picsum.photos/seed/post1/1080/1920",
+    date: "2024-05-10",
+  },
+  {
+    id: 2,
+    authorId: 2,
+    title: "The rise of Puerto Madero: A luxury guide",
+    excerpt:
+      "Explore why Puerto Madero has become the most expensive and exclusive neighborhood in Buenos Aires.",
+    content:
+      "Puerto Madero has undergone a radical transformation over the past three decades, evolving from an abandoned port area into a hub of high-end skyscrapers and luxury living. Its unique combination of safety, river views, and proximity to the financial district makes it a top choice for international investors and local executives. Discover the best residential towers and hidden gems in this modern neighborhood.",
+    postImage: "https://picsum.photos/seed/post2/1080/1920",
+    date: "2024-05-15",
+  },
+  {
+    id: 3,
+    title: "Investing in Patagonia: Why now is the time",
+    excerpt:
+      "The southern regions of Argentina are seeing a surge in interest. Find out why Bariloche and El Calafate are top picks.",
+    content:
+      "Patagonia has always been a tourist favorite, but lately, it's becoming a hotspot for long-term investment. With the rise of remote work, many people are looking for a lifestyle change, swapping city smog for mountain air. Towns like Bariloche, San Martín de los Andes, and El Calafate offer not just natural beauty, but also a growing infrastructure that supports modern living.",
+    postImage: "https://picsum.photos/seed/post3/1080/1920",
+    date: "2024-05-20",
+  },
+  {
+    id: 4,
+    authorId: 3,
+    title: "Living in the Delta: Pros and Cons",
+    excerpt:
+      "The Tigre Delta offers a unique lifestyle. Is island living right for you?",
+    content:
+      "Life in the Paraná Delta is unlike anything else. Accessible only by boat, it offers a level of peace and contact with nature that is hard to find so close to a major city. However, it also comes with challenges, such as dependence on boat transportation, managing your own utilities, and dealing with river tides. We weigh the pros and cons of making the jump to island life.",
+    postImage: "https://picsum.photos/seed/post4/1080/1920",
+    date: "2024-05-25",
+  },
+  {
+    id: 5,
+    authorId: 3,
+    title: "Traditional vs Modern: Argentinian Architecture",
+    excerpt:
+      "From colonial estates to brutalist towers, Argentina's architectural landscape is a rich tapestry of styles.",
+    content:
+      "Argentina's architecture tells the story of its history. You can find beautiful Spanish colonial houses in the north, French-inspired palaces in Buenos Aires, and cutting-edge contemporary designs in the newer developments. Understanding these styles can help you appreciate the character of different neighborhoods and even inspire your own home renovation projects.",
+    postImage: "https://picsum.photos/seed/post5/1080/1920",
+    date: "2024-06-01",
+  },
+  {
+    id: 6,
+    authorId: 2,
+    title: "Top 5 neighborhoods for students in Córdoba",
+    excerpt:
+      "Known as 'La Docta', Córdoba is the student capital of Argentina. Here's where you should live.",
+    content:
+      "Córdoba is home to one of the oldest and largest universities in South America, creating a vibrant student culture. Nueva Córdoba is the obvious choice for many, but neighborhoods like General Paz, Alberdi, and even the city center offer great alternatives with different vibes and price points. We breakdown the best areas based on proximity to campus, nightlife, and budget.",
+    postImage: "https://picsum.photos/seed/post6/1080/1920",
+    date: "2024-06-05",
+  },
+  {
+    id: 7,
+    authorId: 4,
+    title: "The charm of Northern Argentina: Living in Salta and Jujuy",
+    excerpt:
+      "Experience the colorful mountains and rich traditions of the Northwest.",
+    content:
+      "The Argentine Northwest is a land of dramatic landscapes and deep-rooted traditions. Salta, 'La Linda', offers a mix of colonial beauty and modern amenities, while the small towns of Jujuy provide a slower pace of life in the heart of the mountains. Whether you're looking for a vacation home or a permanent relocation, the north offers a unique and soul-enriching experience.",
+    postImage: "https://picsum.photos/seed/post7/1080/1920",
+    date: "2024-06-10",
+  },
+];

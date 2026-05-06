@@ -16,6 +16,7 @@
     "dev:be": "pnpm --filter @free-real-estate/node-drizzle run dev",
     "generate:be": "pnpm --filter @free-real-estate/node-drizzle run generate",
     "push:be": "pnpm --filter @free-real-estate/node-drizzle run push",
+    "seed:be": "pnpm --filter @free-real-estate/node-drizzle run seed",
     "studio:be": "pnpm --filter @free-real-estate/node-drizzle run studio"
   }
 }
