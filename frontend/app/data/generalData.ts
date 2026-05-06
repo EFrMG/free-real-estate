@@ -1,4 +1,10 @@
-// import "../../../types/generalDataTypes.ts";
+import type {
+  PropertyData,
+  UserData,
+  PostData,
+} from "@free-real-estate/shared";
+
+export type { PropertyData, UserData, PostData };
 
 // Some of the frontend code will change once data is fetched in one go, regarding clientLoader
 

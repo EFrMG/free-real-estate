@@ -1,73 +1,56 @@
-export interface UserData {
-  id: number;
-  email: string;
-  name: string;
-  profilePicture: string;
-}
+import { type InferSelectModel } from "drizzle-orm";
+import * as schema from "./src/schema.ts";
 
-export interface PropertyData {
-  id: number;
-  userId?: number;
-  type: "buy" | "rent";
-  title: string;
-  description: string;
-  longDescription?: string;
-  exteriorImage: string;
-  interiorGallery?: string[];
-  sizes?: number[];
-  bedrooms: number;
-  bathrooms: number;
-  price: number;
-  province: string;
-  city: string;
-  address: string;
-  nearbyPlaces?: Record<string, `${number}m`>;
-  latitude: number;
-  longitude: number;
-}
+// Re-export the schema for the backend
+export * from "./src/schema.ts";
 
-export interface PostData {
-  id: number;
-  authorId?: number;
-  title: string;
-  excerpt: string;
-  content: string;
-  postImage: string;
-  date: string;
-}
+// Nullable fields optional so the frontend can omit fields that are null in the DB (T?)
+// Otherwise, one needs to write explicit "null" in the data
+type OptionalNullable<T> = {
+  [K in keyof T as null extends T[K] ? K : never]?: T[K];
+} & {
+  [K in keyof T as null extends T[K] ? never : K]: T[K];
+};
 
-// Used for the Property Item page
+// Inferred from Schema
+export type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
+
+export type PropertyData = OptionalNullable<
+  InferSelectModel<typeof schema.properties>
+>;
+
+export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
+
+export type ChatData = OptionalNullable<InferSelectModel<typeof schema.chats>>;
+
+export type MessageData = OptionalNullable<
+  InferSelectModel<typeof schema.messages>
+>;
+
+// Extended Types (Used for UI and specific API responses)
+// Property Item page
 export interface PropertyWithAuthor extends PropertyData {
   author: UserData;
 }
 
-// Used for User Profile pages
-export interface UserWithProperties extends UserData {
+// User Profile pages
+export interface UserWithPropertiesBookmarks extends UserData {
   properties: PropertyData[];
   bookmarks: PropertyData[];
 }
 
-// Used for the Blog section
+// Blog section
 export interface PostWithAuthor extends PostData {
   author: UserData;
 }
 
-// Join table
+// Join table representation
 export interface Bookmarks {
   propertyIds: number[];
 }
 
-export interface Chat {
-  id: number;
+// Chat with nested participants and last message
+export interface Chat extends ChatData {
   participants: UserData[];
-  lastMessage?: Message;
-  updatedAt: string;
-}
-
-export interface Message {
-  id: number;
-  chatId: number;
-  senderId: number;
-  text: string;
-  createdAt: string;
+  lastMessage?: MessageData;
 }

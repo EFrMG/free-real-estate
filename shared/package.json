@@ -1,11 +1,16 @@
 {
   "name": "@free-real-estate/shared",
-  "version": "0.0.1",
   "description": "Shared types and schemas.",
   "author": "EFrMG",
   "main": "index.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

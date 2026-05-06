@@ -1,6 +1,5 @@
 {
   "name": "@free-real-estate/node-drizzle",
-  "version": "0.0.1",
   "description": "Local backend to be used with SQLite",
   "author": "EFrMG",
   "main": "index.ts",
@@ -15,7 +14,8 @@
   "dependencies": {
     "@libsql/client": "^0.17.3",
     "dotenv": "^17.4.2",
-    "drizzle-orm": "^0.45.2"
+    "drizzle-orm": "^0.45.2",
+    "@free-real-estate/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.19.17",
