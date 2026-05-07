@@ -22,58 +22,58 @@ const json = <TData>(name: string) =>
   })(name);
 
 export const users = sqliteTable("users", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  email: text("email").notNull().unique(),
-  name: text("name").notNull(),
+  id: integer().primaryKey({ autoIncrement: true }),
+  email: text().notNull().unique(),
+  name: text().notNull(),
   // We have to handle a placeholder on user interaction in case of null
   // src attribute cannot be properly null ⌄
-  profilePicture: text("profile_picture").notNull(),
+  profilePicture: text().notNull(),
 });
 
 export const properties = sqliteTable("properties", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").references(() => users.id),
+  id: integer().primaryKey({ autoIncrement: true }),
+  userId: integer().references(() => users.id),
   type: text("type", { enum: ["buy", "rent"] }).notNull(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  longDescription: text("long_description"),
-  exteriorImage: text("exterior_image").notNull(),
+  title: text().notNull(),
+  description: text().notNull(),
+  longDescription: text(),
+  exteriorImage: text().notNull(),
   interiorGallery: json<string[]>("interior_gallery"),
   sizes: json<number[]>("sizes"),
-  bedrooms: integer("bedrooms").notNull(),
-  bathrooms: integer("bathrooms").notNull(),
-  price: integer("price").notNull(),
-  province: text("province").notNull(),
-  city: text("city").notNull(),
-  address: text("address").notNull(),
+  bedrooms: integer().notNull(),
+  bathrooms: integer().notNull(),
+  price: integer().notNull(),
+  province: text().notNull(),
+  city: text().notNull(),
+  address: text().notNull(),
   nearbyPlaces: json<Record<string, `${number}m`>>("nearby_places"),
-  latitude: real("latitude").notNull(),
-  longitude: real("longitude").notNull(),
+  latitude: real().notNull(),
+  longitude: real().notNull(),
 });
 
 export const posts = sqliteTable("posts", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  authorId: integer("author_id").references(() => users.id),
-  title: text("title").notNull(),
-  excerpt: text("excerpt").notNull(),
-  content: text("content").notNull(),
-  postImage: text("post_image").notNull(),
-  date: text("date").notNull(),
+  id: integer().primaryKey({ autoIncrement: true }),
+  authorId: integer().references(() => users.id),
+  title: text().notNull(),
+  excerpt: text().notNull(),
+  content: text().notNull(),
+  postImage: text().notNull(),
+  date: text().notNull(),
 });
 
 export const chats = sqliteTable("chats", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  updatedAt: text("updated_at").notNull(),
+  id: integer().primaryKey({ autoIncrement: true }),
+  updatedAt: text().notNull(),
 });
 
 // Chat participants (Many-to-Many)
 export const chatParticipants = sqliteTable(
   "chat_participants",
   {
-    chatId: integer("chat_id")
+    chatId: integer()
       .notNull()
       .references(() => chats.id, { onDelete: "cascade" }),
-    userId: integer("user_id")
+    userId: integer()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -82,24 +82,24 @@ export const chatParticipants = sqliteTable(
 
 export const messages = sqliteTable("messages", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  chatId: integer("chat_id")
+  chatId: integer()
     .notNull()
     .references(() => chats.id),
-  senderId: integer("sender_id")
+  senderId: integer()
     .notNull()
     .references(() => users.id),
-  text: text("text").notNull(),
-  createdAt: text("created_at").notNull(),
+  text: text().notNull(),
+  createdAt: text().notNull(),
 });
 
 // Bookmarks (Many-to-Many)
 export const bookmarks = sqliteTable(
   "bookmarks",
   {
-    userId: integer("user_id")
+    userId: integer()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    propertyId: integer("property_id")
+    propertyId: integer()
       .notNull()
       .references(() => properties.id, { onDelete: "cascade" }),
   },
