@@ -7,6 +7,7 @@ import type {
 export type { PropertyData, UserData, PostData };
 
 // Some of the frontend code will change once data is fetched in one go, regarding clientLoader
+// This data would generally mirror generalDataSeed.ts in the backend
 
 export const propertyData: PropertyData[] = [
   {

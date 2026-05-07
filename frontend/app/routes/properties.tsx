@@ -8,11 +8,13 @@ import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
 
-export async function clientLoader() {
+export async function loader() {
   const response = await fetch("http://localhost:3000/api/properties");
+
   if (!response.ok) {
     throw new Response("Failed to fetch properties", { status: 500 });
   }
+
   const properties: PropertyData[] = await response.json();
   return { properties };
 }

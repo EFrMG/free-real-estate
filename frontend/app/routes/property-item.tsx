@@ -14,7 +14,7 @@ import { LiaHandshake } from "react-icons/lia";
 
 const Map = lazy(() => import("~/components/Map"));
 
-export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
 
   const resProperty = await fetch(`http://localhost:3000/api/properties/${id}`);
@@ -24,9 +24,11 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     }
     throw new Response("Failed to fetch property", { status: 500 });
   }
+
   const property: PropertyData = await resProperty.json();
 
   let userPoster: UserData | null = null;
+
   if (property.userId) {
     const resUser = await fetch(
       `http://localhost:3000/api/users/${property.userId}`,

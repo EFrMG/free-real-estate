@@ -25,7 +25,9 @@ export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
-  profilePicture: text("profile_picture"),
+  // We have to handle a placeholder on user interaction in case of null
+  // src attribute cannot be properly null ⌄
+  profilePicture: text("profile_picture").notNull(),
 });
 
 export const properties = sqliteTable("properties", {
