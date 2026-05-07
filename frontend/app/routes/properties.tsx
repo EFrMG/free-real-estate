@@ -1,12 +1,21 @@
 import type { Route } from "./+types/properties";
 
 import { lazy, Suspense } from "react";
-import { propertyData, type PropertyData } from "~/data/generalData";
+import type { PropertyData } from "@free-real-estate/shared";
 import FilterInput from "~/components/PropertiesFilterInput";
 import PropertyCard from "~/components/PropertyCard";
 import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
+
+export async function clientLoader() {
+  const response = await fetch("http://localhost:3000/api/properties");
+  if (!response.ok) {
+    throw new Response("Failed to fetch properties", { status: 500 });
+  }
+  const properties: PropertyData[] = await response.json();
+  return { properties };
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,7 +28,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Properties() {
+export default function Properties({ loaderData }: Route.ComponentProps) {
+  const { properties } = loaderData;
+
   const mapFallback = (
     <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
       <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
@@ -28,7 +39,7 @@ export default function Properties() {
     </div>
   );
 
-  const mapPopovers = propertyData.map(
+  const mapPopovers = properties.map(
     ({
       id,
       title,
@@ -58,7 +69,7 @@ export default function Properties() {
       <div className="max-md:order-1">
         <FilterInput />
 
-        {propertyData.map((property) => (
+        {properties.map((property) => (
           <PropertyCard
             key={`property-card-${property.id}`}
             property={property}

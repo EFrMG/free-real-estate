@@ -1,8 +1,8 @@
 import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
+import type { PropertyData, UserData } from "@free-real-estate/shared";
 
-import { propertyData, userData } from "~/data/generalData";
 import PropertyGallery from "~/components/PropertyGallery";
 import {
   GoBookmark,
@@ -17,11 +17,24 @@ const Map = lazy(() => import("~/components/Map"));
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const { id } = params;
 
-  const property = propertyData.find((el) => String(el.id) === id);
+  const resProperty = await fetch(`http://localhost:3000/api/properties/${id}`);
+  if (!resProperty.ok) {
+    if (resProperty.status === 404) {
+      throw new Response("Property Not Found", { status: 404 });
+    }
+    throw new Response("Failed to fetch property", { status: 500 });
+  }
+  const property: PropertyData = await resProperty.json();
 
-  if (!property) throw new Response("Property Not Found", { status: 404 });
-
-  const userPoster = userData.find((el) => el.id === property.userId);
+  let userPoster: UserData | null = null;
+  if (property.userId) {
+    const resUser = await fetch(
+      `http://localhost:3000/api/users/${property.userId}`,
+    );
+    if (resUser.ok) {
+      userPoster = await resUser.json();
+    }
+  }
 
   return { property, userPoster };
 }
