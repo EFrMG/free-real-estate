@@ -34,6 +34,9 @@ export const properties = sqliteTable("properties", {
   id: integer().primaryKey({ autoIncrement: true }),
   userId: integer().references(() => users.id),
   type: text("type", { enum: ["buy", "rent"] }).notNull(),
+  property: text("property", {
+    enum: ["apartment", "house", "condominium"],
+  }).notNull(),
   title: text().notNull(),
   description: text().notNull(),
   longDescription: text(),

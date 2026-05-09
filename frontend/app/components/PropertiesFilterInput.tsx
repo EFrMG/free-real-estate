@@ -1,15 +1,16 @@
 import { useEffect, useState, type SubmitEvent } from "react";
-import { GoSearch } from "react-icons/go";
 import { useSearchParams } from "react-router";
+import type { PropertyData } from "@free-real-estate/shared";
+import { GoSearch } from "react-icons/go";
 
 interface PropertyFilters {
   location: string;
-  type: string;
-  property: string;
+  type: PropertyData["type"] | "any" | string;
+  property: PropertyData["property"] | string;
   minPrice: number | undefined;
   maxPrice: number | undefined;
-  bedrooms: number | undefined;
-  bathrooms: number | undefined;
+  bedrooms: PropertyData["bedrooms"] | undefined;
+  bathrooms: PropertyData["bathrooms"] | undefined;
 }
 
 interface FilterInputProps {
@@ -22,7 +23,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
     location: searchParams.get("city") || "",
     type: searchParams.get("type") || "any",
-    property: searchParams.get("property") || "any", // Needs data
+    property: searchParams.get("property") || "any",
 
     minPrice: searchParams.get("minPrice")
       ? Number(searchParams.get("minPrice"))
@@ -160,7 +161,6 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               }
             >
               <option value="any">Any</option>
-              <option value="land">Land</option>
               <option value="apartment">Apartment</option>
               <option value="house">House</option>
               <option value="condominium">Condominium</option>
