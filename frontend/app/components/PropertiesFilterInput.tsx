@@ -23,6 +23,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
     location: searchParams.get("city") ?? "",
     type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+
     property:
       (searchParams.get("property") as PropertyData["property"] | null) ??
       "any",
@@ -49,6 +50,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
     setPropertyFilters({
       location: searchParams.get("city") || "",
       type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+
       property:
         (searchParams.get("property") as PropertyData["property"]) ?? "any",
 

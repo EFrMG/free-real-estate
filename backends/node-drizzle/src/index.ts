@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
 import { type SQL, eq, and, gte, lte, like, asc } from "drizzle-orm";
 import { db } from "./db/index.ts";
-import { properties, users, posts } from "./db/schema.ts";
+import { type PropertyData, properties, users, posts } from "./db/schema.ts";
 
 const app = new Hono();
 
@@ -19,18 +19,21 @@ api.use("/*", cors());
 // GET all properties while filtering
 api.get("/properties", async (c) => {
   // Query parameter values
-  const { type, city, minPrice, maxPrice, bedrooms, bathrooms } = c.req.query();
+  const { type, property, city, minPrice, maxPrice, bedrooms, bathrooms } =
+    c.req.query();
 
   const filters: SQL[] = [];
 
-  // "property" type left to do and add data for
-
-  if (type && type !== "any") {
-    filters.push(eq(properties.type, type as "buy" | "rent"));
-  }
-
   if (city) {
     filters.push(like(properties.city, `%${city}%`));
+  }
+
+  if (type && type !== "any") {
+    filters.push(eq(properties.type, type as PropertyData["type"]));
+  }
+
+  if (property && property !== "any") {
+    filters.push(eq(properties.property, property as PropertyData["property"]));
   }
 
   if (minPrice) {
