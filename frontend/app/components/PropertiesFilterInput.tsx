@@ -5,8 +5,8 @@ import { GoSearch } from "react-icons/go";
 
 interface PropertyFilters {
   location: string;
-  type: PropertyData["type"] | "any" | string;
-  property: PropertyData["property"] | string;
+  type: PropertyData["type"] | "any";
+  property: PropertyData["property"] | "any";
   minPrice: number | undefined;
   maxPrice: number | undefined;
   bedrooms: PropertyData["bedrooms"] | undefined;
@@ -21,9 +21,11 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
-    location: searchParams.get("city") || "",
-    type: searchParams.get("type") || "any",
-    property: searchParams.get("property") || "any",
+    location: searchParams.get("city") ?? "",
+    type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+    property:
+      (searchParams.get("property") as PropertyData["property"] | null) ??
+      "any",
 
     minPrice: searchParams.get("minPrice")
       ? Number(searchParams.get("minPrice"))
@@ -46,8 +48,9 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   useEffect(() => {
     setPropertyFilters({
       location: searchParams.get("city") || "",
-      type: searchParams.get("type") || "any",
-      property: searchParams.get("property") || "any",
+      type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+      property:
+        (searchParams.get("property") as PropertyData["property"]) ?? "any",
 
       minPrice: searchParams.get("minPrice")
         ? Number(searchParams.get("minPrice"))
@@ -143,7 +146,11 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               name="type"
               id="type"
               value={propertyFilters.type}
-              onChange={(e) => updatePropertyFilters({ type: e.target.value })}
+              onChange={(e) =>
+                updatePropertyFilters({
+                  type: e.target.value as PropertyFilters["type"],
+                })
+              }
             >
               <option value="any">Any</option>
               <option value="buy">Buy</option>
@@ -157,7 +164,9 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               id="property"
               value={propertyFilters.property}
               onChange={(e) =>
-                updatePropertyFilters({ property: e.target.value })
+                updatePropertyFilters({
+                  property: e.target.value as PropertyFilters["property"],
+                })
               }
             >
               <option value="any">Any</option>
