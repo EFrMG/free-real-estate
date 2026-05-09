@@ -3,6 +3,17 @@ import type { Route } from "./+types/home";
 import SearchInput from "~/components/HomeSearchInput";
 import HeroRightSide from "~/components/HeroRightSide";
 
+export async function loader() {
+  const citiesRes = await fetch("http://localhost:3000/api/cities");
+
+  if (!citiesRes.ok) {
+    throw new Response("Failed to fetch cities", { status: 500 });
+  }
+
+  const cities: string[] = await citiesRes.json();
+  return cities;
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Free Real State" },
@@ -14,7 +25,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const cities = loaderData;
+
   return (
     <main className="gen-main">
       {/* Left side */}
@@ -29,7 +42,7 @@ export default function Home() {
         </p>
         <p className="py-6 text-xl">Get your deal today!</p>
 
-        <SearchInput />
+        <SearchInput cities={cities} />
 
         <div className="flex justify-center gap-8 max-sm:flex-wrap py-6">
           <hgroup>

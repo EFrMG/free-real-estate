@@ -8,15 +8,28 @@ import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
 
-export async function loader() {
-  const response = await fetch("http://localhost:3000/api/properties");
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const searchParams = String(url.searchParams);
 
-  if (!response.ok) {
-    throw new Response("Failed to fetch properties", { status: 500 });
+  // Fetch properties with search param filters and cities for datalist element
+  const [propertiesRes, citiesRes] = await Promise.all([
+    fetch(
+      `http://localhost:3000/api/properties${searchParams && `?${searchParams}`}`,
+    ),
+    fetch("http://localhost:3000/api/cities"),
+  ]);
+
+  if (!propertiesRes.ok || !citiesRes.ok) {
+    throw new Response("Failed to fetch properties and cities", {
+      status: 500,
+    });
   }
 
-  const properties: PropertyData[] = await response.json();
-  return { properties };
+  const properties: PropertyData[] = await propertiesRes.json();
+  const cities: string[] = await citiesRes.json();
+
+  return { properties, cities };
 }
 
 export function meta({}: Route.MetaArgs) {
@@ -31,7 +44,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Properties({ loaderData }: Route.ComponentProps) {
-  const { properties } = loaderData;
+  const { properties, cities } = loaderData;
 
   const mapFallback = (
     <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
@@ -69,7 +82,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="max-md:order-1">
-        <FilterInput />
+        <FilterInput cities={cities} />
 
         {properties.map((property) => (
           <PropertyCard

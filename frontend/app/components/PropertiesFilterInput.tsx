@@ -1,32 +1,104 @@
-import { useState } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { GoSearch } from "react-icons/go";
+import { useSearchParams } from "react-router";
 
 interface PropertyFilters {
   location: string;
   type: string;
   property: string;
-  minPrice: number;
-  maxPrice: number;
-  bedrooms: number;
-  bathrooms: number;
+  minPrice: number | undefined;
+  maxPrice: number | undefined;
+  bedrooms: number | undefined;
+  bathrooms: number | undefined;
 }
 
-export default function PropertiesFilterInput() {
+interface FilterInputProps {
+  cities: string[];
+}
+
+export default function PropertiesFilterInput({ cities }: FilterInputProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
-    location: "",
-    type: "any",
-    property: "any",
-    minPrice: 0,
-    maxPrice: 0,
-    bedrooms: 0,
-    bathrooms: 0,
+    location: searchParams.get("city") || "",
+    type: searchParams.get("type") || "any",
+    property: searchParams.get("property") || "any", // Needs data
+
+    minPrice: searchParams.get("minPrice")
+      ? Number(searchParams.get("minPrice"))
+      : undefined,
+
+    maxPrice: searchParams.get("maxPrice")
+      ? Number(searchParams.get("maxPrice"))
+      : undefined,
+
+    bedrooms: searchParams.get("bedrooms")
+      ? Number(searchParams.get("bedrooms"))
+      : undefined,
+
+    bathrooms: searchParams.get("bathrooms")
+      ? Number(searchParams.get("bathrooms"))
+      : undefined,
   });
+
+  // Keep local state in sync with URL if URL changes because of history
+  useEffect(() => {
+    setPropertyFilters({
+      location: searchParams.get("city") || "",
+      type: searchParams.get("type") || "any",
+      property: searchParams.get("property") || "any",
+
+      minPrice: searchParams.get("minPrice")
+        ? Number(searchParams.get("minPrice"))
+        : undefined,
+
+      maxPrice: searchParams.get("maxPrice")
+        ? Number(searchParams.get("maxPrice"))
+        : undefined,
+
+      bedrooms: searchParams.get("bedrooms")
+        ? Number(searchParams.get("bedrooms"))
+        : undefined,
+
+      bathrooms: searchParams.get("bathrooms")
+        ? Number(searchParams.get("bathrooms"))
+        : undefined,
+    });
+  }, [searchParams]);
 
   const updatePropertyFilters = (updates: Partial<PropertyFilters>) => {
     setPropertyFilters((prev: PropertyFilters) => ({
       ...prev,
       ...updates,
     }));
+  };
+
+  const handleSearch = (e: SubmitEvent) => {
+    e.preventDefault();
+
+    const newParams = new URLSearchParams();
+    if (propertyFilters.location)
+      newParams.set("city", propertyFilters.location);
+
+    if (propertyFilters.type !== "any")
+      newParams.set("type", propertyFilters.type);
+
+    if (propertyFilters.property !== "any")
+      newParams.set("property", propertyFilters.property);
+
+    if (propertyFilters.minPrice !== undefined)
+      newParams.set("minPrice", propertyFilters.minPrice.toString());
+
+    if (propertyFilters.maxPrice !== undefined)
+      newParams.set("maxPrice", propertyFilters.maxPrice.toString());
+
+    if (propertyFilters.bedrooms !== undefined)
+      newParams.set("bedrooms", propertyFilters.bedrooms.toString());
+
+    if (propertyFilters.bathrooms !== undefined)
+      newParams.set("bathrooms", propertyFilters.bathrooms.toString());
+
+    setSearchParams(newParams);
   };
 
   return (
@@ -36,121 +108,142 @@ export default function PropertiesFilterInput() {
       [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
     >
       <h1 className="my-8 text-center text-xl sm:text-2xl">
-        Search Results for <b>LOCATION</b>
+        Search Results for <b>{propertyFilters.location || "all locations"}</b>
       </h1>
 
-      <div className="max-w-[80%] mx-auto my-6 filter-input-group">
-        <label htmlFor="city" className="text-lg sm:text-xl! pl-6!">
-          Location
-        </label>
-        <input
-          id="city"
-          type="text"
-          name="city"
-          placeholder="City"
-          value={propertyFilters.location}
-          onChange={(e) => updatePropertyFilters({ location: e.target.value })}
-          className="w-full"
-        />
-      </div>
+      <form onSubmit={(e) => handleSearch(e)}>
+        <fieldset className="max-w-[80%] mx-auto my-6 filter-input-group">
+          <label htmlFor="city" className="text-lg sm:text-xl! pl-6!">
+            Location
+          </label>
+          <input
+            id="city"
+            type="text"
+            name="city"
+            placeholder="City"
+            list="city-suggestions"
+            value={propertyFilters.location}
+            onChange={(e) =>
+              updatePropertyFilters({ location: e.target.value })
+            }
+            className="w-full"
+          />
+          <datalist id="city-suggestions">
+            {cities?.map((city) => (
+              <option key={city} value={city} />
+            ))}
+          </datalist>
+        </fieldset>
 
-      <div className="flex gap-2 flex-wrap justify-center items-center mt-6 mx-2 md:mx-4 mb-12">
-        <div className="filter-input-group">
-          <label htmlFor="type">Type</label>
-          <select
-            name="type"
-            id="type"
-            value={propertyFilters.type}
-            onChange={(e) => updatePropertyFilters({ type: e.target.value })}
+        <fieldset className="flex gap-2 flex-wrap justify-center items-center mt-6 mx-2 md:mx-4 mb-12">
+          <div className="filter-input-group">
+            <label htmlFor="type">Type</label>
+            <select
+              name="type"
+              id="type"
+              value={propertyFilters.type}
+              onChange={(e) => updatePropertyFilters({ type: e.target.value })}
+            >
+              <option value="any">Any</option>
+              <option value="buy">Buy</option>
+              <option value="rent">Rent</option>
+            </select>
+          </div>
+          <div className="filter-input-group">
+            <label htmlFor="property">Property</label>
+            <select
+              name="property"
+              id="property"
+              value={propertyFilters.property}
+              onChange={(e) =>
+                updatePropertyFilters({ property: e.target.value })
+              }
+            >
+              <option value="any">Any</option>
+              <option value="land">Land</option>
+              <option value="apartment">Apartment</option>
+              <option value="house">House</option>
+              <option value="condominium">Condominium</option>
+            </select>
+          </div>
+          <div className="filter-input-group">
+            <label htmlFor="minPrice">Minimum Price</label>
+            <input
+              id="minPrice"
+              type="number"
+              name="minPrice"
+              placeholder="0"
+              min={0}
+              max={1000000}
+              value={propertyFilters.minPrice ?? ""}
+              onChange={(e) =>
+                updatePropertyFilters({
+                  minPrice: e.target.value ? +e.target.value : undefined,
+                })
+              }
+            />
+          </div>
+          <div className="filter-input-group">
+            <label htmlFor="maxPrice">Maximum Price</label>
+            <input
+              id="maxPrice"
+              type="number"
+              name="maxPrice"
+              placeholder="0"
+              min={0}
+              max={1000000}
+              value={propertyFilters.maxPrice ?? ""}
+              onChange={(e) =>
+                updatePropertyFilters({
+                  maxPrice: e.target.value ? +e.target.value : undefined,
+                })
+              }
+            />
+          </div>
+          <div className="filter-input-group">
+            <label htmlFor="bedrooms">Bedrooms</label>
+            <input
+              id="bedrooms"
+              type="number"
+              name="bedrooms"
+              placeholder="Any Number"
+              min={0}
+              max={10}
+              className="min-w-[16ch]"
+              value={propertyFilters.bedrooms ?? ""}
+              onChange={(e) =>
+                updatePropertyFilters({
+                  bedrooms: e.target.value ? +e.target.value : undefined,
+                })
+              }
+            />
+          </div>
+          <div className="filter-input-group">
+            <label htmlFor="bathrooms">Bathrooms</label>
+            <input
+              id="bathrooms"
+              type="number"
+              name="bathrooms"
+              placeholder="Any Number"
+              min={0}
+              max={10}
+              className="min-w-[16ch]"
+              value={propertyFilters.bathrooms ?? ""}
+              onChange={(e) =>
+                updatePropertyFilters({
+                  bathrooms: e.target.value ? +e.target.value : undefined,
+                })
+              }
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-2 py-2.5 max-h-fit rounded-lg bg-amber-500"
           >
-            <option value="any">Any</option>
-            <option value="buy">Buy</option>
-            <option value="rent">Rent</option>
-          </select>
-        </div>
-        <div className="filter-input-group">
-          <label htmlFor="property">Property</label>
-          <select
-            name="property"
-            id="property"
-            value={propertyFilters.property}
-            onChange={(e) =>
-              updatePropertyFilters({ property: e.target.value })
-            }
-          >
-            <option value="any">Any</option>
-            <option value="land">Land</option>
-            <option value="apartment">Apartment</option>
-            <option value="house">House</option>
-            <option value="condominium">Condominium</option>
-          </select>
-        </div>
-        <div className="filter-input-group">
-          <label htmlFor="minPrice">Minimum Price</label>
-          <input
-            id="minPrice"
-            type="number"
-            name="minPrice"
-            placeholder="0"
-            min={0}
-            max={1000000}
-            value={propertyFilters.minPrice}
-            onChange={(e) =>
-              updatePropertyFilters({ minPrice: +e.target.value })
-            }
-          />
-        </div>
-        <div className="filter-input-group">
-          <label htmlFor="maxPrice">Maximum Price</label>
-          <input
-            id="maxPrice"
-            type="number"
-            name="maxPrice"
-            placeholder="0"
-            min={0}
-            max={1000000}
-            value={propertyFilters.maxPrice}
-            onChange={(e) =>
-              updatePropertyFilters({ maxPrice: +e.target.value })
-            }
-          />
-        </div>
-        <div className="filter-input-group">
-          <label htmlFor="bedrooms">Bedrooms</label>
-          <input
-            id="bedrooms"
-            type="number"
-            name="bedrooms"
-            placeholder="Any Number"
-            min={0}
-            max={10}
-            className="min-w-[16ch]"
-            value={propertyFilters.bedrooms}
-            onChange={(e) =>
-              updatePropertyFilters({ bedrooms: +e.target.value })
-            }
-          />
-        </div>
-        <div className="filter-input-group">
-          <label htmlFor="bathrooms">Bathrooms</label>
-          <input
-            id="bathrooms"
-            type="number"
-            name="bathrooms"
-            placeholder="Any Number"
-            min={0}
-            max={10}
-            className="min-w-[16ch]"
-            value={propertyFilters.bathrooms}
-            onChange={(e) =>
-              updatePropertyFilters({ bathrooms: +e.target.value })
-            }
-          />
-        </div>
-        <button className="px-2 py-2.5 max-h-fit rounded-lg bg-amber-500">
-          <GoSearch size={38} color="white" />
-        </button>
-      </div>
+            <GoSearch size={38} color="white" />
+          </button>
+        </fieldset>
+      </form>
     </div>
   );
 }

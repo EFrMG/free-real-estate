@@ -1,5 +1,5 @@
-import { db } from "./src/db/index.ts";
-import { users, properties, posts } from "./src/db/schema.ts";
+import { db } from "./index.ts";
+import { users, properties, posts } from "./schema.ts";
 import { count } from "drizzle-orm";
 
 async function check() {

@@ -20,7 +20,7 @@ interface MapProps {
   viewportHeight: number;
   zoomLevel: number;
   scrollable: boolean;
-  mapPopovers: MapPopover[];
+  mapPopovers?: MapPopover[];
 }
 
 export default function Map({
@@ -35,7 +35,10 @@ export default function Map({
       className={`md:sticky md:top-[7.5vh] h-[35vh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
     >
       <MapContainer
-        center={[+`${mapPopovers[0].latitude}`, +`${mapPopovers[0].longitude}`]}
+        center={[
+          +`${mapPopovers ? `${mapPopovers[0].latitude}` : "-38.4161"}`,
+          +`${mapPopovers ? `${mapPopovers[0].longitude}` : "-63.6167"}`,
+        ]}
         zoom={zoomLevel}
         scrollWheelZoom={scrollable}
         className="h-full w-full rounded-lg! shadow-lg"
@@ -45,7 +48,7 @@ export default function Map({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {mapPopovers.map(
+        {mapPopovers?.map(
           (
             {
               id,
