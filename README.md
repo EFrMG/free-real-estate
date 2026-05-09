@@ -17,31 +17,52 @@ A general overview of the current state of the project:
 
 ```mermaid
 graph TD
-    subgraph "Frontend (React Router v7)"
+    subgraph FE ["Frontend"]
         UI[UI Components]
-        Maps[Interactive Maps]
+        Components("`Geographic Maps
+        Property Listing
+        **User Interactions**`")
     end
 
-    subgraph "Backend (Hono API)"
-        API[REST Endpoints]
+    subgraph BE ["Backend"]
+        API[Hono REST API]
         ORM[Drizzle ORM]
     end
 
-    subgraph "Shared Package"
+    subgraph SH ["Shared Package"]
         Schema[Database Schema]
-        Types[Shared Types]
+        Types[Shared Data Types]
     end
 
     DB[(SQLite Database)]
 
-    UI -- "Fetches Data" --> API
-    API -- "Queries" --> ORM
-    ORM -- "SQL" --> DB
+    %% Runtime Data Flow
+    Components ==> UI
+    UI <== "Fetch / JSON" ==> API
+    API <== "Queries" ==> ORM
+    ORM <== "SQL" ==> DB
 
+    %% Source of Truth Logic
     Schema -- "Defines" --> ORM
     Schema -- "Infers" --> Types
-    Types -- "Provides Safety / Types" --> UI
-    Types -- "Provides Safety / Types" --> API
+    Schema -- "Syncs / Migrates" --> DB
+
+    Types -- "Type Safety" --> UI
+    Types -- "Type Safety" --> API
+
+    %% Subgraphs
+    style FE fill:#1f1f1f,stroke:#202036,stroke-width:2px
+    style BE fill:#1f1f1f,stroke:#202036,stroke-width:2px
+    style SH fill:#1f1f1f,stroke:#202036,stroke-width:2px
+
+    %% Lighter Node
+    style UI fill:#3f3f3f,stroke:#909090
+    style Components fill:#3f3f3f,stroke:#909090
+    style API fill:#3f3f3f,stroke:#909090
+    style ORM fill:#3f3f3f,stroke:#909090
+    style Schema fill:#3f3f3f,stroke:#909090
+    style Types fill:#3f3f3f,stroke:#909090
+    style DB fill:#3f3f3f,stroke:#909090
 ```
 
 The main parts of this monorepo are as follows (dependencies and their web links are listed in their respective README documents):
