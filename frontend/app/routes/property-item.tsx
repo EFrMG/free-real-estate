@@ -168,7 +168,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
               <div className="flex gap-4 w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
                 <button
                   className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                  hover:scale-110 transition-transform duration-150"
+                  gen-btn-hovaction"
                 >
                   <GoCommentDiscussion
                     size={28}
@@ -180,7 +180,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 {true ? (
                   <button
                     className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                    hover:scale-110 transition-transform duration-150"
+                    gen-btn-hovaction"
                   >
                     <GoBookmark
                       size={28}
@@ -191,7 +191,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 ) : (
                   <button
                     className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                      hover:scale-110 transition-transform duration-150"
+                      gen-btn-hovaction"
                   >
                     <GoBookmarkSlash
                       size={28}

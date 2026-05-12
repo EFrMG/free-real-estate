@@ -69,4 +69,12 @@
       text-decoration: underline solid 1px theme(--color-blue-600);
     }
   }
+
+  .gen-btn-hovaction {
+    @apply hover:scale-110 active:scale-100 transition-transform duration-150;
+  }
+
+  .gen-btn-hovaction-sm {
+    @apply hover:scale-105 active:scale-100 transition-transform duration-150;
+  }
 }

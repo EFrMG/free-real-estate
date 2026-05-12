@@ -7,14 +7,18 @@
   --default-mono-font-feature-settings: ;
   --default-mono-font-variation-settings: ;
 
-  --font-italic: system-ui;
-
   --font-sans:
     OpenSans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans-italic:
+    OpenSans-italic, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif:
     Playfair-display, ui-serif, Georgia, Cambria, "Times New Roman", Times,
     serif;
+  --font-serif-italic:
+    Playfair-display-italic, ui-serif, Georgia, Cambria, "Times New Roman",
+    Times, serif;
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
