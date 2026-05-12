@@ -46,16 +46,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
         <div className="flex justify-center gap-8 max-sm:flex-wrap py-6">
           <hgroup>
-            <span className="block font-semibold text-center text-xl">38</span>
+            <span className="block font-semibold text-center text-xl">3</span>
             <h2 className="text-lg text-center">Awarded Industry Prices</h2>
           </hgroup>
           <hgroup>
-            <span className="block font-semibold text-center text-xl">25+</span>
+            <span className="block font-semibold text-center text-xl">
+              25<span className="opacity-lesser">+</span>
+            </span>
             <h2 className="text-lg text-center">Years of Experience</h2>
           </hgroup>
           <hgroup>
             <span className="block font-semibold text-center text-xl">
-              1000+
+              200<span className="opacity-lesser">+</span>
             </span>
             <h2 className="text-lg text-center">Properties Ready</h2>
           </hgroup>

@@ -55,7 +55,7 @@ export default function About() {
           <a
             href="http://francisco.is-a.dev/"
             target="_blank"
-            className="text-blue-600/84 decoration-blue-600/84 outside-link"
+            className="outside-link opacity-less"
           >
             My Portfolio
           </a>

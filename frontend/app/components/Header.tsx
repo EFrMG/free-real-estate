@@ -8,7 +8,7 @@ interface NavLinks {
   key: string;
 }
 
-const IS_USER = true;
+const IS_USER = false;
 
 const headerLinks: NavLinks[] = [
   {
@@ -85,13 +85,13 @@ export default function Header() {
           </Link>
 
           <nav className="md:self-end max-sm:hidden">
-            <ul className="flex gap-4 md:gap-6 text-base leading-7">
+            <ul className="flex md:gap-2 text-base font-medium leading-6">
               {headerLinks.map((link: NavLinks) => (
                 <li key={`nav-link-${link.key}`} className="text-nowrap">
                   <NavLink
                     to={`/${link.key}`}
                     className={({ isActive }) =>
-                      `inline-block transition-all duration-175 ${isActive ? "text-emerald-800 scale-105" : ""}`
+                      `inline-block px-2 pt-2 transition-all duration-175 ${isActive ? "text-emerald-800 scale-105" : ""}`
                     }
                   >
                     {link.name}
@@ -113,7 +113,7 @@ export default function Header() {
               <Link
                 key={link.key}
                 to={`/${link.key}`}
-                className={`px-4 py-2 text-base md:text-lg hidden sm:inline-block
+                className={`px-4 py-2 text-base hidden sm:inline-block
               ${link.key === "log-in" ? "" : "bg-amber-300 rounded-sm"}`}
               >
                 {link.name}
