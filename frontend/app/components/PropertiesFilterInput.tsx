@@ -109,17 +109,17 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
 
   return (
     <div
-      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0 [&_label]:sm:text-lg
+      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0
       [&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2
       [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
     >
-      <h1 className="my-8 text-center text-xl sm:text-2xl">
+      <h1 className="my-8 text-center text-2xl">
         Search Results for <b>{propertyFilters.location || "all locations"}</b>
       </h1>
 
       <form onSubmit={(e) => handleSearch(e)}>
         <fieldset className="max-w-[80%] mx-auto my-6 filter-input-group">
-          <label htmlFor="city" className="text-lg sm:text-xl! pl-6!">
+          <label htmlFor="city" className="text-lg pl-2!">
             Location
           </label>
           <input

@@ -61,4 +61,12 @@
   .property-img-outline {
     @apply outline-2 outline-slate-500/12;
   }
+
+  .outside-link {
+    color: theme(--color-blue-600);
+
+    &:hover {
+      text-decoration: underline solid 1px theme(--color-blue-600);
+    }
+  }
 }

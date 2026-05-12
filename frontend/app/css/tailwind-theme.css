@@ -1,24 +1,20 @@
 @theme {
-  /* Custom variables */
-
-  --default-font-family: system-ui;
+  --default-font-family: var(--font-sans);
   --default-font-feature-settings: ;
   --default-font-variation-settings: ;
+
   --default-mono-font-family: monospace, monospace;
   --default-mono-font-feature-settings: ;
   --default-mono-font-variation-settings: ;
 
-  --font-medium: system-ui;
-  --font-bold: system-ui;
   --font-italic: system-ui;
-  --font-heading: Arial;
-  --font-extra: monospace;
-  --font-extra-bold: monospace;
 
   --font-sans:
-    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    OpenSans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif:
+    Playfair-display, ui-serif, Georgia, Cambria, "Times New Roman", Times,
+    serif;
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
@@ -90,8 +86,6 @@
     1
   );
 
-  /* Default variables */
-
   --color-black: #000;
   --color-white: #fff;
 
@@ -116,31 +110,32 @@
   --container-6xl: 72rem;
   --container-7xl: 80rem;
 
-  --text-xs: 0.75rem;
+  --text-xs: clamp(0.69rem, -0.11vi + 0.72rem, 0.63rem);
+  --text-sm: clamp(0.83rem, 0.02vi + 0.83rem, 0.84rem);
+  --text-base: clamp(1rem, 0.23vi + 0.94rem, 1.13rem);
+  --text-lg: clamp(1.2rem, 0.54vi + 1.06rem, 1.5rem);
+  --text-xl: clamp(1.44rem, 1.02vi + 1.19rem, 2rem);
+  --text-2xl: clamp(1.73rem, 1.7vi + 1.3rem, 2.66rem);
+  --text-3xl: clamp(2.07rem, 2.69vi + 1.4rem, 3.55rem);
+  --text-4xl: clamp(2.49rem, 4.08vi + 1.47rem, 4.73rem);
+  --text-5xl: clamp(2.99rem, 6.05vi + 1.47rem, 6.31rem);
+  --text-6xl: clamp(3.58rem, 8.78vi + 1.39rem, 8.41rem);
+  --text-7xl: clamp(4.3rem, 12.57vi + 1.16rem, 11.21rem);
+  --text-8xl: clamp(5.16rem, 17.8vi + 0.71rem, 14.95rem);
+  --text-9xl: clamp(6.19rem, 24.97vi + -0.05rem, 19.93rem);
+
   --text-xs--line-height: calc(1 / 0.75);
-  --text-sm: 0.875rem;
   --text-sm--line-height: calc(1.25 / 0.875);
-  --text-base: 1rem;
   --text-base--line-height: calc(1.5 / 1);
-  --text-lg: 1.125rem;
   --text-lg--line-height: calc(1.75 / 1.125);
-  --text-xl: 1.25rem;
   --text-xl--line-height: calc(1.75 / 1.25);
-  --text-2xl: 1.5rem;
   --text-2xl--line-height: calc(2 / 1.5);
-  --text-3xl: 1.875rem;
   --text-3xl--line-height: calc(2.25 / 1.875);
-  --text-4xl: 2.25rem;
   --text-4xl--line-height: calc(2.5 / 2.25);
-  --text-5xl: 3rem;
   --text-5xl--line-height: 1;
-  --text-6xl: 3.75rem;
   --text-6xl--line-height: 1;
-  --text-7xl: 4.5rem;
   --text-7xl--line-height: 1;
-  --text-8xl: 6rem;
   --text-8xl--line-height: 1;
-  --text-9xl: 8rem;
   --text-9xl--line-height: 1;
 
   --font-weight-thin: 100;

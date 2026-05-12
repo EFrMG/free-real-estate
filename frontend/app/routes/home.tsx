@@ -32,7 +32,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="gen-left">
-        <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl">
+        <h1 className="text-3xl">
           Find the place of your dreams at unmatched discounts
         </h1>
         <p className="pt-12 text-lg">
@@ -40,22 +40,24 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           life is in the end. We provide the best places at a price that might
           as well not be real.
         </p>
-        <p className="py-6 text-xl">Get your deal today!</p>
+        <h2 className="py-6 text-xl">Get your deal today!</h2>
 
         <SearchInput cities={cities} />
 
         <div className="flex justify-center gap-8 max-sm:flex-wrap py-6">
           <hgroup>
-            <span className="block font-bold text-center text-2xl">38</span>
-            <h2 className="text-xl text-center">Awarded Industry Prices</h2>
+            <span className="block font-semibold text-center text-xl">38</span>
+            <h2 className="text-lg text-center">Awarded Industry Prices</h2>
           </hgroup>
           <hgroup>
-            <span className="block font-bold text-center text-2xl">25+</span>
-            <h2 className="text-xl text-center">Years of Experience</h2>
+            <span className="block font-semibold text-center text-xl">25+</span>
+            <h2 className="text-lg text-center">Years of Experience</h2>
           </hgroup>
           <hgroup>
-            <span className="block font-bold text-center text-2xl">1000+</span>
-            <h2 className="text-xl text-center">Properties Ready</h2>
+            <span className="block font-semibold text-center text-xl">
+              1000+
+            </span>
+            <h2 className="text-lg text-center">Properties Ready</h2>
           </hgroup>
         </div>
       </div>

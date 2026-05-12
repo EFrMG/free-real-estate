@@ -48,7 +48,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
 
   const mapFallback = (
     <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-      <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+      <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
         Loading Map...
       </p>
     </div>

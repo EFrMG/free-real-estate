@@ -77,7 +77,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
   const mapFallback = (
     <div className="md:sticky md:top-[7.5vh] h-[35vh] w-[85%] md:w-[95%] md:mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-      <p className="block w-fit mx-auto pt-12 text-xl text-gray-100">
+      <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
         Loading Map...
       </p>
     </div>
@@ -112,7 +112,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           />
         )}
 
-        <h1 className="my-6 text-center font-bold text-xl sm:text-2xl md:text-3xl text-amber-900">
+        <h1 className="my-6 text-center font-bold text-xl text-amber-900">
           {title}
         </h1>
 
@@ -122,18 +122,18 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
               <p className="flex items-center gap-[1ex] translate-x-px mb-4">
                 <GoLocation size={24} color="var(--color-amber-700)" />
                 <span className="text-gray-600">
-                  Address: <span className="text-lg">{address}</span>
+                  Address: <span className="font-medium">{address}</span>
                 </span>
               </p>
               <p className="flex items-center gap-[0.75ex]">
                 <LiaHandshake size={26} color="var(--color-amber-700)" />
                 <span className="text-gray-600 capitalize">
-                  Transaction type: <span className="text-lg">{type}</span>
+                  Transaction type: <span className="font-medium">{type}</span>
                 </span>
               </p>
             </div>
 
-            <p className="max-xs:text-sm lg:text-lg text-gray-700">
+            <p className="max-xs:text-sm text-gray-700">
               {longDescription || description}
             </p>
 
@@ -205,9 +205,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           </div>
 
           <div className="h-fit p-4 bg-amber-100/24 rounded-lg shadow-md inset-shadow-xs">
-            <h3 className="mb-4 text-center font-semibold text-lg sm:text-xl">
-              Details
-            </h3>
+            <h3 className="mb-2 text-center font-semibold text-lg">Details</h3>
             <div className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&>p]:border-b [&>p]:border-amber-300/74">
               <p>
                 <span>Price:</span>{" "}
@@ -247,24 +245,22 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
         <div className="relative max-md:rounded-lg z-10 bg-amber-100 shadow-over-map">
           <div className="mt-10 mx-6 mb-4 pt-4">
-            <h3 className="text-lg sm:text-xl font-bold">Location:</h3>
+            <h3 className="text-lg font-bold">Location:</h3>
           </div>
           <div className="block pb-4">
             <div className="flex justify-between items-center mx-4 md:mx-6 p-3 bg-amber-50/66 rounded-lg border border-amber-200">
-              <span className="text-amber-800 max-sm:text-sm">{city}</span>
-              <span className="text-amber-600 text-lg sm:text-xl">
-                {province}
-              </span>
+              <span className="text-amber-800">{city}</span>
+              <span className="text-amber-600 text-lg">{province}</span>
             </div>
           </div>
           {sizes && sizes.length > 0 && (
             <div className="mt-4 md:mt-8 mx-6 mb-4">
-              <h3 className="mb-2 text-lg sm:text-xl font-bold">Room Sizes:</h3>
+              <h3 className="mb-2 text-lg font-bold">Room Sizes:</h3>
               <div className="flex gap-x-4 gap-y-2 flex-wrap pb-4">
                 {sizes.map((size, idx) => (
                   <span
                     key={idx}
-                    className="px-4 py-2 bg-amber-50/66 rounded-md border border-amber-200 max-sm:text-sm text-amber-900"
+                    className="px-4 py-2 bg-amber-50/66 rounded-md border border-amber-200 text-amber-900"
                   >
                     Room {idx + 1}: {size} sqft
                   </span>
@@ -274,21 +270,15 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           )}
           {nearbyPlaces && Object.keys(nearbyPlaces).length > 0 && (
             <div className="mt-4 md:mt-8 mx-6 mb-4">
-              <h3 className="mb-2 text-lg sm:text-xl font-bold">
-                Nearby Places:
-              </h3>
+              <h3 className="mb-2 text-lg font-bold">Nearby Places:</h3>
               <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
                 {Object.entries(nearbyPlaces).map(([place, distance]) => (
                   <div
                     key={place}
                     className="p-3 bg-amber-50/66 rounded-lg border border-amber-200 flex justify-between items-center gap-2"
                   >
-                    <span className="capitalize text-amber-800 max-sm:text-sm">
-                      {place}
-                    </span>
-                    <span className="font-mono text-amber-600 max-sm:text-sm">
-                      {distance}
-                    </span>
+                    <span className="capitalize text-amber-800">{place}</span>
+                    <span className="font-mono text-amber-600">{distance}</span>
                   </div>
                 ))}
               </div>

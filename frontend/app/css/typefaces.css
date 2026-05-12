@@ -1,0 +1,33 @@
+/* Titles */
+@font-face {
+  font-family: Playfair-display;
+  src: url("/fonts/PlayfairDisplay-VariableFont_wght.woff2") format("woff2");
+  font-weight: 400 900; /* wght */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Playfair-display-italic;
+  src: url("/fonts/PlayfairDisplay-Italic-VariableFont_wght.woff2")
+    format("woff2");
+  font-weight: 400 900; /* wght */
+  font-style: italic;
+}
+
+/* Body */
+@font-face {
+  font-family: OpenSans;
+  src: url("/fonts/OpenSans-VariableFont_wdth,wght.woff2") format("woff2");
+  font-weight: 300 800; /* wght */
+  /* wdth: 75 100 */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: OpenSans-italic;
+  src: url("/fonts/OpenSans-Italic-VariableFont_wdth,wght.woff2")
+    format("woff2");
+  font-weight: 300 800; /* wght */
+  /* wdth: 75 100 */
+  font-style: italic;
+}

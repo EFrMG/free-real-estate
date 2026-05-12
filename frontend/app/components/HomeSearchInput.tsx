@@ -50,7 +50,7 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
 
   return (
     <div className="py-12 px-3">
-      <div className="*:px-6 *:py-2 *:text-lg *:border-2 *:border-amber-500 *:focus:outline-0">
+      <div className="*:px-6 *:py-2 *:border-2 *:border-amber-500 *:focus:outline-0">
         <button
           onClick={() => updateQuery({ type: "any" })}
           className={`[border-right-style:none]! [border-bottom-style:none]! rounded-tl-lg

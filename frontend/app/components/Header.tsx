@@ -40,22 +40,52 @@ const signingLinks: NavLinks[] = [
   },
 ];
 
+function UserLink({ isBurger }: { isBurger: boolean }) {
+  return (
+    <Link
+      to="/user-profile/ID"
+      className={isBurger ? "sm:hidden" : "hidden sm:inline-block"}
+    >
+      <div className="flex items-center gap-2">
+        <span>USERNAME</span>
+        <div className="relative">
+          <img
+            src="/app/assets/images/profile-pictures/man_1.jpeg"
+            alt=""
+            draggable={false}
+            className="w-12 h-12 rounded-full"
+          />
+          {true && (
+            <span
+              className="absolute top-[-0.75ch] left-[-0.5ch]
+                    px-1.5 py-1 bg-rose-700 rounded-full
+                    text-yellow-50 leading-none font-bold"
+            >
+              <span className="translate-y-px inline-block">N</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
 
   return (
     <header className="max-sm:bg-amber-100 relative z-50 grid grid-cols-[65%_35%] md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
       <div className="max-sm:bg-amber-100 bg-amber-50 z-1">
-        <div className="flex items-center gap-4 lg:gap-6 text-xl px-2 py-4">
+        <div className="flex items-center gap-4 lg:gap-6 px-2 py-4">
           <Link to="/" className="flex items-center gap-2 max-sm:ml-2">
             <GoHome size={38} />
-            <span className="self-end max-sm:inline-block hidden lg:inline-block">
+            <span className="hidden lg:inline-block self-end max-sm:inline-block text-lg leading-7">
               FreeRealEstate
             </span>
           </Link>
 
           <nav className="md:self-end max-sm:hidden">
-            <ul className="flex gap-4 md:gap-6 text-base md:text-lg">
+            <ul className="flex gap-4 md:gap-6 text-base leading-7">
               {headerLinks.map((link: NavLinks) => (
                 <li key={`nav-link-${link.key}`} className="text-nowrap">
                   <NavLink
@@ -77,28 +107,7 @@ export default function Header() {
       <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
         <div className="space-x-2 md:space-x-6">
           {IS_USER ? (
-            <Link to="/user-profile/ID">
-              <div className="flex items-center gap-2">
-                <span>USERNAME</span>
-                <div className="relative">
-                  <img
-                    src="/app/assets/images/profile-pictures/man_1.jpeg"
-                    alt=""
-                    draggable={false}
-                    className="w-12 h-12 rounded-full"
-                  />
-                  {true && (
-                    <span
-                      className="absolute top-[-0.75ch] left-[-0.5ch]
-                    px-1.5 py-1 bg-rose-700 rounded-full
-                    text-yellow-50 leading-none font-bold"
-                    >
-                      <span className="translate-y-px inline-block">N</span>
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Link>
+            <UserLink isBurger={false} />
           ) : (
             signingLinks.map((link: NavLinks) => (
               <Link
@@ -137,12 +146,15 @@ export default function Header() {
               </li>
             ))}
 
-            {!IS_USER &&
+            {IS_USER ? (
+              <UserLink isBurger={true} />
+            ) : (
               signingLinks.map((link: NavLinks) => (
                 <Link key={link.key} to={`/${link.key}`}>
                   {link.name}
                 </Link>
-              ))}
+              ))
+            )}
           </ul>
         </nav>
       </div>

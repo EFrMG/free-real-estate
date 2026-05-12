@@ -52,7 +52,11 @@ export default function About() {
         </p>
         <p className="text-gray-600/84">
           This is a demo project for{" "}
-          <a href="http://francisco.is-a.dev/" className="text-blue-600/84">
+          <a
+            href="http://francisco.is-a.dev/"
+            target="_blank"
+            className="text-blue-600/84 decoration-blue-600/84 outside-link"
+          >
             My Portfolio
           </a>
           .

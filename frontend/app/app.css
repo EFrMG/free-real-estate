@@ -4,4 +4,5 @@
 @import "./css/tailwind-theme.css";
 @import "./css/tailwind-general.css";
 
+@import "./css/typefaces.css";
 @import "./css/leaflet-overrides.css";

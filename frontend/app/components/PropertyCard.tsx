@@ -43,7 +43,7 @@ export default function PropertyCard({
         hover:shadow-md transition-shadow duration-250 delay-75"
       >
         <div
-          className={`absolute bottom-6 -left-2.75 z-10
+          className={`absolute flex items-center h-[1.35lh] bottom-6 -left-2.75 z-10
           group-hover:rotate-y-12 perspective-normal
           transition-transform duration-425 delay-75
           shadow-md text-shadow-sm px-4 py-1.5 rounded-r-md
@@ -55,7 +55,9 @@ export default function PropertyCard({
               : "bg-sky-300 after:border-t-sky-500 [&_span:text-sky-900]"
           }`}
         >
-          <span className="text-sm font-bold uppercase">{type}</span>
+          <span className="text-sm font-bold uppercase grow-0 shrink leading-none">
+            {type}
+          </span>
         </div>
 
         <img
@@ -67,7 +69,7 @@ export default function PropertyCard({
 
         <div className="stack-2">
           <h2
-            className="text-lg sm:text-xl text-center font-bold text-amber-900
+            className="text-lg text-center font-bold text-amber-900
             group-hover:text-amber-700 transition-colors duration-425 delay-75"
           >
             {title}
@@ -80,7 +82,7 @@ export default function PropertyCard({
               {province}, {city}, {address}
             </p>
           </div>
-          <p className="max-sm:text-sm text-gray-700 line-clamp-3">
+          <p className="px-2 max-sm:text-sm text-gray-700 line-clamp-3">
             {description}
           </p>
           <div className="mt-auto flex justify-between items-center">
@@ -103,14 +105,12 @@ export default function PropertyCard({
             </div>
             <div className="flex items-center self-end gap-2 w-fit ml-auto">
               <span
-                className="text-lg sm:text-xl font-bold text-emerald-700/86
+                className="font-semibold text-emerald-700/86
                 line-through decoration-2 decoration-gray-500/64"
               >
                 ${price}
               </span>
-              <span className="text-xl sm:text-2xl font-bold text-emerald-700">
-                $0
-              </span>
+              <span className="text-lg font-semibold text-emerald-700">$0</span>
             </div>
           </div>
         </div>
