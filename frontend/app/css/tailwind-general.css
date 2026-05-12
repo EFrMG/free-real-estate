@@ -77,4 +77,48 @@
   .gen-btn-hovaction-sm {
     @apply hover:scale-105 active:scale-100 transition-transform duration-150;
   }
+
+  .details-card {
+    @apply border border-amber-700/26 rounded-lg bg-amber-100/24 shadow-md overflow-hidden transition-all duration-300;
+  }
+
+  .details-content {
+    @apply h-0 px-4 pt-0 pb-0 text-amber-950/80 leading-relaxed;
+  }
+
+  .details-card[open] .details-content {
+    @apply h-auto pt-2 pb-4;
+    animation: details-show 450ms ease-out;
+    transition: height 300ms ease-out;
+
+    @starting-style {
+      @apply h-0 pt-0 pb-0;
+    }
+  }
+
+  .details-summary {
+    @apply list-none cursor-pointer px-4 py-3 font-semibold text-amber-900 flex justify-between items-center select-none hover:bg-amber-200/18 transition-colors;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .details-icon {
+    @apply text-2xl transition-transform duration-300 group-open:rotate-90;
+  }
+
+  @keyframes details-show {
+    0% {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    33% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

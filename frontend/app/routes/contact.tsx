@@ -1,4 +1,5 @@
 import type { Route } from "./+types/contact";
+import { RiArrowDownSLine } from "react-icons/ri";
 
 import HeroRightSide from "~/components/HeroRightSide";
 
@@ -21,7 +22,8 @@ export default function Contact() {
         <form
           action=""
           onSubmit={(e) => e.preventDefault()}
-          className="stack-6 mb-12 p-4 roudned-lg bg-amber-100/48 [&_fieldset]:stack-0 [&_label]:text-lg"
+          className="stack-6 mb-12 p-4 rounded-lg bg-amber-100/48 shadow-lg
+          [&_fieldset]:stack-0 [&_label]:text-lg"
         >
           <fieldset>
             <label htmlFor="email">Your Email:</label>
@@ -71,36 +73,52 @@ export default function Contact() {
           <button
             type="submit"
             className="ml-auto px-4 py-2 bg-amber-200/36 border border-amber-300 rounded-md
-            text-amber-700 shadow-md gen-btn-hovaction-sm"
+            text-amber-900 font-medium shadow-md gen-btn-hovaction-sm"
           >
             Submit Form
           </button>
         </form>
 
-        <div>
-          <h2 className="text-xl">Directly Given Assertions</h2>
-          <details>
-            <summary>Are these properties real?</summary>
-            Not particularly "real." This is a software project rather than a
-            legitimate Real Estate website. There is no company behind it all.
+        <div className="stack-4 mt-8 min-h-112">
+          <h2 className="text-xl mb-4">Directly Given Assertions</h2>
+          <details name="assertion" className="details-card group">
+            <summary className="details-summary">
+              Are these properties real?
+              <RiArrowDownSLine size={30} className="details-icon" />
+            </summary>
+            <div className="details-content">
+              Not particularly "<span className="font-sans-italic">real</span>."
+              This is a software project rather than a legitimate Real Estate
+              website. There is no company behind it all.
+            </div>
           </details>
-          <details>
-            <summary>Are the prices real?</summary>
-            Yes. The prices are actually real! Only that they refer not to real
-            properties that verifiably exist.
+          <details name="assertion" className="details-card group">
+            <summary className="details-summary">
+              Are the prices real?
+              <RiArrowDownSLine size={30} className="details-icon" />
+            </summary>
+            <div className="details-content">
+              Yes. The prices are actually real! Only that they refer not to
+              real properties that verifiably exist.
+            </div>
           </details>
-          <details>
-            <summary>Can I use the website as normal?</summary>
-            Absolutely! Also, in case you find any issues or would like to see
-            more features I encourage you to tell me about them on{" "}
-            <a
-              target="_blank"
-              href="https://github.com/EFrMG/free-real-state"
-              className="outside-link"
-            >
-              the public repository
-            </a>
-            . Thank you in advance and be well.
+          <details name="assertion" className="details-card group">
+            <summary className="details-summary">
+              Can I use the website as normal?
+              <RiArrowDownSLine size={30} className="details-icon" />
+            </summary>
+            <div className="details-content">
+              Absolutely! Also, in case you find any issues or would like to see
+              more features I encourage you to tell me about them on{" "}
+              <a
+                target="_blank"
+                href="https://github.com/EFrMG/free-real-state"
+                className="outside-link"
+              >
+                the public repository
+              </a>
+              . Thank you in advance and be well.
+            </div>
           </details>
         </div>
       </div>
