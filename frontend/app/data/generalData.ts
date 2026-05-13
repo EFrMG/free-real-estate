@@ -452,25 +452,33 @@ export const userData: UserData[] = [
   {
     id: 1,
     email: "john@me.com",
+    passwordHash: "",
     name: "Johnathan Doebanne",
+    role: "agent",
     profilePicture: "/app/assets/images/profile-pictures/man_1.jpeg",
   },
   {
     id: 2,
     email: "marti@me.com",
+    passwordHash: "",
     name: "Martina Rossi",
+    role: "agent",
     profilePicture: "/app/assets/images/profile-pictures/woman_1.jpeg",
   },
   {
     id: 3,
     email: "facu@me.com",
+    passwordHash: "",
     name: "Facundo Gomez",
+    role: "agent",
     profilePicture: "/app/assets/images/profile-pictures/man_2.jpeg",
   },
   {
     id: 4,
     email: "sofi@me.com",
+    passwordHash: "",
     name: "Sofia Martinez",
+    role: "agent",
     profilePicture: "/app/assets/images/profile-pictures/woman_2.jpeg",
   },
 ];

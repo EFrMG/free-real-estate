@@ -3,4 +3,5 @@ packages:
   - "shared"
   - "backends/*"
 allowBuilds:
+  argon2: true
   esbuild: true

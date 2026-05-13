@@ -24,7 +24,11 @@ const json = <TData>(name: string) =>
 export const users = sqliteTable("users", {
   id: integer().primaryKey({ autoIncrement: true }),
   email: text().notNull().unique(),
+  passwordHash: text().notNull(),
   name: text().notNull(),
+  role: text("role", { enum: ["agent", "user"] })
+    .notNull()
+    .default("user"),
   // We have to handle a placeholder on user interaction in case of null
   // src attribute cannot be properly null ⌄
   profilePicture: text().notNull(),
@@ -83,6 +87,7 @@ export const chatParticipants = sqliteTable(
   (table) => [primaryKey({ columns: [table.chatId, table.userId] })],
 );
 
+// Chats
 export const messages = sqliteTable("messages", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   chatId: integer()
