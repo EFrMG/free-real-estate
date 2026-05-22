@@ -112,6 +112,33 @@
     @apply text-2xl transition-transform duration-300 group-open:rotate-90;
   }
 
+  .gen-btn-border {
+    @apply border border-amber-200/48;
+  }
+
+  .gen-form-labels {
+    @apply [&_fieldset]:stack-0 [&_label]:text-lg [&_label]:font-medium [&_label]:text-amber-900;
+  }
+
+  .gen-input-forms {
+    @apply px-2 py-3 bg-white/42 border-b border-amber-950/36 rounded-md shadow-sm inset-shadow-xs;
+  }
+
+  .sign-in-wrapper {
+    @apply stack-0 justify-center px-4 sm:px-8 md:px-12;
+  }
+
+  .sign-in-btn {
+    @apply w-full mt-4 px-2 py-3 bg-amber-600/94
+    hover:bg-amber-700/94 transition-colors duration-150
+    rounded-md text-slate-50 font-medium shadow-md
+    disabled:opacity-75 disabled:cursor-none;
+  }
+
+  .gen-form-error {
+    @apply p-3 bg-rose-100 border border-rose-200 text-rose-600 text-sm rounded-md;
+  }
+
   @keyframes details-show {
     0% {
       opacity: 0;

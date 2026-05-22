@@ -12,6 +12,21 @@ import "./app.css";
 
 import Header from "~/components/Header";
 
+export async function clientLoader() {
+  try {
+    const authRes = await fetch("http://localhost:3000/api/auth/me", {
+      credentials: "include",
+    });
+
+    if (authRes.ok) {
+      return await authRes.json();
+    }
+  } catch (error) {
+    console.error(error); // The backend handles this on requireAuth regardless
+  }
+  return null;
+}
+
 export const links: Route.LinksFunction = () => [
   {
     rel: "icon",

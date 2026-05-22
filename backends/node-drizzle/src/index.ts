@@ -35,7 +35,14 @@ app.get("/", (c) => {
 const api = app.basePath("/api");
 
 // Enable CORS for the frontend
-api.use("/*", cors());
+api.use(
+  "/*",
+  cors({
+    credentials: true,
+    // TODO: Add specific route if hosted.
+    // When developing, ports might change so we let Hono decide it for the headers
+  }),
+);
 
 // Properties --.
 

@@ -33,7 +33,7 @@ export const requireAuth = createMiddleware<{
 }>(async (c, next) => {
   const token = getCookie(c, COOKIE_NAME);
 
-  if (!token) return c.json({ error: "Unauthorized" }, 401);
+  if (!token) return c.json({ error: "Unauthorized as user" }, 401);
 
   try {
     const payload = await verify(token, JWT_KEY, "HS256");

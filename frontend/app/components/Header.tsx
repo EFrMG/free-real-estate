@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useRouteLoaderData } from "react-router";
 
 interface NavLinks {
   name: string;
   key: string;
 }
-
-const IS_USER = false;
 
 const headerLinks: NavLinks[] = [
   {
@@ -40,30 +38,33 @@ const signingLinks: NavLinks[] = [
   },
 ];
 
-function UserLink({ isBurger }: { isBurger: boolean }) {
+function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
   return (
     <Link
-      to="/user-profile/ID"
+      to={`/user-profile/${user.id}`}
       className={isBurger ? "sm:hidden" : "hidden sm:inline-block"}
     >
       <div className="flex items-center gap-2">
-        <span>USERNAME</span>
+        <span>{user.name}</span>
         <div className="relative">
+          {/* TODO: better profile picture placeholder */}
           <img
-            src="/app/assets/images/profile-pictures/man_1.jpeg"
+            src={
+              user.profilePicture ||
+              "/app/assets/images/profile-pictures/man_1.jpeg"
+            }
             alt=""
             draggable={false}
-            className="w-12 h-12 rounded-full"
+            className="w-12 h-12 rounded-full object-cover"
           />
-          {true && (
-            <span
-              className="absolute top-[-0.75ch] left-[-0.5ch]
+          {/* TODO: implement notifications and show the real number */}
+          <span
+            className="absolute top-[-0.75ch] left-[-0.5ch]
                     px-1.5 py-1 bg-rose-700 rounded-full
-                    text-yellow-50 leading-none font-bold"
-            >
-              <span className="translate-y-px inline-block">N</span>
-            </span>
-          )}
+                    text-sm text-yellow-50 leading-none font-bold"
+          >
+            <span className="translate-y-px inline-block">N</span>
+          </span>
         </div>
       </div>
     </Link>
@@ -71,6 +72,9 @@ function UserLink({ isBurger }: { isBurger: boolean }) {
 }
 
 export default function Header() {
+  const user = useRouteLoaderData("root");
+  const isUser = !!user;
+
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
 
   return (
@@ -106,8 +110,8 @@ export default function Header() {
       {/* Login buttons */}
       <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
         <div className="space-x-2 md:space-x-6">
-          {IS_USER ? (
-            <UserLink isBurger={false} />
+          {isUser ? (
+            <UserLink isBurger={false} user={user} />
           ) : (
             signingLinks.map((link: NavLinks) => (
               <Link
@@ -146,8 +150,8 @@ export default function Header() {
               </li>
             ))}
 
-            {IS_USER ? (
-              <UserLink isBurger={true} />
+            {isUser ? (
+              <UserLink isBurger={true} user={user} />
             ) : (
               signingLinks.map((link: NavLinks) => (
                 <Link key={link.key} to={`/${link.key}`}>

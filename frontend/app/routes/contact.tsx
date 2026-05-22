@@ -18,12 +18,14 @@ export default function Contact() {
   return (
     <main className="gen-main">
       <div className="gen-left">
-        <h1 className="my-12 text-2xl">Contact Us Here!</h1>
+        <h1 className="mt-12 mb-2 text-2xl text-amber-950">Contact Us Here!</h1>
+        <p className="text-amber-900/74 mb-12">Any questions or suggestions?</p>
+        {/* TODO: Form handling */}
         <form
           action=""
           onSubmit={(e) => e.preventDefault()}
-          className="stack-6 mb-12 p-4 rounded-lg bg-amber-100/48 shadow-lg
-          [&_fieldset]:stack-0 [&_label]:text-lg"
+          className="stack-6 max-w-lg mx-auto mb-12 p-6 rounded-lg bg-amber-100/74 shadow-lg
+          gen-form-labels"
         >
           <fieldset>
             <label htmlFor="email">Your Email:</label>
@@ -31,7 +33,7 @@ export default function Contact() {
               id="email"
               name="email"
               type="email"
-              className="mx-4 px-2 py-3 border-b border-amber-950/36 shadow-sm inset-shadow-xs"
+              className="gen-input-forms"
             />
           </fieldset>
           <fieldset>
@@ -39,14 +41,12 @@ export default function Contact() {
             <textarea
               id="message"
               name="message"
-              className="mx-4 px-2 py-3 max-h-[10lh] border-b border-amber-950/36 rounded-md shadow-sm inset-shadow-xs"
+              className="mx-2 max-h-[10lh] gen-input-forms"
             ></textarea>
           </fieldset>
 
           <fieldset>
-            <p className="text-lg text-center">
-              Were you satisfied with our service?
-            </p>
+            <p className="text-center">Were you satisfied with our service?</p>
             <div className="flex justify-around [&_div]:flex [&_input]:w-6">
               <div>
                 <label htmlFor="says-no">No</label>
@@ -72,7 +72,7 @@ export default function Contact() {
           </fieldset>
           <button
             type="submit"
-            className="ml-auto px-4 py-2 bg-amber-200/36 border border-amber-300 rounded-md
+            className="ml-auto px-4 py-2 bg-amber-200/36 border border-amber-300/68 rounded-md
             text-amber-900 font-medium shadow-md gen-btn-hovaction-sm"
           >
             Submit Form

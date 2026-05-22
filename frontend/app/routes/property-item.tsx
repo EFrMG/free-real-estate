@@ -167,8 +167,8 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
               <div className="flex gap-4 w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
                 <button
-                  className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                  gen-btn-hovaction"
+                  className="bg-amber-100/24 cursor-pointer
+                  gen-btn-border gen-btn-hovaction"
                 >
                   <GoCommentDiscussion
                     size={28}
@@ -179,8 +179,8 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
                 {true ? (
                   <button
-                    className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                    gen-btn-hovaction"
+                    className="bg-amber-100/24 cursor-pointer
+                    gen-btn-border gen-btn-hovaction"
                   >
                     <GoBookmark
                       size={28}

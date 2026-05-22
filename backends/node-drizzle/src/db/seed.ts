@@ -9,6 +9,7 @@ import {
   bookmarks,
 } from "./schema.ts";
 import { userData, propertyData, postData } from "./generalDataSeed.ts";
+import argon2 from "argon2";
 
 const clearAllColumns = true;
 
@@ -31,7 +32,12 @@ async function seed() {
     }
 
     console.log("Seeding users...");
-    await db.insert(users).values(userData).onConflictDoNothing();
+    const defaultPasswordHash = await argon2.hash("password123");
+    const usersToInsert = userData.map((u) => ({
+      ...u,
+      passwordHash: u.passwordHash || defaultPasswordHash,
+    }));
+    await db.insert(users).values(usersToInsert).onConflictDoNothing();
 
     console.log("Seeding properties...");
     await db.insert(properties).values(propertyData).onConflictDoNothing();
