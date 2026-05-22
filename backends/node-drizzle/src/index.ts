@@ -161,6 +161,7 @@ api.post("/auth/register", async (c) => {
       email: users.email,
       name: users.name,
       role: users.role,
+      profilePicture: users.profilePicture,
     });
 
   await setSessionCookie(c, user as UserSession);
@@ -189,6 +190,7 @@ api.post("/auth/login", async (c) => {
     email: user.email,
     name: user.name,
     role: user.role,
+    profilePicture: user.profilePicture,
   };
 
   await setSessionCookie(c, session);

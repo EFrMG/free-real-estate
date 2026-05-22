@@ -10,6 +10,7 @@ export interface UserSession {
   email: string;
   name: string;
   role: "agent" | "user";
+  profilePicture: string;
 }
 
 // Signs a JWT and sets it as an HttpOnly cookie
@@ -43,6 +44,7 @@ export const requireAuth = createMiddleware<{
       email: payload["email"] as string,
       name: payload["name"] as string,
       role: payload["role"] as "agent" | "user",
+      profilePicture: payload["profilePicture"] as string,
     };
 
     // Pass the user
