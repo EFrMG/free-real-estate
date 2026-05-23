@@ -109,19 +109,31 @@ export default function PropertyGallery({
           openCloseDialog(false);
         }}
         className="inset-0 w-full h-full max-w-none max-h-none
-        backdrop:bg-black/42 backdrop:backdrop-blur-xs bg-transparent 
+        backdrop:bg-transparent bg-transparent 
         overflow-hidden border-none outline-none"
       >
         <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
           {isDialogOpen && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.31 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.3 }}
               className="flex items-center justify-center w-full h-full relative"
             >
-              <div className="relative">
+              {/* Custom backdrop */}
+              <div
+                className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
+                onClick={() => openCloseDialog(false)}
+              />
+
+              <motion.div
+                initial={{ scale: 0.96 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.985, transition: { duration: 0.15 } }}
+                transition={{ duration: 0.3 }}
+                className="relative z-10"
+              >
                 <img
                   src={displaySlides[currentIdx]}
                   alt="Full size view"
@@ -135,7 +147,7 @@ export default function PropertyGallery({
                 >
                   <GoX size={36} color="white" />
                 </button>
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
