@@ -36,8 +36,8 @@ export default function Map({
     >
       <MapContainer
         center={[
-          +`${mapPopovers ? `${mapPopovers[0].latitude}` : "-38.4161"}`,
-          +`${mapPopovers ? `${mapPopovers[0].longitude}` : "-63.6167"}`,
+          +`${mapPopovers?.length ? `${mapPopovers[0].latitude}` : "-38.4161"}`,
+          +`${mapPopovers?.length ? `${mapPopovers[0].longitude}` : "-63.6167"}`,
         ]}
         zoom={zoomLevel}
         scrollWheelZoom={scrollable}
