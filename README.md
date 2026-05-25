@@ -93,7 +93,7 @@ React Router's `loader` and `action` patterns are used for data fetching and mut
 
 ---
 
-<img width="1592" height="1806" alt="properties" src="https://github.com/user-attachments/assets/4fca0417-7317-4b7e-a0b4-8a055f490e17" />
+<img width="1575" height="1417" alt="properties" src="https://github.com/user-attachments/assets/3f6b3e75-e64e-47da-8e4f-c520ad4d0bbd" />
 
 ---
 
@@ -110,6 +110,14 @@ React Router's `loader` and `action` patterns are used for data fetching and mut
 ---
 
 <img width="1592" height="1007" alt="log-in" src="https://github.com/user-attachments/assets/86883455-53bb-4967-ad5d-a7da59278f36" />
+
+---
+
+<img width="1592" height="1007" alt="user-profile_0" src="https://github.com/user-attachments/assets/af661908-ca35-4425-87bd-c3a54f679502" />
+
+---
+
+<img width="1592" height="1007" alt="user-profile_1" src="https://github.com/user-attachments/assets/68fd766c-8fd5-4f8e-a7ce-d4434820a0a8" />
 
 ### 1.2 Backends
 
