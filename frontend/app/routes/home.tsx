@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 
-import SearchInput from "~/components/HomeSearchInput";
+import SearchInput from "~/components/home/SearchInput";
 import HeroRightSide from "~/components/HeroRightSide";
 
 export async function loader() {

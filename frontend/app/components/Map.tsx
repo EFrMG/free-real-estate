@@ -70,7 +70,7 @@ export default function Map({
               <Popup>
                 <div className="min-w-50">
                   <Link to={`/properties/${id}`}>
-                    <h3 className="pb-2 text-base text-center leading-none text-amber-900 font-medium">
+                    <h3 className="pb-3 text-base text-center leading-none text-amber-900 font-medium">
                       {title}
                     </h3>
                   </Link>

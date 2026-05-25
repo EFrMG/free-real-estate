@@ -2,8 +2,8 @@ import type { Route } from "./+types/properties";
 
 import { lazy, Suspense } from "react";
 import type { PropertyData } from "@free-real-estate/shared";
-import FilterInput from "~/components/PropertiesFilterInput";
-import PropertyCard from "~/components/PropertyCard";
+import FilterInput from "~/components/properties/FilterInput";
+import PropertyCard from "~/components/properties/PropertyCard";
 import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
@@ -80,8 +80,8 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
 
   return (
     <main className="gen-main">
-      {/* Left side */}
-      <div className="max-md:order-1">
+      {/* Left column */}
+      <div className="max-md:order-1 gen-left-column">
         <FilterInput cities={cities} />
 
         {properties.map((property) => (
@@ -91,7 +91,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
           />
         ))}
       </div>
-      {/* Right side */}
+      {/* Right column */}
       <div className="max-md:order-0 md:bg-amber-100">
         <ClientOnly>
           {() => (

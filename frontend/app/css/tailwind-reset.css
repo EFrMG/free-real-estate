@@ -106,7 +106,7 @@
   }
 
   :where(a) {
-    text-underline-offset: 5px;
+    text-underline-offset: 0.25em;
   }
 
   :where(a:hover) {

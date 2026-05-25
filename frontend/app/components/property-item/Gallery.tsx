@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { GoChevronLeft, GoChevronRight, GoX } from "react-icons/go";
+import useDialog from "~/hooks/useDialog";
 
 export default function PropertyGallery({
   interiorGallery,
@@ -8,10 +9,12 @@ export default function PropertyGallery({
   interiorGallery: string[];
 }) {
   const [currentIdx, setCurrentIdx] = useState(1);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const trackRef = useRef<HTMLDivElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const isTransitioning = useRef(false);
+
+  const { isDialogOpen, dialogRef, openCloseDialog } = useDialog();
+
   const totalSlides = interiorGallery.length;
 
   const moveToSlide = useCallback((idx: number, animate = true) => {
@@ -60,16 +63,6 @@ export default function PropertyGallery({
     interiorGallery[0],
   ];
 
-  const openCloseDialog = (open: boolean) => {
-    if (open) {
-      setIsDialogOpen(true);
-      dialogRef.current?.showModal();
-    } else {
-      setIsDialogOpen(false);
-      // Wait for complete motion exit
-    }
-  };
-
   return (
     <div
       className="relative w-full h-[35vh] mt-8 shadow-lg rounded-lg overflow-hidden
@@ -117,8 +110,8 @@ export default function PropertyGallery({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.15 } }}
               transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
               className="flex items-center justify-center w-full h-full relative"
             >
               {/* Custom backdrop */}
@@ -130,8 +123,8 @@ export default function PropertyGallery({
               <motion.div
                 initial={{ scale: 0.96 }}
                 animate={{ scale: 1 }}
-                exit={{ scale: 0.985, transition: { duration: 0.15 } }}
                 transition={{ duration: 0.3 }}
+                exit={{ scale: 0.985, transition: { duration: 0.15 } }}
                 className="relative z-10"
               >
                 <img

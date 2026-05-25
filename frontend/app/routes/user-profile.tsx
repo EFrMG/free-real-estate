@@ -1,6 +1,21 @@
 import type { Route } from "./+types/user-profile";
+import { Link } from "react-router";
 
-import { userData } from "~/data/generalData";
+import type { PropertyData } from "~/data/generalData";
+
+import useDialog from "~/hooks/useDialog";
+
+import EditProfileModal from "~/components/user-profile/EditProfileModal";
+import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
+import MiniPropertyCard from "~/components/user-profile/MiniPropertyCard";
+
+import {
+  GoBookmark,
+  GoComment,
+  GoPencil,
+  GoShieldLock,
+  GoPackage,
+} from "react-icons/go";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,28 +28,256 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-// Change later!
-export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const { id } = params;
+export async function clientLoader({}: Route.ClientLoaderArgs) {
+  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+    credentials: "include",
+  });
 
-  const user = userData.find((el) => String(el.id) === id);
+  if (!userRes)
+    throw new Response("Not authenticated as a user!", { status: 401 });
 
-  if (!user) throw new Response("User Not Found", { status: 404 });
+  const user = await userRes.json();
+  const userId = user.id;
 
-  const properties = null;
-  const bookmarks = null;
-  const messages = null;
+  const [userPropertiesRes, userBookmarksRes] = await Promise.all([
+    fetch(`http://localhost:3000/api/users/${userId}/properties`),
+    fetch(`http://localhost:3000/api/users/${userId}/bookmarks`, {
+      credentials: "include",
+    }),
+  ]);
 
-  return { user, properties, bookmarks, messages };
+  if (!userPropertiesRes.ok || !userBookmarksRes.ok) {
+    throw new Response("Failed to fetch user properties and/or bookmarks", {
+      status: 500,
+    });
+  }
+
+  const userProperties = await userPropertiesRes.json();
+  const userBookmarks = await userBookmarksRes.json();
+
+  // TODO: messaging feature
+  const userMessages = null;
+
+  return { user, userProperties, userBookmarks, userMessages };
+}
+
+function ProfileSection({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="p-4 bg-amber-100/48 rounded-xl shadow-md border border-amber-200/36">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-amber-700">{icon}</span>
+        <h2 className="text-lg font-semibold text-amber-950">{title}</h2>
+      </div>
+      {children}
+    </section>
+  );
 }
 
 export default function UserProfile({ loaderData }: Route.ComponentProps) {
-  const { user, properties, bookmarks, messages } = loaderData;
+  const { user, userProperties, userBookmarks, userMessages } = loaderData;
+
+  const {
+    isDialogOpen: isEditProfileOpen,
+    dialogRef: editProfileRef,
+    openCloseDialog: setEditProfileOpen,
+  } = useDialog();
+
+  const {
+    isDialogOpen: isChangePasswordOpen,
+    dialogRef: changePasswordRef,
+    openCloseDialog: setChangePasswordOpen,
+  } = useDialog();
 
   return (
-    <main className="gen-main">
-      <div>BOOKMARKS, PROFILE, PROPERTY LIST</div>
-      <div>CHATS</div>
-    </main>
+    <>
+      <main className="gen-main">
+        {/* Left column */}
+        <div className="gen-left-column">
+          {/* Profile header */}
+          <section
+            className="relative overflow-hidden rounded-xl shadow-lg
+            bg-linear-to-br from-amber-100/82 via-amber-50 to-amber-100/36
+            border border-amber-200/48"
+          >
+            <div
+              className="absolute top-0 inset-x-0 h-24
+              bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/26"
+            />
+
+            <div className="relative z-10 p-5 sm:p-6">
+              {/* Avatar + Info row */}
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                <div>
+                  <img
+                    src={user.profilePicture}
+                    alt={user.name}
+                    draggable={false}
+                    className="profile-picture-big"
+                  />
+                </div>
+
+                <div className="text-center sm:text-left mt-2 sm:mt-4 stack-2 grow">
+                  <h1 className="text-2xl font-bold text-amber-950 tracking-tight">
+                    {user.name}
+                  </h1>
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-sm text-amber-800/84">{user.email}</p>
+                      <span
+                        className="inline-block w-fit mt-1 px-3 py-0.5
+                    bg-amber-300/30 text-amber-900 text-xs font-medium
+                    rounded-full border border-amber-300/50 capitalize
+                    mx-auto sm:mx-0"
+                      >
+                        {user.role}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => setEditProfileOpen(true)}
+                      className="profile-pencil-btn"
+                      title="Edit name & profile picture"
+                    >
+                      <GoPencil size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Password section */}
+              <div
+                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/64
+                flex items-center justify-between flex-wrap gap-3"
+              >
+                <div className="stack-1">
+                  <p className="flex items-center gap-2 text-sm font-medium text-amber-900 leading-none">
+                    <GoShieldLock
+                      size={20}
+                      className="text-amber-600 shrink-0"
+                    />
+                    Password
+                  </p>
+                  <p
+                    className="ml-4 text-lg tracking-[0.3em] text-amber-800/64 select-none"
+                    aria-label="Password hidden"
+                  >
+                    •••••••••
+                  </p>
+                </div>
+                <button
+                  onClick={() => setChangePasswordOpen(true)}
+                  className="px-4 py-2 text-sm font-medium text-amber-800
+                  bg-amber-200/36 rounded-sm shadow-sm gen-btn-border gen-btn-hovaction-sm"
+                >
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* TODO: bookmarks */}
+          <ProfileSection
+            title="Bookmarked Properties"
+            icon={<GoBookmark size={24} />}
+          >
+            {userBookmarks?.length ? (
+              <div className="stack-3">
+                {userBookmarks.map((property: PropertyData) => (
+                  <MiniPropertyCard
+                    key={`bookmark-${property.id}`}
+                    property={property}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="max-w-none py-4 text-sm text-amber-800/94 italic text-center">
+                Your bookmarked properties will appear here.
+              </p>
+            )}
+          </ProfileSection>
+
+          {/* Property list */}
+          <ProfileSection title="My Properties" icon={<GoPackage size={24} />}>
+            {userProperties?.length ? (
+              <div className="max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4">
+                {userProperties.map((property: PropertyData) => (
+                  <MiniPropertyCard
+                    key={`property-${property.id}`}
+                    property={property}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="py-4 text-sm text-amber-800/94 italic text-center">
+                You currently have no listed properties.
+              </p>
+            )}
+          </ProfileSection>
+
+          {/* TODO: blog posts section */}
+        </div>
+
+        {/* Right column */}
+        <div className="md:bg-amber-100 max-md:mt-4 md:p-6">
+          <div
+            className="md:sticky md:top-[7.5vh] p-5
+            bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md
+            border border-amber-200/40"
+          >
+            <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
+              <span className="text-amber-700">
+                <GoComment size={24} />
+              </span>
+              Messages
+            </h2>
+            <div className="stack-4 py-6 text-center">
+              <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
+                <span className="text-2xl opacity-42">💬</span>
+              </div>
+              <p className="text-sm text-amber-800/74 italic">
+                Your chats will appear here.
+              </p>
+              <p className="text-xs text-amber-700/92">
+                Visit{" "}
+                <Link
+                  to="/our-agents"
+                  className="underline decoration-amber-700/76"
+                >
+                  Our Agents
+                </Link>{" "}
+                profiles to send them a message.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Modals */}
+      <EditProfileModal
+        editProfileProps={{
+          isDialogOpen: isEditProfileOpen,
+          dialogRef: editProfileRef,
+          openCloseDialog: setEditProfileOpen,
+        }}
+        user={user}
+      />
+
+      <ChangePasswordModal
+        changePasswordProps={{
+          isDialogOpen: isChangePasswordOpen,
+          dialogRef: changePasswordRef,
+          openCloseDialog: setChangePasswordOpen,
+        }}
+      />
+    </>
   );
 }

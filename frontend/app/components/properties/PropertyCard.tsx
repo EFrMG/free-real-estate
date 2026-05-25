@@ -2,21 +2,24 @@ import { Link } from "react-router";
 import { GoLocation } from "react-icons/go";
 import { LuBed, LuBath } from "react-icons/lu";
 
-interface PropertyCardProps {
-  property: {
-    id: number;
-    type: "buy" | "rent";
-    title: string;
-    description: string;
-    exteriorImage: string;
-    province: string;
-    city: string;
-    address: string;
-    bedrooms: number;
-    bathrooms: number;
-    price: number;
-  };
-}
+import type { PropertyData } from "@free-real-estate/shared";
+
+type PropertyCardProps = {
+  property: Pick<
+    PropertyData,
+    | "id"
+    | "type"
+    | "title"
+    | "description"
+    | "exteriorImage"
+    | "province"
+    | "city"
+    | "address"
+    | "bedrooms"
+    | "bathrooms"
+    | "price"
+  >;
+};
 
 export default function PropertyCard({
   property: {
@@ -34,13 +37,10 @@ export default function PropertyCard({
   },
 }: PropertyCardProps) {
   return (
-    <Link
-      to={`/properties/${id}`}
-      className="mx-4 my-8 block hover:opacity-100 group"
-    >
+    <Link to={`/properties/${id}`} className="block hover:opacity-100 group">
       <div
-        className="relative flex gap-4 pl-3 pr-4 py-3 rounded-lg shadow-lg inset-shadow-sm
-        hover:shadow-md transition-shadow duration-250 delay-75"
+        className="relative grid grid-cols-[5fr_8fr] gap-4 pl-3 pr-4 py-3 bg-amber-100/28 rounded-lg shadow-lg inset-shadow-sm
+        hover:shadow-md transition-shadow duration-250"
       >
         <div
           className={`absolute flex items-center h-[1.35lh] bottom-6 -left-2.75 z-10
@@ -64,7 +64,7 @@ export default function PropertyCard({
           src={exteriorImage}
           alt={title}
           draggable="false"
-          className="w-full max-h-48 my-auto object-cover rounded-md"
+          className="w-full h-full max-h-58 my-auto object-cover rounded-md"
         />
 
         <div className="stack-2">
@@ -103,14 +103,14 @@ export default function PropertyCard({
                 </span>
               </div>
             </div>
-            <div className="flex items-center self-end gap-2 w-fit ml-auto">
+            <div className="flex items-center self-end gap-2 w-fit ml-auto font-semibold">
               <span
-                className="font-semibold text-emerald-700/86
+                className="text-emerald-700/74
                 line-through decoration-2 decoration-gray-500/64"
               >
                 ${price}
               </span>
-              <span className="text-lg font-semibold text-emerald-700">$0</span>
+              <span className="text-lg text-emerald-700">$0</span>
             </div>
           </div>
         </div>

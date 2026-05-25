@@ -72,7 +72,7 @@ export default function Contact() {
           </fieldset>
           <button
             type="submit"
-            className="ml-auto px-4 py-2 bg-amber-200/36 border border-amber-300/68 rounded-md
+            className="ml-auto px-4 py-2 bg-amber-200/36 gen-btn-border rounded-md
             text-amber-900 font-medium shadow-md gen-btn-hovaction-sm"
           >
             Submit Form

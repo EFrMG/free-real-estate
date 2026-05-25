@@ -141,7 +141,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
           </datalist>
         </fieldset>
 
-        <fieldset className="flex gap-2 flex-wrap justify-center items-center mt-6 mx-2 md:mx-4 mb-12">
+        <fieldset className="flex gap-2 flex-wrap justify-center items-center my-8 mx-2 md:mx-4">
           <div className="filter-input-group">
             <label htmlFor="type">Type</label>
             <select

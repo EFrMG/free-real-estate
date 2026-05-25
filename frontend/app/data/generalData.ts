@@ -386,7 +386,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 14,
-    userId: 2,
+    userId: 1,
     type: "rent",
     property: "house",
     title: "Delta Island Hideaway in Tigre",
