@@ -132,7 +132,8 @@ The runtime is `Node.js` via `@hono/node-server`.
   - _Users & Bookmarks_:
     - `GET /api/users`: Gets list of agents.
     - `GET /api/users/:id`: Gets profile details of a specific user.
-    - `GET /api/users/:id/bookmarks`: Gets a user's bookmarked properties.
+    - `GET /api/users/:id/bookmarks`: Gets properties owned by a user (there's still logic left to do when it comes to differentiating users and agents).
+    - `GET /users/:id/properties`: Gets a user's bookmarked properties.
     - `POST /api/users/:id/bookmarks`: Saves a property to a user's bookmarks.
     - `DELETE /api/users/:id/bookmarks/:propertyId`: Removes a property from a user's bookmarks.
   - _Posts_:
@@ -158,7 +159,13 @@ A central package containing the database schema and TypeScript types, ensuring 
 
 ## 2. Running the Project
 
-As of now, one could clone the repository and run:
+As of now, one could clone the repository and add a `.env` file with the following:
+
+```
+DB_FILE_NAME=file:local.db
+```
+
+Then run:
 
 ```bash
 pnpm install

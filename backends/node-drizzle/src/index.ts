@@ -248,13 +248,13 @@ api.get("/users/:id", async (c) => {
 });
 
 // GET properties owned by a user
-api.get("/users/:userId/properties", async (c) => {
-  const userId = Number(c.req.param("userId"));
+api.get("/users/:id/properties", async (c) => {
+  const id = Number(c.req.param("id"));
 
   const results = await db
     .select()
     .from(properties)
-    .where(eq(properties.userId, userId));
+    .where(eq(properties.userId, id));
 
   return c.json(results);
 });

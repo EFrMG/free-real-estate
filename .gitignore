@@ -7,3 +7,4 @@ build
 .react-router
 **/DOCS
 *.log
+/backends/node-drizzle/local.db
