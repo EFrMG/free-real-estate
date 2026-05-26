@@ -37,8 +37,10 @@ export const users = sqliteTable("users", {
 export const properties = sqliteTable("properties", {
   id: integer().primaryKey({ autoIncrement: true }),
   userId: integer().references(() => users.id),
-  type: text("type", { enum: ["buy", "rent"] }).notNull(),
-  property: text("property", {
+  transactionType: text("transaction_type", {
+    enum: ["buy", "rent"],
+  }).notNull(),
+  propertyType: text("property_type", {
     enum: ["apartment", "house", "condominium"],
   }).notNull(),
   title: text().notNull(),

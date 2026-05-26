@@ -6,7 +6,7 @@ type MiniPropertyCardProps = {
   property: Pick<
     PropertyData,
     | "id"
-    | "type"
+    | "transactionType"
     | "title"
     | "exteriorImage"
     | "province"
@@ -20,7 +20,7 @@ type MiniPropertyCardProps = {
 export default function MiniPropertyCard({
   property: {
     id,
-    type,
+    transactionType,
     title,
     exteriorImage,
     province,
@@ -41,13 +41,13 @@ export default function MiniPropertyCard({
             className={`absolute top-1 left-1 mx-auto flex items-center h-[1.35lh]
             shadow-md text-sm px-3 py-1 rounded-md
             ${
-              type === "buy"
+              transactionType === "buy"
                 ? "bg-emerald-300 [&_span:text-emerald-900]"
                 : "bg-sky-300 [&_span:text-sky-900]"
             }`}
           >
             <span className="text-sm font-bold uppercase grow-0 shrink leading-none">
-              {type}
+              {transactionType}
             </span>
           </div>
 

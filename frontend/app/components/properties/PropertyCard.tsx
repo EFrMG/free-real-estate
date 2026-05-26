@@ -8,7 +8,7 @@ type PropertyCardProps = {
   property: Pick<
     PropertyData,
     | "id"
-    | "type"
+    | "transactionType"
     | "title"
     | "description"
     | "exteriorImage"
@@ -24,7 +24,7 @@ type PropertyCardProps = {
 export default function PropertyCard({
   property: {
     id,
-    type,
+    transactionType,
     title,
     description,
     exteriorImage,
@@ -50,13 +50,13 @@ export default function PropertyCard({
           after:absolute after:top-full after:left-0
           after:border-t-10 after:border-l-10 after:border-l-transparent
           ${
-            type === "buy"
+            transactionType === "buy"
               ? "bg-emerald-300 after:border-t-emerald-500 [&_span:text-emerald-900]"
               : "bg-sky-300 after:border-t-sky-500 [&_span:text-sky-900]"
           }`}
         >
           <span className="text-sm font-bold uppercase grow-0 shrink leading-none">
-            {type}
+            {transactionType}
           </span>
         </div>
 

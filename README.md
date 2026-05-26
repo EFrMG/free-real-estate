@@ -167,7 +167,7 @@ A central package containing the database schema and TypeScript types, ensuring 
 
 ## 2. Running the Project
 
-As of now, one could clone the repository and add a `.env` file with the following:
+As of now, one could clone the repository and add a `.env` file at `/backends/node-drizzle/` with the following:
 
 ```
 DB_FILE_NAME=file:local.db

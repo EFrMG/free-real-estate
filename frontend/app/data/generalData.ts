@@ -12,8 +12,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 1,
     userId: 1,
-    type: "buy",
-    property: "apartment",
+    transactionType: "buy",
+    propertyType: "apartment",
     title: "Modern Loft in Palermo Soho",
     description:
       "A trendy loft in the heart of Palermo Soho, surrounded by the best boutiques and restaurants in the city. Features high ceilings and a private balcony.",
@@ -43,8 +43,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 2,
     userId: 2,
-    type: "rent",
-    property: "apartment",
+    transactionType: "rent",
+    propertyType: "apartment",
     title: "Elegant Apartment in Nueva Córdoba",
     description:
       "Spacious apartment perfect for students or young professionals. Located just steps away from Sarmiento Park and the university campus.",
@@ -72,8 +72,8 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 3,
-    type: "rent",
-    property: "apartment",
+    transactionType: "rent",
+    propertyType: "apartment",
     title: "Riverside View Studio",
     description:
       "Charming studio with an incredible view of the Paraná River. Modern finishes and located in the coolest neighborhood of Rosario.",
@@ -96,8 +96,8 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 4,
-    type: "buy",
-    property: "house",
+    transactionType: "buy",
+    propertyType: "house",
     title: "Luxury Vineyard Villa",
     description:
       "Experience the wine country in style. This luxury villa features a private vineyard, swimming pool, and breathtaking views of the Andes.",
@@ -125,8 +125,8 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 5,
-    type: "rent",
-    property: "house",
+    transactionType: "rent",
+    propertyType: "house",
     title: "Lakeside Cabin in Bariloche",
     description:
       "Cozy wooden cabin with direct access to Lake Nahuel Huapi. Perfect for winter skiing or summer hiking adventures.",
@@ -156,8 +156,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 6,
     userId: 2,
-    type: "buy",
-    property: "house",
+    transactionType: "buy",
+    propertyType: "house",
     title: "Colonial Estate in San Lorenzo",
     description:
       "Traditional colonial-style home in the peaceful hills of Salta. Features a large garden and a clay oven for authentic empanadas.",
@@ -188,8 +188,8 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 7,
-    type: "buy",
-    property: "house",
+    transactionType: "buy",
+    propertyType: "house",
     title: "Classic Mansion in Los Troncos",
     description:
       "Exclusive residence in the most prestigious neighborhood of Mar del Plata. Elegant architecture with high-end details and a beautiful garden.",
@@ -219,8 +219,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 8,
     userId: 4,
-    type: "rent",
-    property: "apartment",
+    transactionType: "rent",
+    propertyType: "apartment",
     title: "Beagle Channel View Apartment",
     description:
       "Cozy apartment at the end of the world. Enjoy stunning views of the Beagle Channel and easy access to the Martial Glacier.",
@@ -245,8 +245,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 9,
     userId: 4,
-    type: "buy",
-    property: "apartment",
+    transactionType: "buy",
+    propertyType: "apartment",
     title: "Skyscraper Penthouse in Puerto Madero",
     description:
       "The pinnacle of luxury in Buenos Aires. Ultra-modern penthouse with 360-degree views of the city and the river.",
@@ -274,8 +274,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 10,
     userId: 2,
-    type: "buy",
-    property: "house",
+    transactionType: "buy",
+    propertyType: "house",
     title: "Garden Estate in San Isidro",
     description:
       "Classic family home in the traditional northern suburbs. Features a huge swimming pool and ancient trees.",
@@ -305,8 +305,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 11,
     userId: 3,
-    type: "rent",
-    property: "house",
+    transactionType: "rent",
+    propertyType: "house",
     title: "Alpine Chalet in Villa General Belgrano",
     description:
       "Charming Bavarian-style chalet in the hills of Córdoba. Perfect for a family getaway or a peaceful retreat.",
@@ -334,8 +334,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 12,
     userId: 4,
-    type: "rent",
-    property: "house",
+    transactionType: "rent",
+    propertyType: "house",
     title: "Adobe Boutique Inn in Purmamarca",
     description:
       "Stay in the heart of the Quebrada de Humahuaca. Traditional adobe construction with modern comforts and stunning mountain views.",
@@ -359,8 +359,8 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 13,
-    type: "buy",
-    property: "house",
+    transactionType: "buy",
+    propertyType: "house",
     title: "Modern Glaciar View House",
     description:
       "Contemporary architecture meets Patagonian wilderness. Eco-friendly home with views of Lake Argentino.",
@@ -387,8 +387,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 14,
     userId: 1,
-    type: "rent",
-    property: "house",
+    transactionType: "rent",
+    propertyType: "house",
     title: "Delta Island Hideaway in Tigre",
     description:
       "Escape to the islands. Charming riverfront house accessible only by boat, surrounded by lush vegetation.",
@@ -420,8 +420,8 @@ export const propertyData: PropertyData[] = [
   {
     id: 15,
     userId: 3,
-    type: "buy",
-    property: "condominium",
+    transactionType: "buy",
+    propertyType: "condominium",
     title: "Country Club Residence in Yerba Buena",
     description:
       "Modern family home in the most exclusive gated community of Tucumán. Security, nature, and comfort.",
@@ -470,7 +470,7 @@ export const userData: UserData[] = [
     email: "facu@me.com",
     passwordHash: "",
     name: "Facundo Gomez",
-    role: "agent",
+    role: "user",
     profilePicture: "/app/assets/images/profile-pictures/man_2.jpeg",
   },
   {
@@ -478,7 +478,7 @@ export const userData: UserData[] = [
     email: "sofi@me.com",
     passwordHash: "",
     name: "Sofia Martinez",
-    role: "agent",
+    role: "user",
     profilePicture: "/app/assets/images/profile-pictures/woman_2.jpeg",
   },
 ];

@@ -31,7 +31,7 @@ async function seed() {
       console.log("Columns cleared first.");
     }
 
-    console.log("Seeding users...");
+    console.log("Seeding users with placeholder passwords...");
     const defaultPasswordHash = await argon2.hash("password123");
     const usersToInsert = userData.map((u) => ({
       ...u,

@@ -57,7 +57,8 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   const { property, userPoster } = loaderData;
   const {
     id,
-    type,
+    transactionType,
+    propertyType,
     title,
     description,
     longDescription,
@@ -128,7 +129,8 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
               <p className="flex items-center gap-[0.75ex]">
                 <LiaHandshake size={26} color="var(--color-amber-700)" />
                 <span className="text-gray-600 capitalize">
-                  Transaction type: <span className="font-medium">{type}</span>
+                  Transaction type:{" "}
+                  <span className="font-medium">{transactionType}</span>
                 </span>
               </p>
             </div>
@@ -200,16 +202,25 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
 
           <div className="h-fit p-4 bg-amber-100/28 rounded-lg shadow-md inset-shadow-xs">
             <h3 className="mb-2 text-center font-semibold text-lg">Details</h3>
-            <div className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&>p]:border-b [&>p]:border-amber-300/74">
+            <div
+              className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&_p]:items-center
+              [&>p]:border-b [&>p]:border-amber-300/74"
+            >
+              <p>
+                <span>Property Type:</span>{" "}
+                <span className="capitalize font-medium">{propertyType}</span>
+              </p>
               <p>
                 <span>Price:</span>{" "}
-                <span className="text-emerald-700">${price}</span>
+                <span className="text-emerald-700 font-medium">${price}</span>
               </p>
               <p>
-                <span>Bedrooms:</span> <span>{bedrooms}</span>
+                <span>Bedrooms:</span>{" "}
+                <span className="font-medium">{bedrooms}</span>
               </p>
               <p>
-                <span>Bathrooms:</span> <span>{bathrooms}</span>
+                <span>Bathrooms:</span>{" "}
+                <span className="font-medium">{bathrooms}</span>
               </p>
               <div className="mt-4">
                 <p className="text-sm text-gray-600">
