@@ -1,10 +1,12 @@
 import type {
   PropertyData,
   UserData,
-  PostData,
+  AgentProfileData,
+  // PostData,
 } from "@free-real-estate/shared";
 
-export type { PropertyData, UserData, PostData };
+// export type { PropertyData, UserData, PostData };
+export type { PropertyData, UserData, AgentProfileData };
 
 // This data is linked to generalDataSeed.ts in the backend
 
@@ -13,6 +15,7 @@ export const propertyData: PropertyData[] = [
     id: 1,
     userId: 1,
     transactionType: "buy",
+    status: "free",
     propertyType: "apartment",
     title: "Modern Loft in Palermo Soho",
     description:
@@ -44,6 +47,7 @@ export const propertyData: PropertyData[] = [
     id: 2,
     userId: 2,
     transactionType: "rent",
+    status: "free",
     propertyType: "apartment",
     title: "Elegant Apartment in Nueva Córdoba",
     description:
@@ -73,6 +77,7 @@ export const propertyData: PropertyData[] = [
   {
     id: 3,
     transactionType: "rent",
+    status: "unavailable",
     propertyType: "apartment",
     title: "Riverside View Studio",
     description:
@@ -97,6 +102,7 @@ export const propertyData: PropertyData[] = [
   {
     id: 4,
     transactionType: "buy",
+    status: "inactive",
     propertyType: "house",
     title: "Luxury Vineyard Villa",
     description:
@@ -126,6 +132,7 @@ export const propertyData: PropertyData[] = [
   {
     id: 5,
     transactionType: "rent",
+    status: "free",
     propertyType: "house",
     title: "Lakeside Cabin in Bariloche",
     description:
@@ -157,6 +164,7 @@ export const propertyData: PropertyData[] = [
     id: 6,
     userId: 2,
     transactionType: "buy",
+    status: "free",
     propertyType: "house",
     title: "Colonial Estate in San Lorenzo",
     description:
@@ -189,6 +197,7 @@ export const propertyData: PropertyData[] = [
   {
     id: 7,
     transactionType: "buy",
+    status: "free",
     propertyType: "house",
     title: "Classic Mansion in Los Troncos",
     description:
@@ -220,6 +229,7 @@ export const propertyData: PropertyData[] = [
     id: 8,
     userId: 4,
     transactionType: "rent",
+    status: "unavailable",
     propertyType: "apartment",
     title: "Beagle Channel View Apartment",
     description:
@@ -246,6 +256,7 @@ export const propertyData: PropertyData[] = [
     id: 9,
     userId: 4,
     transactionType: "buy",
+    status: "unavailable",
     propertyType: "apartment",
     title: "Skyscraper Penthouse in Puerto Madero",
     description:
@@ -275,6 +286,7 @@ export const propertyData: PropertyData[] = [
     id: 10,
     userId: 2,
     transactionType: "buy",
+    status: "unavailable",
     propertyType: "house",
     title: "Garden Estate in San Isidro",
     description:
@@ -306,6 +318,7 @@ export const propertyData: PropertyData[] = [
     id: 11,
     userId: 3,
     transactionType: "rent",
+    status: "free",
     propertyType: "house",
     title: "Alpine Chalet in Villa General Belgrano",
     description:
@@ -335,6 +348,7 @@ export const propertyData: PropertyData[] = [
     id: 12,
     userId: 4,
     transactionType: "rent",
+    status: "inactive",
     propertyType: "house",
     title: "Adobe Boutique Inn in Purmamarca",
     description:
@@ -360,6 +374,7 @@ export const propertyData: PropertyData[] = [
   {
     id: 13,
     transactionType: "buy",
+    status: "inactive",
     propertyType: "house",
     title: "Modern Glaciar View House",
     description:
@@ -388,6 +403,7 @@ export const propertyData: PropertyData[] = [
     id: 14,
     userId: 1,
     transactionType: "rent",
+    status: "free",
     propertyType: "house",
     title: "Delta Island Hideaway in Tigre",
     description:
@@ -421,6 +437,7 @@ export const propertyData: PropertyData[] = [
     id: 15,
     userId: 3,
     transactionType: "buy",
+    status: "free",
     propertyType: "condominium",
     title: "Country Club Residence in Yerba Buena",
     description:
@@ -483,81 +500,95 @@ export const userData: UserData[] = [
   },
 ];
 
-export const postData: PostData[] = [
+export const agentProfileData: AgentProfileData[] = [
   {
-    id: 1,
-    authorId: 1,
-    title: "How to choose your first home in Argentina",
-    excerpt:
-      "Navigating the real estate market in Argentina can be challenging. Here are some tips for first-time buyers.",
-    content:
-      "Buying your first home is a significant milestone, especially in a dynamic market like Argentina's. From understanding the difference between 'escritura' and 'boleto de compraventa' to choosing the right neighborhood, there's a lot to consider. We recommend starting with a clear budget, research on local market trends, and finding a trustworthy real estate agent who knows the area well.",
-    postImage: "https://picsum.photos/seed/post1/1080/1920",
-    date: "2024-05-10",
+    userId: 1,
+    bio: "With over 10 years of experience in the Buenos Aires real estate market, I specialize in finding the perfect luxury apartments and investments for my clients.",
+    licenseNumber: "CUCICBA-1234",
+    phoneNumber: "+54 9 11 1234-5678",
   },
   {
-    id: 2,
-    authorId: 2,
-    title: "The rise of Puerto Madero: A luxury guide",
-    excerpt:
-      "Explore why Puerto Madero has become the most expensive and exclusive neighborhood in Buenos Aires.",
-    content:
-      "Puerto Madero has undergone a radical transformation over the past three decades, evolving from an abandoned port area into a hub of high-end skyscrapers and luxury living. Its unique combination of safety, river views, and proximity to the financial district makes it a top choice for international investors and local executives. Discover the best residential towers and hidden gems in this modern neighborhood.",
-    postImage: "https://picsum.photos/seed/post2/1080/1920",
-    date: "2024-05-15",
-  },
-  {
-    id: 3,
-    title: "Investing in Patagonia: Why now is the time",
-    excerpt:
-      "The southern regions of Argentina are seeing a surge in interest. Find out why Bariloche and El Calafate are top picks.",
-    content:
-      "Patagonia has always been a tourist favorite, but lately, it's becoming a hotspot for long-term investment. With the rise of remote work, many people are looking for a lifestyle change, swapping city smog for mountain air. Towns like Bariloche, San Martín de los Andes, and El Calafate offer not just natural beauty, but also a growing infrastructure that supports modern living.",
-    postImage: "https://picsum.photos/seed/post3/1080/1920",
-    date: "2024-05-20",
-  },
-  {
-    id: 4,
-    authorId: 3,
-    title: "Living in the Delta: Pros and Cons",
-    excerpt:
-      "The Tigre Delta offers a unique lifestyle. Is island living right for you?",
-    content:
-      "Life in the Paraná Delta is unlike anything else. Accessible only by boat, it offers a level of peace and contact with nature that is hard to find so close to a major city. However, it also comes with challenges, such as dependence on boat transportation, managing your own utilities, and dealing with river tides. We weigh the pros and cons of making the jump to island life.",
-    postImage: "https://picsum.photos/seed/post4/1080/1920",
-    date: "2024-05-25",
-  },
-  {
-    id: 5,
-    authorId: 3,
-    title: "Traditional vs Modern: Argentinian Architecture",
-    excerpt:
-      "From colonial estates to brutalist towers, Argentina's architectural landscape is a rich tapestry of styles.",
-    content:
-      "Argentina's architecture tells the story of its history. You can find beautiful Spanish colonial houses in the north, French-inspired palaces in Buenos Aires, and cutting-edge contemporary designs in the newer developments. Understanding these styles can help you appreciate the character of different neighborhoods and even inspire your own home renovation projects.",
-    postImage: "https://picsum.photos/seed/post5/1080/1920",
-    date: "2024-06-01",
-  },
-  {
-    id: 6,
-    authorId: 2,
-    title: "Top 5 neighborhoods for students in Córdoba",
-    excerpt:
-      "Known as 'La Docta', Córdoba is the student capital of Argentina. Here's where you should live.",
-    content:
-      "Córdoba is home to one of the oldest and largest universities in South America, creating a vibrant student culture. Nueva Córdoba is the obvious choice for many, but neighborhoods like General Paz, Alberdi, and even the city center offer great alternatives with different vibes and price points. We breakdown the best areas based on proximity to campus, nightlife, and budget.",
-    postImage: "https://picsum.photos/seed/post6/1080/1920",
-    date: "2024-06-05",
-  },
-  {
-    id: 7,
-    authorId: 4,
-    title: "The charm of Northern Argentina: Living in Salta and Jujuy",
-    excerpt:
-      "Experience the colorful mountains and rich traditions of the Northwest.",
-    content:
-      "The Argentine Northwest is a land of dramatic landscapes and deep-rooted traditions. Salta, 'La Linda', offers a mix of colonial beauty and modern amenities, while the small towns of Jujuy provide a slower pace of life in the heart of the mountains. Whether you're looking for a vacation home or a permanent relocation, the north offers a unique and soul-enriching experience.",
-    postImage: "https://picsum.photos/seed/post7/1080/1920",
-    date: "2024-06-10",
+    userId: 2,
+    bio: "Passionate about matching people with their dream homes. I have a deep knowledge of the Córdoba and Salta markets, ensuring smooth transactions from start to finish.",
+    licenseNumber: "CPI-5678",
   },
 ];
+
+// export const postData: PostData[] = [
+//   {
+//     id: 1,
+//     authorId: 1,
+//     title: "How to choose your first home in Argentina",
+//     excerpt:
+//       "Navigating the real estate market in Argentina can be challenging. Here are some tips for first-time buyers.",
+//     content:
+//       "Buying your first home is a significant milestone, especially in a dynamic market like Argentina's. From understanding the difference between 'escritura' and 'boleto de compraventa' to choosing the right neighborhood, there's a lot to consider. We recommend starting with a clear budget, research on local market trends, and finding a trustworthy real estate agent who knows the area well.",
+//     postImage: "https://picsum.photos/seed/post1/1080/1920",
+//     date: "2024-05-10",
+//   },
+//   {
+//     id: 2,
+//     authorId: 2,
+//     title: "The rise of Puerto Madero: A luxury guide",
+//     excerpt:
+//       "Explore why Puerto Madero has become the most expensive and exclusive neighborhood in Buenos Aires.",
+//     content:
+//       "Puerto Madero has undergone a radical transformation over the past three decades, evolving from an abandoned port area into a hub of high-end skyscrapers and luxury living. Its unique combination of safety, river views, and proximity to the financial district makes it a top choice for international investors and local executives. Discover the best residential towers and hidden gems in this modern neighborhood.",
+//     postImage: "https://picsum.photos/seed/post2/1080/1920",
+//     date: "2024-05-15",
+//   },
+//   {
+//     id: 3,
+//     title: "Investing in Patagonia: Why now is the time",
+//     excerpt:
+//       "The southern regions of Argentina are seeing a surge in interest. Find out why Bariloche and El Calafate are top picks.",
+//     content:
+//       "Patagonia has always been a tourist favorite, but lately, it's becoming a hotspot for long-term investment. With the rise of remote work, many people are looking for a lifestyle change, swapping city smog for mountain air. Towns like Bariloche, San Martín de los Andes, and El Calafate offer not just natural beauty, but also a growing infrastructure that supports modern living.",
+//     postImage: "https://picsum.photos/seed/post3/1080/1920",
+//     date: "2024-05-20",
+//   },
+//   {
+//     id: 4,
+//     authorId: 3,
+//     title: "Living in the Delta: Pros and Cons",
+//     excerpt:
+//       "The Tigre Delta offers a unique lifestyle. Is island living right for you?",
+//     content:
+//       "Life in the Paraná Delta is unlike anything else. Accessible only by boat, it offers a level of peace and contact with nature that is hard to find so close to a major city. However, it also comes with challenges, such as dependence on boat transportation, managing your own utilities, and dealing with river tides. We weigh the pros and cons of making the jump to island life.",
+//     postImage: "https://picsum.photos/seed/post4/1080/1920",
+//     date: "2024-05-25",
+//   },
+//   {
+//     id: 5,
+//     authorId: 3,
+//     title: "Traditional vs Modern: Argentinian Architecture",
+//     excerpt:
+//       "From colonial estates to brutalist towers, Argentina's architectural landscape is a rich tapestry of styles.",
+//     content:
+//       "Argentina's architecture tells the story of its history. You can find beautiful Spanish colonial houses in the north, French-inspired palaces in Buenos Aires, and cutting-edge contemporary designs in the newer developments. Understanding these styles can help you appreciate the character of different neighborhoods and even inspire your own home renovation projects.",
+//     postImage: "https://picsum.photos/seed/post5/1080/1920",
+//     date: "2024-06-01",
+//   },
+//   {
+//     id: 6,
+//     authorId: 2,
+//     title: "Top 5 neighborhoods for students in Córdoba",
+//     excerpt:
+//       "Known as 'La Docta', Córdoba is the student capital of Argentina. Here's where you should live.",
+//     content:
+//       "Córdoba is home to one of the oldest and largest universities in South America, creating a vibrant student culture. Nueva Córdoba is the obvious choice for many, but neighborhoods like General Paz, Alberdi, and even the city center offer great alternatives with different vibes and price points. We breakdown the best areas based on proximity to campus, nightlife, and budget.",
+//     postImage: "https://picsum.photos/seed/post6/1080/1920",
+//     date: "2024-06-05",
+//   },
+//   {
+//     id: 7,
+//     authorId: 4,
+//     title: "The charm of Northern Argentina: Living in Salta and Jujuy",
+//     excerpt:
+//       "Experience the colorful mountains and rich traditions of the Northwest.",
+//     content:
+//       "The Argentine Northwest is a land of dramatic landscapes and deep-rooted traditions. Salta, 'La Linda', offers a mix of colonial beauty and modern amenities, while the small towns of Jujuy provide a slower pace of life in the heart of the mountains. Whether you're looking for a vacation home or a permanent relocation, the north offers a unique and soul-enriching experience.",
+//     postImage: "https://picsum.photos/seed/post7/1080/1920",
+//     date: "2024-06-10",
+//   },
+// ];

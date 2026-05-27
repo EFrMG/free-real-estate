@@ -5,8 +5,8 @@ import { GoSearch } from "react-icons/go";
 
 interface PropertyFilters {
   location: string;
-  type: PropertyData["type"] | "any";
-  property: PropertyData["property"] | "any";
+  type: PropertyData["transactionType"] | "any";
+  property: PropertyData["propertyType"] | "any";
   minPrice: number | undefined;
   maxPrice: number | undefined;
   bedrooms: PropertyData["bedrooms"] | undefined;
@@ -22,10 +22,10 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
 
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
     location: searchParams.get("city") ?? "",
-    type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+    type: (searchParams.get("type") as PropertyData["transactionType"] | null) ?? "any",
 
     property:
-      (searchParams.get("property") as PropertyData["property"] | null) ??
+      (searchParams.get("property") as PropertyData["propertyType"] | null) ??
       "any",
 
     minPrice: searchParams.get("minPrice")
@@ -49,10 +49,10 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   useEffect(() => {
     setPropertyFilters({
       location: searchParams.get("city") || "",
-      type: (searchParams.get("type") as PropertyData["type"] | null) ?? "any",
+      type: (searchParams.get("type") as PropertyData["transactionType"] | null) ?? "any",
 
       property:
-        (searchParams.get("property") as PropertyData["property"]) ?? "any",
+        (searchParams.get("property") as PropertyData["propertyType"]) ?? "any",
 
       minPrice: searchParams.get("minPrice")
         ? Number(searchParams.get("minPrice"))

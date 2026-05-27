@@ -29,17 +29,29 @@ export const users = sqliteTable("users", {
   role: text("role", { enum: ["agent", "user"] })
     .notNull()
     .default("user"),
-  // We have to handle a placeholder on user interaction in case of null
-  // src attribute cannot be properly null ⌄
-  profilePicture: text().notNull(),
+  profilePicture: text().notNull().default(""),
+});
+
+export const agentProfiles = sqliteTable("agent_profiles", {
+  userId: integer()
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  licenseNumber: text().notNull(),
+  phoneNumber: text(),
+  bio: text(),
 });
 
 export const properties = sqliteTable("properties", {
   id: integer().primaryKey({ autoIncrement: true }),
-  userId: integer().references(() => users.id),
+  userId: integer().references(() => users.id, { onDelete: "cascade" }),
   transactionType: text("transaction_type", {
     enum: ["buy", "rent"],
   }).notNull(),
+  status: text("status", {
+    enum: ["free", "unavailable", "inactive"],
+  })
+    .notNull()
+    .default("free"),
   propertyType: text("property_type", {
     enum: ["apartment", "house", "condominium"],
   }).notNull(),
@@ -60,19 +72,23 @@ export const properties = sqliteTable("properties", {
   longitude: real().notNull(),
 });
 
-export const posts = sqliteTable("posts", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  authorId: integer().references(() => users.id),
-  title: text().notNull(),
-  excerpt: text().notNull(),
-  content: text().notNull(),
-  postImage: text().notNull(),
-  date: text().notNull(),
-});
+// TODO: post feature. This will come after chats are fully developed
+// export const posts = sqliteTable("posts", {
+//   id: integer().primaryKey({ autoIncrement: true }),
+//   authorId: integer().references(() => users.id, { onDelete: "cascade" }),
+//   title: text().notNull(),
+//   excerpt: text().notNull(),
+//   content: text().notNull(),
+//   postImage: text().notNull(),
+//   date: text().notNull(),
+// });
 
 export const chats = sqliteTable("chats", {
   id: integer().primaryKey({ autoIncrement: true }),
   updatedAt: text().notNull(),
+  propertyId: integer()
+    .notNull()
+    .references(() => properties.id),
 });
 
 // Chat participants (Many-to-Many)
@@ -94,10 +110,10 @@ export const messages = sqliteTable("messages", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   chatId: integer()
     .notNull()
-    .references(() => chats.id),
+    .references(() => chats.id, { onDelete: "cascade" }),
   senderId: integer()
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "cascade" }),
   text: text().notNull(),
   createdAt: text().notNull(),
 });

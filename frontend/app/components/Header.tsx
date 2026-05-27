@@ -51,7 +51,7 @@ function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
           <img
             src={
               user.profilePicture ||
-              "/app/assets/images/profile-pictures/man_1.jpeg"
+              "/app/assets/images/profile-pictures/placeholder.png"
             }
             alt=""
             draggable={false}

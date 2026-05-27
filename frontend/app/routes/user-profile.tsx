@@ -117,7 +117,10 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
                 <div>
                   <img
-                    src={user.profilePicture}
+                    src={
+                      user.profilePicture ||
+                      "/app/assets/images/profile-pictures/placeholder.png"
+                    }
                     alt={user.name}
                     draggable={false}
                     className="profile-picture-big"

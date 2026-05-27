@@ -4,7 +4,7 @@ import * as schema from "./src/schema.ts";
 // Re-export the schema for the backend
 export * from "./src/schema.ts";
 
-// Nullable fields optional so the frontend can omit fields that are null in the DB (T?)
+// Nullable fields optional so the frontend can omit fields that are null in the DB (K?)
 // Otherwise, one needs to write explicit "null" in the data
 type OptionalNullable<T> = {
   [K in keyof T as null extends T[K] ? K : never]?: T[K];
@@ -15,11 +15,13 @@ type OptionalNullable<T> = {
 // Inferred from Schema
 export type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
 
+export type AgentProfileData = OptionalNullable<
+  InferSelectModel<typeof schema.agentProfiles>
+>;
+
 export type PropertyData = OptionalNullable<
   InferSelectModel<typeof schema.properties>
 >;
-
-export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
 
 export type ChatData = OptionalNullable<InferSelectModel<typeof schema.chats>>;
 
@@ -40,9 +42,11 @@ export interface UserWithPropertiesBookmarks extends UserData {
 }
 
 // Blog section
-export interface PostWithAuthor extends PostData {
-  author: UserData;
-}
+// export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
+
+// export interface PostWithAuthor extends PostData {
+//   author: UserData;
+// }
 
 // Join table representation
 export interface Bookmarks {

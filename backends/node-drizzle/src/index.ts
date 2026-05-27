@@ -9,8 +9,9 @@ import { db } from "./db/index.ts";
 import {
   type PropertyData,
   users,
+  agentProfiles,
   properties,
-  posts,
+  // posts,
   bookmarks,
   chats,
   chatParticipants,
@@ -59,11 +60,15 @@ api.get("/properties", async (c) => {
   }
 
   if (type && type !== "any") {
-    filters.push(eq(properties.type, type as PropertyData["type"]));
+    filters.push(
+      eq(properties.transactionType, type as PropertyData["transactionType"]),
+    );
   }
 
   if (property && property !== "any") {
-    filters.push(eq(properties.property, property as PropertyData["property"]));
+    filters.push(
+      eq(properties.propertyType, property as PropertyData["propertyType"]),
+    );
   }
 
   if (minPrice) {
@@ -244,7 +249,36 @@ api.get("/users/:id", async (c) => {
 
   if (!result) return c.json({ error: "User not found" }, 404);
 
+  if (result.role === "agent") {
+    const profile = await db
+      .select()
+      .from(agentProfiles)
+      .where(eq(agentProfiles.userId, id))
+      .get();
+      
+    return c.json({ ...result, profile });
+  }
+
   return c.json(result);
+});
+
+// Update agent profile
+api.put("/users/:id/profile", requireAuth, requireAgent, async (c) => {
+  const id = Number(c.req.param("id"));
+  if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
+  
+  const body = await c.req.json();
+  const { bio, licenseNumber, phoneNumber } = body;
+  
+  await db
+    .insert(agentProfiles)
+    .values({ userId: id, bio, licenseNumber, phoneNumber })
+    .onConflictDoUpdate({
+      target: agentProfiles.userId,
+      set: { bio, licenseNumber, phoneNumber },
+    });
+    
+  return c.json({ ok: true });
 });
 
 // GET properties owned by a user
@@ -311,12 +345,13 @@ api.delete("/users/:id/bookmarks/:propertyId", requireAuth, async (c) => {
 
 // Posts --.
 
+// TODO: blog feature
 // GET all posts
-api.get("/posts", async (c) => {
-  const result = await db.select().from(posts);
-
-  return c.json(result);
-});
+// api.get("/posts", async (c) => {
+//   const result = await db.select().from(posts);
+//
+//   return c.json(result);
+// });
 
 const port = 3000;
 

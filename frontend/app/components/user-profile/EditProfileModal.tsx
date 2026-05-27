@@ -16,7 +16,9 @@ export default function EditProfileModal({
   const { isDialogOpen, dialogRef, openCloseDialog } = editProfileProps;
 
   const [name, setName] = useState(user.name);
-  const [previewSrc, setPreviewSrc] = useState(user.profilePicture);
+  const [profilePictureSrc, setProfilePictureSrc] = useState(
+    user.profilePicture,
+  );
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -26,7 +28,7 @@ export default function EditProfileModal({
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (ev) => setPreviewSrc(ev.target?.result as string);
+      reader.onload = (e) => setProfilePictureSrc(e.target?.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -84,7 +86,10 @@ export default function EditProfileModal({
                   <div className="relative group">
                     <div className="overflow-hidden rounded-full">
                       <img
-                        src={previewSrc}
+                        src={
+                          profilePictureSrc ||
+                          "/app/assets/images/profile-pictures/placeholder.png"
+                        }
                         alt="Profile picture preview"
                         onClick={() => fileRef.current?.click()}
                         className="profile-picture-big cursor-pointer
