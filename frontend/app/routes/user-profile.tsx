@@ -8,6 +8,7 @@ import type {
 
 import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
+import { getAssetUrl } from "~/utils/display";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
@@ -135,10 +136,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <div>
                   <img
-                    src={
-                      user.profilePicture ||
-                      "/app/assets/images/profile-pictures/placeholder.png"
-                    }
+                    src={getAssetUrl(user.profilePicture)}
                     alt={`${user.name}-profile-picture`}
                     draggable={false}
                     className="profile-picture-big"

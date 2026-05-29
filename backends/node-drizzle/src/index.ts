@@ -1,9 +1,12 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { type SQL, eq, and, gte, lte, like, asc } from "drizzle-orm";
 import argon2 from "argon2";
 import { z } from "zod";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 import { db } from "./db/index.ts";
 import {
@@ -33,6 +36,9 @@ import type {
 } from "@free-real-estate/shared";
 
 const app = new Hono();
+
+// Serve static files
+app.use("/public/*", serveStatic({ root: "./" }));
 
 app.get("/", (c) => {
   return c.text("Free Real Estate API.");
@@ -293,16 +299,48 @@ api.put("/users/:id", requireAuth, async (c) => {
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
-  const body = await c.req.json();
-  const { name, profilePicture, licenseNumber, phoneNumber, bio } = body;
+  // Handle both JSON and Multipart for file uploads
+  const contentType = c.req.header("Content-Type") || "";
+  let body: any;
+
+  if (contentType.includes("multipart/form-data")) {
+    body = await c.req.parseBody();
+  } else {
+    body = await c.req.json();
+  }
+
+  const { name, licenseNumber, phoneNumber, bio } = body;
+  let profilePicture = body.profilePicture;
 
   // Core users table
   const userUpdates: Partial<UserBasic> = {};
 
   if (name !== undefined) userUpdates["name"] = name;
 
-  if (profilePicture !== undefined)
-    userUpdates["profilePicture"] = profilePicture ?? "";
+  // Handle profile picture file upload
+  if (profilePicture instanceof File) {
+    const file = profilePicture;
+    const fileName = `${id}-${Date.now()}-${file.name}`; // Good enough to avoid duplicates
+
+    const filePath = path.join(
+      "public",
+      "uploads",
+      "profile-pictures",
+      fileName,
+    );
+
+    const arrayBuffer = await file.arrayBuffer();
+
+    await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+
+    userUpdates["profilePicture"] =
+      `/public/uploads/profile-pictures/${fileName}`;
+  } else if (
+    typeof profilePicture === "string" &&
+    profilePicture !== undefined
+  ) {
+    userUpdates["profilePicture"] = profilePicture;
+  }
 
   if (Object.keys(userUpdates).length) {
     await db.update(users).set(userUpdates).where(eq(users.id, id));
@@ -329,7 +367,10 @@ api.put("/users/:id", requireAuth, async (c) => {
     }
   }
 
-  return c.json({ ok: true });
+  return c.json({
+    ok: true,
+    profilePicture: userUpdates.profilePicture,
+  });
 });
 
 // Promote a normal user to agent

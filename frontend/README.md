@@ -12,7 +12,9 @@ This is the frontend application for the Free Real Estate project, built as a mo
 
 ## Structure
 
-- `app/components/`: Reusable UI components.
+- `app/components/*`: Reusable UI components organized per route, or general components such as for layout at the root.
 - `app/routes/`: Individual page components.
 - `app/css/`: Tailwind customizations and global styles.
 - `app/data/`: Mock data to use as seed and legacy types (constantly migrating to API).
+- `app/hooks/`: Custom React hooks.
+- `app/utils/`: Like hooks but without state or other hooks.

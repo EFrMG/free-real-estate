@@ -2,6 +2,7 @@ import { useState } from "react";
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
 import { Link, NavLink, useRouteLoaderData } from "react-router";
+import { getAssetUrl } from "~/utils/display";
 
 interface NavLinks {
   name: string;
@@ -47,12 +48,8 @@ function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
       <div className="flex items-center gap-2">
         <span>{user.name}</span>
         <div className="relative">
-          {/* TODO: better profile picture placeholder */}
           <img
-            src={
-              user.profilePicture ||
-              "/app/assets/images/profile-pictures/placeholder.png"
-            }
+            src={getAssetUrl(user.profilePicture)}
             alt=""
             draggable={false}
             className="w-12 h-12 rounded-full object-cover"

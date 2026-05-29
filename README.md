@@ -136,16 +136,16 @@ The runtime is `Node.js` via `@hono/node-server`.
     - `POST /api/auth/register`: User registration.
     - `POST /api/auth/login`: User login (sets session cookie).
     - `POST /api/auth/logout`: User logout (clears session cookie).
-    - `GET /api/auth/me`: Retrieves currently authenticated user session.
+    - `GET /api/auth/me`: Verifies currently authenticated user session and retrieves the full user's profile.
   - _Users & Bookmarks_:
-    - `GET /api/users`: Gets list of agents.
+    - `GET /api/users`: Gets list of user agents (not normal users, as this is for Our Agents page).
     - `GET /api/users/:id`: Gets profile details of a specific user.
-    - `GET /api/users/:id/bookmarks`: Gets properties owned by a user (there's still logic left to do when it comes to differentiating users and agents).
-    - `GET /users/:id/properties`: Gets a user's bookmarked properties.
+    - `PUT /api/users/:id`: Updates a user's profile (name, profile picture, bio, etc).
+    - `POST /api/users/:id/promote`: Promotes a normal user to Agent status using a secret code.
+    - `GET /api/users/:id/properties`: Gets properties owned by a user.
+    - `GET /api/users/:id/bookmarks`: Gets a user's bookmarked properties.
     - `POST /api/users/:id/bookmarks`: Saves a property to a user's bookmarks.
     - `DELETE /api/users/:id/bookmarks/:propertyId`: Removes a property from a user's bookmarks.
-  - _Posts_:
-    - `GET /api/posts`: Generic blog wall or news entry fetching.
 
 ##### 1.2.1.1 Core Database Entities
 

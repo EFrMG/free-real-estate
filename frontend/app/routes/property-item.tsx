@@ -2,6 +2,7 @@ import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
 import type { PropertyData, UserBasic } from "~/data/generalData";
+import { getAssetUrl } from "~/utils/display";
 
 import PropertyGallery from "~/components/property-item/Gallery";
 import {
@@ -146,7 +147,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   bg-amber-100/24 shadow-md rounded-lg border border-amber-200"
                 >
                   <img
-                    src={userPoster.profilePicture}
+                    src={getAssetUrl(userPoster.profilePicture)}
                     alt={userPoster.name}
                     className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                   />

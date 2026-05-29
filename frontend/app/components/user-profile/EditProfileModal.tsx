@@ -1,8 +1,11 @@
 import { useState, useRef } from "react";
+import { useRevalidator } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
-import type { ModalProps } from "./modalTypes";
+import type { UserProfile } from "~/data/generalData";
 import type { ProfileState } from "~/routes/user-profile";
+import type { ModalProps } from "./modalTypes";
+import { getAssetUrl } from "~/utils/display";
 
 import { GoPencil, GoX } from "react-icons/go";
 
@@ -14,25 +17,59 @@ export default function EditProfileModal({
   updateProfileState,
 }: {
   editProfileProps: ModalProps;
-  userRole: "user" | "agent";
-  userId: number;
+  userRole: UserProfile["role"];
+  userId: UserProfile["id"];
   profileState: ProfileState;
   updateProfileState: (updates: Partial<ProfileState>) => void;
 }) {
   const { isDialogOpen, dialogRef, openCloseDialog } = editProfileProps;
 
-  const handleProfileChange = async (profileState: ProfileState) => {
-    fetch(`http://localhost:3000/api/users/${userId}`, {
-      method: "PUT",
-      body: JSON.stringify(profileState),
-      credentials: "include",
-    });
-  };
+  const { revalidate, state: revalidateState } = useRevalidator();
 
-  // TODO: profile picture real update
-  const [profilePictureSrc, setProfilePictureSrc] = useState(
-    profileState.profilePicture,
-  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleProfileChange = async (profileState: ProfileState) => {
+    const formData = new FormData();
+
+    formData.append("name", profileState.name);
+
+    if (selectedFile) {
+      formData.append("profilePicture", selectedFile);
+    }
+
+    if (userRole === "agent") {
+      if (profileState.phoneNumber)
+        formData.append("phoneNumber", String(profileState.phoneNumber));
+
+      if (profileState.bio) formData.append("bio", String(profileState.bio));
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/${userId}`,
+        {
+          method: "PUT",
+          body: formData,
+          credentials: "include",
+        },
+      );
+
+      if (response.ok) {
+        // The backend returns the new path if we have a new picture
+        const data = await response.json();
+
+        if (data.profilePicture) {
+          updateProfileState({ profilePicture: data.profilePicture });
+        }
+
+        openCloseDialog(false);
+
+        if (revalidateState === "idle") revalidate();
+      }
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -40,9 +77,14 @@ export default function EditProfileModal({
     const file = e.target.files?.[0];
 
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
 
-      reader.onload = (e) => setProfilePictureSrc(e.target?.result as string);
+      reader.onload = (e) =>
+        updateProfileState({ profilePicture: e.target?.result as string });
+      reader.onerror = (err) =>
+        console.error(`Error while handling profile picture update: ${err}`);
+
       reader.readAsDataURL(file);
     }
   };
@@ -107,10 +149,7 @@ export default function EditProfileModal({
                     <div className="relative group">
                       <div className="overflow-hidden rounded-full">
                         <img
-                          src={
-                            profilePictureSrc ||
-                            "/app/assets/images/profile-pictures/placeholder.png"
-                          }
+                          src={getAssetUrl(profileState.profilePicture)}
                           alt="Profile picture preview"
                           onClick={() => fileRef.current?.click()}
                           className="profile-picture-big cursor-pointer
@@ -118,6 +157,7 @@ export default function EditProfileModal({
                         />
                       </div>
                       <button
+                        type="button"
                         onClick={() => fileRef.current?.click()}
                         className="absolute bottom-0 right-0 profile-pencil-btn"
                       >
@@ -127,6 +167,7 @@ export default function EditProfileModal({
                     <input
                       ref={fileRef}
                       type="file"
+                      name="profilePicture"
                       accept="image/*"
                       onChange={handleFileChange}
                       className="sr-only"
@@ -158,7 +199,7 @@ export default function EditProfileModal({
                         <input
                           id="edit-phone-number"
                           type="tel"
-                          value={String(profileState.phoneNumber)}
+                          value={String(profileState.phoneNumber ?? "")}
                           onChange={(e) =>
                             updateProfileState({ phoneNumber: e.target.value })
                           }
@@ -170,7 +211,7 @@ export default function EditProfileModal({
                         <label htmlFor="edit-biography">Biography</label>
                         <textarea
                           id="edit-biography"
-                          value={String(profileState.bio)}
+                          value={String(profileState.bio ?? "")}
                           onChange={(e) =>
                             updateProfileState({ bio: e.target.value })
                           }
@@ -182,6 +223,7 @@ export default function EditProfileModal({
 
                   <fieldset className="flex justify-end gap-3 pt-2">
                     <button
+                      type="button"
                       onClick={() => openCloseDialog(false)}
                       className="px-4 py-2 text-amber-800 rounded-md
             hover:bg-amber-200/68  transition-colors cursor-pointer"
@@ -189,7 +231,7 @@ export default function EditProfileModal({
                       Cancel
                     </button>
                     <button
-                      onClick={() => openCloseDialog(false)}
+                      type="submit"
                       className="px-5 py-2 bg-amber-600/94 text-white font-medium
             rounded-md shadow-md hover:bg-amber-700/94
             transition-colors cursor-pointer"
