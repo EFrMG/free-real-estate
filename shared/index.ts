@@ -19,9 +19,9 @@ export interface UserBasic extends Omit<UserData, "passwordHash"> {}
 
 // Shape returned by GET /users/:id
 export interface UserProfile extends UserBasic {
-  bio?: string | null;
   licenseNumber?: string | null;
   phoneNumber?: string | null;
+  bio?: string | null;
 }
 
 export type AgentProfileData = OptionalNullable<

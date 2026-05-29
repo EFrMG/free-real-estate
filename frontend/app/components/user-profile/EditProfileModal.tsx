@@ -1,23 +1,37 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
-import type { UserData } from "~/data/generalData";
 import type { ModalProps } from "./modalTypes";
+import type { ProfileState } from "~/routes/user-profile";
 
 import { GoPencil, GoX } from "react-icons/go";
 
 export default function EditProfileModal({
-  user,
   editProfileProps,
+  userId,
+  userRole,
+  profileState,
+  updateProfileState,
 }: {
-  user: UserData;
   editProfileProps: ModalProps;
+  userRole: "user" | "agent";
+  userId: number;
+  profileState: ProfileState;
+  updateProfileState: (updates: Partial<ProfileState>) => void;
 }) {
   const { isDialogOpen, dialogRef, openCloseDialog } = editProfileProps;
 
-  const [name, setName] = useState(user.name);
+  const handleProfileChange = async (profileState: ProfileState) => {
+    fetch(`http://localhost:3000/api/users/${userId}`, {
+      method: "PUT",
+      body: JSON.stringify(profileState),
+      credentials: "include",
+    });
+  };
+
+  // TODO: profile picture real update
   const [profilePictureSrc, setProfilePictureSrc] = useState(
-    user.profilePicture,
+    profileState.profilePicture,
   );
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -77,74 +91,113 @@ export default function EditProfileModal({
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="text-xl font-semibold text-amber-950">
+                <h2 className="ml-2 text-xl font-semibold text-amber-950">
                   Edit Profile
                 </h2>
 
-                {/* Picture preview + upload */}
-                <div className="flex flex-col items-center gap-3">
-                  <div className="relative group">
-                    <div className="overflow-hidden rounded-full">
-                      <img
-                        src={
-                          profilePictureSrc ||
-                          "/app/assets/images/profile-pictures/placeholder.png"
-                        }
-                        alt="Profile picture preview"
-                        onClick={() => fileRef.current?.click()}
-                        className="profile-picture-big cursor-pointer
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleProfileChange(profileState);
+                  }}
+                  className="space-y-4 mt-4"
+                >
+                  {/* Picture preview + upload */}
+                  <fieldset className="flex flex-col items-center gap-3">
+                    <div className="relative group">
+                      <div className="overflow-hidden rounded-full">
+                        <img
+                          src={
+                            profilePictureSrc ||
+                            "/app/assets/images/profile-pictures/placeholder.png"
+                          }
+                          alt="Profile picture preview"
+                          onClick={() => fileRef.current?.click()}
+                          className="profile-picture-big cursor-pointer
                         group-hover:scale-105 transition-transform duration-300"
-                      />
+                        />
+                      </div>
+                      <button
+                        onClick={() => fileRef.current?.click()}
+                        className="absolute bottom-0 right-0 profile-pencil-btn"
+                      >
+                        <GoPencil size={14} />
+                      </button>
                     </div>
+                    <input
+                      ref={fileRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="sr-only"
+                    />
+
+                    <p className="text-xs text-amber-700/92">
+                      Click the pencil to upload a new photo
+                    </p>
+                  </fieldset>
+
+                  {/* Name input */}
+                  <fieldset className="stack-0 gen-form-labels">
+                    <label htmlFor="edit-name">Display Name</label>
+                    <input
+                      id="edit-name"
+                      type="text"
+                      value={profileState.name}
+                      onChange={(e) =>
+                        updateProfileState({ name: e.target.value })
+                      }
+                      className="gen-input-forms"
+                    />
+                  </fieldset>
+
+                  {userRole === "agent" && (
+                    <>
+                      <fieldset className="stack-0 gen-form-labels">
+                        <label htmlFor="edit-phone-number">Phone Number:</label>
+                        <input
+                          id="edit-phone-number"
+                          type="tel"
+                          value={String(profileState.phoneNumber)}
+                          onChange={(e) =>
+                            updateProfileState({ phoneNumber: e.target.value })
+                          }
+                          className="gen-input-forms"
+                        />
+                      </fieldset>
+
+                      <fieldset className="stack-0 gen-form-labels">
+                        <label htmlFor="edit-biography">Biography</label>
+                        <textarea
+                          id="edit-biography"
+                          value={String(profileState.bio)}
+                          onChange={(e) =>
+                            updateProfileState({ bio: e.target.value })
+                          }
+                          className="gen-input-forms max-h-[8lh]"
+                        />
+                      </fieldset>
+                    </>
+                  )}
+
+                  <fieldset className="flex justify-end gap-3 pt-2">
                     <button
-                      onClick={() => fileRef.current?.click()}
-                      className="absolute bottom-0 right-0 profile-pencil-btn"
-                    >
-                      <GoPencil size={14} />
-                    </button>
-                  </div>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="sr-only"
-                  />
-
-                  <p className="text-xs text-amber-700/92">
-                    Click the pencil to upload a new photo
-                  </p>
-                </div>
-
-                {/* Name input */}
-                <fieldset className="stack-0 gen-form-labels">
-                  <label htmlFor="edit-name">Display Name</label>
-                  <input
-                    id="edit-name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="gen-input-forms"
-                  />
-                </fieldset>
-
-                <div className="flex justify-end gap-3 pt-2">
-                  <button
-                    onClick={() => openCloseDialog(false)}
-                    className="px-4 py-2 text-amber-800 rounded-md
+                      onClick={() => openCloseDialog(false)}
+                      className="px-4 py-2 text-amber-800 rounded-md
             hover:bg-amber-200/68  transition-colors cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => openCloseDialog(false)}
-                    className="px-5 py-2 bg-amber-600/94 text-white font-medium
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => openCloseDialog(false)}
+                      className="px-5 py-2 bg-amber-600/94 text-white font-medium
             rounded-md shadow-md hover:bg-amber-700/94
             transition-colors cursor-pointer"
-                  >
-                    Save Changes
-                  </button>
-                </div>
+                    >
+                      Save Changes
+                    </button>
+                  </fieldset>
+                </form>
               </div>
             </motion.div>
           </motion.div>

@@ -26,7 +26,11 @@ import {
   COOKIE_NAME,
 } from "./auth.ts";
 
-import type { UserBasic, UserProfile } from "@free-real-estate/shared";
+import type {
+  AgentProfileData,
+  UserBasic,
+  UserProfile,
+} from "@free-real-estate/shared";
 
 const app = new Hono();
 
@@ -290,7 +294,7 @@ api.put("/users/:id", requireAuth, async (c) => {
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
   const body = await c.req.json();
-  const { name, profilePicture, bio, licenseNumber, phoneNumber } = body;
+  const { name, profilePicture, licenseNumber, phoneNumber, bio } = body;
 
   // Core users table
   const userUpdates: Partial<UserBasic> = {};
@@ -304,17 +308,25 @@ api.put("/users/:id", requireAuth, async (c) => {
     await db.update(users).set(userUpdates).where(eq(users.id, id));
   }
 
-  // Agent data
+  // Agent profile updates
   const session = c.get("user") as UserSession;
 
   if (session.role === "agent") {
-    await db
-      .insert(agentProfiles)
-      .values({ userId: id, bio, licenseNumber, phoneNumber })
-      .onConflictDoUpdate({
-        target: agentProfiles.userId,
-        set: { bio, licenseNumber, phoneNumber },
-      });
+    const agentUpdates: Partial<AgentProfileData> = {};
+
+    if (licenseNumber !== undefined)
+      agentUpdates["licenseNumber"] = licenseNumber;
+
+    if (phoneNumber !== undefined) agentUpdates["phoneNumber"] = phoneNumber;
+
+    if (bio !== undefined) agentUpdates["bio"] = bio;
+
+    if (Object.keys(agentUpdates).length) {
+      await db
+        .update(agentProfiles)
+        .set(agentUpdates)
+        .where(eq(agentProfiles.userId, id));
+    }
   }
 
   return c.json({ ok: true });
@@ -323,20 +335,22 @@ api.put("/users/:id", requireAuth, async (c) => {
 // Promote a normal user to agent
 api.post("/users/:id/promote", requireAuth, async (c) => {
   const id = Number(c.req.param("id"));
+
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
-  const { adminCode, bio, licenseNumber, phoneNumber } = await c.req.json();
-  const secret = process.env.AGENT_PROMOTION_CODE ?? "demo-secret";
+  const { adminCode, licenseNumber } = await c.req.json();
+  const secret =
+    process.env.AGENT_PROMOTION_CODE ?? "agent-code--change-in-prod";
+
   if (adminCode !== secret)
     return c.json({ error: "Invalid promotion code" }, 401);
 
   // Update role to agent
   await db.update(users).set({ role: "agent" }).where(eq(users.id, id));
 
-  // Insert agent profile (ignore if already exists)
   await db
     .insert(agentProfiles)
-    .values({ userId: id, bio, licenseNumber, phoneNumber })
+    .values({ userId: id, licenseNumber })
     .onConflictDoNothing();
 
   return c.json({ ok: true });

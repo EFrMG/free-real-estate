@@ -159,7 +159,7 @@
   }
 
   .profile-modal-card {
-    @apply relative w-[92vw] max-w-md pt-4 px-6 pb-6 bg-amber-50 rounded-xl shadow-2xl stack-6;
+    @apply relative w-[92vw] max-w-md p-6 bg-amber-50 rounded-xl shadow-2xl;
   }
 
   .profile-modal-cross {

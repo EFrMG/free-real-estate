@@ -1,9 +1,13 @@
 import type { Route } from "./+types/user-profile";
 import { Link, redirect } from "react-router";
 
-import type { PropertyData } from "~/data/generalData";
+import type {
+  PropertyData,
+  UserProfile as UserProfileData,
+} from "~/data/generalData";
 
 import useDialog from "~/hooks/useDialog";
+import useObjectState from "~/hooks/useObjectState";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
@@ -16,6 +20,11 @@ import {
   GoShieldLock,
   GoPackage,
 } from "react-icons/go";
+
+export interface ProfileState extends Omit<
+  UserProfileData,
+  "id" | "email" | "role" | "licenseNumber"
+> {}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -37,7 +46,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (!userRes) return redirect("/log-in");
 
-  const user = await userRes.json();
+  const user: UserProfileData = await userRes.json();
   const userId = user.id;
 
   const [userPropertiesRes, userBookmarksRes] = await Promise.all([
@@ -85,6 +94,14 @@ function ProfileSection({
 export default function UserProfile({ loaderData }: Route.ComponentProps) {
   const { user, userProperties, userBookmarks, userMessages } = loaderData;
 
+  const { state: profileState, updateState: updateProfileState } =
+    useObjectState<ProfileState>({
+      name: user.name,
+      profilePicture: user.profilePicture,
+      phoneNumber: user.phoneNumber,
+      bio: user.bio,
+    });
+
   const {
     isDialogOpen: isEditProfileOpen,
     dialogRef: editProfileRef,
@@ -115,7 +132,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
             <div className="relative z-10 p-5 sm:p-6">
               {/* Avatar + Info row */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <div>
                   <img
                     src={
@@ -282,22 +299,26 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               Messages
             </h2>
             <div className="stack-4 py-6 text-center">
-              <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
-                <span className="text-2xl opacity-42">💬</span>
-              </div>
-              <p className="text-sm text-amber-800/74 italic">
-                Your chats will appear here.
-              </p>
-              <p className="text-xs text-amber-700/92">
-                Visit{" "}
-                <Link
-                  to="/our-agents"
-                  className="underline decoration-amber-700/76"
-                >
-                  Our Agents
-                </Link>{" "}
-                profiles to send them a message.
-              </p>
+              {!userMessages && (
+                <>
+                  <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
+                    <span className="text-2xl opacity-42">💬</span>
+                  </div>
+                  <p className="text-sm text-amber-800/74 italic">
+                    Your chats will appear here.
+                  </p>
+                  <p className="text-xs text-amber-700/92">
+                    Visit{" "}
+                    <Link
+                      to="/our-agents"
+                      className="underline decoration-amber-700/76"
+                    >
+                      Our Agents
+                    </Link>{" "}
+                    profiles to send them a message.
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -310,7 +331,10 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           dialogRef: editProfileRef,
           openCloseDialog: setEditProfileOpen,
         }}
-        user={user}
+        userRole={user.role}
+        userId={user.id}
+        profileState={profileState}
+        updateProfileState={updateProfileState}
       />
 
       <ChangePasswordModal
