@@ -12,8 +12,17 @@ type OptionalNullable<T> = {
   [K in keyof T as null extends T[K] ? never : K]: T[K];
 };
 
-// Inferred from Schema
-export type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
+// Inferred from Schema and extensions
+type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
+
+export interface UserBasic extends Omit<UserData, "passwordHash"> {}
+
+// Shape returned by GET /users/:id
+export interface UserProfile extends UserBasic {
+  bio?: string | null;
+  licenseNumber?: string | null;
+  phoneNumber?: string | null;
+}
 
 export type AgentProfileData = OptionalNullable<
   InferSelectModel<typeof schema.agentProfiles>

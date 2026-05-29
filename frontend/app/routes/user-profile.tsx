@@ -1,5 +1,5 @@
 import type { Route } from "./+types/user-profile";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 
 import type { PropertyData } from "~/data/generalData";
 
@@ -28,13 +28,14 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function clientLoader({}: Route.ClientLoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+
   const userRes = await fetch("http://localhost:3000/api/auth/me", {
-    credentials: "include",
+    headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
   });
 
-  if (!userRes)
-    throw new Response("Not authenticated as a user!", { status: 401 });
+  if (!userRes) return redirect("/log-in");
 
   const user = await userRes.json();
   const userId = user.id;
@@ -42,7 +43,7 @@ export async function clientLoader({}: Route.ClientLoaderArgs) {
   const [userPropertiesRes, userBookmarksRes] = await Promise.all([
     fetch(`http://localhost:3000/api/users/${userId}/properties`),
     fetch(`http://localhost:3000/api/users/${userId}/bookmarks`, {
-      credentials: "include",
+      headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     }),
   ]);
 
@@ -121,7 +122,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       user.profilePicture ||
                       "/app/assets/images/profile-pictures/placeholder.png"
                     }
-                    alt={user.name}
+                    alt={`${user.name}-profile-picture`}
                     draggable={false}
                     className="profile-picture-big"
                   />
@@ -134,15 +135,23 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-amber-800/84">{user.email}</p>
-                      <span
-                        className="inline-block w-fit mt-1 px-3 py-0.5
-                    bg-amber-300/30 text-amber-900 text-xs font-medium
+                      <p className="flex items-center gap-4 text-sm text-amber-800/84">
+                        {user.email}
+                        {user.role === "user" && (
+                          //  TODO: agent promotion
+                          <button className="text-amber-900/58">
+                            become an agent
+                          </button>
+                        )}
+                      </p>
+                      <p
+                        className="w-fit mt-1 px-3 py-0.5 text-xs 
+                    bg-amber-300/30 text-amber-900 font-medium
                     rounded-full border border-amber-300/50 capitalize
                     mx-auto sm:mx-0"
                       >
                         {user.role}
-                      </span>
+                      </p>{" "}
                     </div>
 
                     <button
@@ -184,6 +193,31 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   Change Password
                 </button>
               </div>
+
+              {/* Agent details */}
+              {user.role === "agent" && (
+                <div
+                  className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50/84
+                  border border-amber-200/64 space-y-3
+                  [&_div]:flex [&_div]:justify-between [&_div]:items-center
+                  [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
+                  [&_h2]:text-lg [&_h2]:text-amber-950
+                  [&_p]:ml-8 [&_p]:text-slate-900/94"
+                >
+                  <div>
+                    <h2>License number:</h2>
+                    <p>{user.licenseNumber}</p>
+                  </div>
+                  <div>
+                    <h2>Telephone number:</h2>
+                    <p>{user.phoneNumber}</p>
+                  </div>
+                  <div>
+                    <h2>Biography:</h2>
+                    <p className="text-slate-900/72!">{user.bio}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 
@@ -209,22 +243,27 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           </ProfileSection>
 
           {/* Property list */}
-          <ProfileSection title="My Properties" icon={<GoPackage size={24} />}>
-            {userProperties?.length ? (
-              <div className="max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4">
-                {userProperties.map((property: PropertyData) => (
-                  <MiniPropertyCard
-                    key={`property-${property.id}`}
-                    property={property}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="py-4 text-sm text-amber-800/94 italic text-center">
-                You currently have no listed properties.
-              </p>
-            )}
-          </ProfileSection>
+          {user.role === "agent" && (
+            <ProfileSection
+              title="My Properties"
+              icon={<GoPackage size={24} />}
+            >
+              {userProperties?.length ? (
+                <div className="max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4">
+                  {userProperties.map((property: PropertyData) => (
+                    <MiniPropertyCard
+                      key={`property-${property.id}`}
+                      property={property}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="py-4 text-sm text-amber-800/94 italic text-center">
+                  You currently have no listed properties.
+                </p>
+              )}
+            </ProfileSection>
+          )}
 
           {/* TODO: blog posts section */}
         </div>

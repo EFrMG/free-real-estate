@@ -1,7 +1,7 @@
 import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
-import type { PropertyData, UserData } from "@free-real-estate/shared";
+import type { PropertyData, UserBasic } from "@free-real-estate/shared";
 
 import PropertyGallery from "~/components/property-item/Gallery";
 import {
@@ -28,7 +28,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   const property: PropertyData = await resProperty.json();
 
-  let userPoster: UserData | null = null;
+  let userPoster: UserBasic | null = null;
 
   if (property.userId) {
     const resUser = await fetch(

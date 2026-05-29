@@ -28,11 +28,9 @@
 
   --body-max-width: 80ch;
 
-  --text-clr: hsl(0, 0%, 10%);
-  --text-clr-dimish: hsla(0, 0%, 10%, 0.85);
-  --text-clr-dim: hsla(0, 0%, 10%, 0.7);
+  --text-clr: var(--color-slate-900);
 
-  --bkg-clr: hsl(0, 0%, 95%);
+  --bkg-clr: var(--color-amber-50);
 
   --b-width-s: 1px;
   --b-width-m: 3px;

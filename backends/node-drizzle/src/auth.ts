@@ -1,3 +1,5 @@
+// Authentication utilities for Free Real Estate backend
+
 import { createMiddleware } from "hono/factory";
 import { sign, verify } from "hono/jwt";
 import { setCookie, getCookie, deleteCookie } from "hono/cookie";
@@ -5,15 +7,12 @@ import { setCookie, getCookie, deleteCookie } from "hono/cookie";
 const JWT_KEY = process.env.JWT_KEY ?? "dev-secret--change-in-prod";
 const COOKIE_NAME = "session";
 
+// Minimal session payload
 export interface UserSession {
   id: number;
-  email: string;
-  name: string;
   role: "agent" | "user";
-  profilePicture: string;
 }
 
-// Signs a JWT and sets it as an HttpOnly cookie
 export async function setSessionCookie(c: any, user: UserSession) {
   const token = await sign(
     { ...user, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7 }, // 7 days
@@ -29,39 +28,24 @@ export async function setSessionCookie(c: any, user: UserSession) {
   });
 }
 
+// Middleware to verify the JWT and attach UserSession to context
 export const requireAuth = createMiddleware<{
   Variables: { user: UserSession };
 }>(async (c, next) => {
   const token = getCookie(c, COOKIE_NAME);
-
   if (!token) return c.json({ error: "Unauthorized as user" }, 401);
 
   try {
     const payload = await verify(token, JWT_KEY, "HS256");
-
     const user: UserSession = {
       id: payload["id"] as number,
-      email: payload["email"] as string,
-      name: payload["name"] as string,
       role: payload["role"] as "agent" | "user",
-      profilePicture: payload["profilePicture"] as string,
     };
-
-    // Pass the user
     c.set("user", user);
     await next();
   } catch {
     return c.json({ error: "Invalid session token." }, 401);
   }
-});
-
-export const requireAgent = createMiddleware<{
-  Variables: { user: UserSession };
-}>(async (c, next) => {
-  const user = c.get("user");
-
-  if (user.role !== "agent") return c.json({ error: "Forbidden" }, 403);
-  await next();
 });
 
 export { deleteCookie, COOKIE_NAME };

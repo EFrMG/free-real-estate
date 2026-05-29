@@ -12,18 +12,21 @@ import "./app.css";
 
 import Header from "~/components/Header";
 
-export async function clientLoader() {
+export async function loader({ request }: Route.LoaderArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+
   try {
     const authRes = await fetch("http://localhost:3000/api/auth/me", {
-      credentials: "include",
+      headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     });
 
     if (authRes.ok) {
       return await authRes.json();
     }
   } catch (error) {
-    console.error(error); // The backend handles this on requireAuth regardless
+    console.error(error); // The backend should handle this on requireAuth regardless
   }
+
   return null;
 }
 
