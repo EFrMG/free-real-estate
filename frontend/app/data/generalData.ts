@@ -1,12 +1,12 @@
 import type {
   PropertyData,
   UserData,
+  UserBasic,
   AgentProfileData,
   // PostData,
 } from "@free-real-estate/shared";
 
-// export type { PropertyData, UserData, PostData };
-export type { PropertyData, UserData, AgentProfileData };
+export type { PropertyData, UserBasic, AgentProfileData };
 
 // This data is linked to generalDataSeed.ts in the backend
 

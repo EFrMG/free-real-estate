@@ -13,7 +13,7 @@ type OptionalNullable<T> = {
 };
 
 // Inferred from Schema and extensions
-type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
+export type UserData = OptionalNullable<InferSelectModel<typeof schema.users>>;
 
 export interface UserBasic extends Omit<UserData, "passwordHash"> {}
 

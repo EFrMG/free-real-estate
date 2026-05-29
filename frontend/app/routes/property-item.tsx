@@ -1,7 +1,7 @@
 import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
-import type { PropertyData, UserBasic } from "@free-real-estate/shared";
+import type { PropertyData, UserBasic } from "~/data/generalData";
 
 import PropertyGallery from "~/components/property-item/Gallery";
 import {
