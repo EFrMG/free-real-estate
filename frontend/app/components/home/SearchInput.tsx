@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
+import useObjectState from "~/hooks/useObjectState";
 import { GoSearch } from "react-icons/go";
 
 interface Query {
@@ -16,19 +16,13 @@ interface HomeSearchInputProps {
 export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
   const navigate = useNavigate();
 
-  const [searchQuery, setSearchQuery] = useState<Query>({
-    type: "any",
-    location: "",
-    minPrice: undefined,
-    maxPrice: undefined,
-  });
-
-  const updateQuery = (updates: Partial<Query>) => {
-    setSearchQuery((prev: Query) => ({
-      ...prev,
-      ...updates,
-    }));
-  };
+  const { state: searchQuery, updateState: updateQuery } =
+    useObjectState<Query>({
+      type: "any",
+      location: "",
+      minPrice: undefined,
+      maxPrice: undefined,
+    });
 
   const handleSearch = (e: React.SubmitEvent) => {
     e.preventDefault();

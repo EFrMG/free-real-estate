@@ -1,7 +1,8 @@
-import { useEffect, useState, type SubmitEvent } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import type { PropertyData } from "@free-real-estate/shared";
 import { GoSearch } from "react-icons/go";
+import useObjectState from "~/hooks/useObjectState";
 
 interface PropertyFilters {
   location: string;
@@ -20,36 +21,41 @@ interface FilterInputProps {
 export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [propertyFilters, setPropertyFilters] = useState<PropertyFilters>({
-    location: searchParams.get("city") ?? "",
-    type: (searchParams.get("type") as PropertyData["transactionType"] | null) ?? "any",
+  const { state: propertyFilters, updateState: setPropertyFilters } =
+    useObjectState<PropertyFilters>({
+      location: searchParams.get("city") ?? "",
+      type:
+        (searchParams.get("type") as PropertyData["transactionType"] | null) ??
+        "any",
 
-    property:
-      (searchParams.get("property") as PropertyData["propertyType"] | null) ??
-      "any",
+      property:
+        (searchParams.get("property") as PropertyData["propertyType"] | null) ??
+        "any",
 
-    minPrice: searchParams.get("minPrice")
-      ? Number(searchParams.get("minPrice"))
-      : undefined,
+      minPrice: searchParams.get("minPrice")
+        ? Number(searchParams.get("minPrice"))
+        : undefined,
 
-    maxPrice: searchParams.get("maxPrice")
-      ? Number(searchParams.get("maxPrice"))
-      : undefined,
+      maxPrice: searchParams.get("maxPrice")
+        ? Number(searchParams.get("maxPrice"))
+        : undefined,
 
-    bedrooms: searchParams.get("bedrooms")
-      ? Number(searchParams.get("bedrooms"))
-      : undefined,
+      bedrooms: searchParams.get("bedrooms")
+        ? Number(searchParams.get("bedrooms"))
+        : undefined,
 
-    bathrooms: searchParams.get("bathrooms")
-      ? Number(searchParams.get("bathrooms"))
-      : undefined,
-  });
+      bathrooms: searchParams.get("bathrooms")
+        ? Number(searchParams.get("bathrooms"))
+        : undefined,
+    });
 
   // Keep local state in sync with URL if URL changes because of history
   useEffect(() => {
     setPropertyFilters({
       location: searchParams.get("city") || "",
-      type: (searchParams.get("type") as PropertyData["transactionType"] | null) ?? "any",
+      type:
+        (searchParams.get("type") as PropertyData["transactionType"] | null) ??
+        "any",
 
       property:
         (searchParams.get("property") as PropertyData["propertyType"]) ?? "any",
@@ -72,14 +78,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
     });
   }, [searchParams]);
 
-  const updatePropertyFilters = (updates: Partial<PropertyFilters>) => {
-    setPropertyFilters((prev: PropertyFilters) => ({
-      ...prev,
-      ...updates,
-    }));
-  };
-
-  const handleSearch = (e: SubmitEvent) => {
+  const handleSearch = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     const newParams = new URLSearchParams();
@@ -129,9 +128,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
             placeholder="City"
             list="city-suggestions"
             value={propertyFilters.location}
-            onChange={(e) =>
-              updatePropertyFilters({ location: e.target.value })
-            }
+            onChange={(e) => setPropertyFilters({ location: e.target.value })}
             className="w-full"
           />
           <datalist id="city-suggestions">
@@ -149,7 +146,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               id="type"
               value={propertyFilters.type}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   type: e.target.value as PropertyFilters["type"],
                 })
               }
@@ -166,7 +163,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               id="property"
               value={propertyFilters.property}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   property: e.target.value as PropertyFilters["property"],
                 })
               }
@@ -188,7 +185,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               max={1000000}
               value={propertyFilters.minPrice ?? ""}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   minPrice: e.target.value ? +e.target.value : undefined,
                 })
               }
@@ -205,7 +202,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               max={1000000}
               value={propertyFilters.maxPrice ?? ""}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   maxPrice: e.target.value ? +e.target.value : undefined,
                 })
               }
@@ -223,7 +220,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               className="min-w-[16ch]"
               value={propertyFilters.bedrooms ?? ""}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   bedrooms: e.target.value ? +e.target.value : undefined,
                 })
               }
@@ -241,7 +238,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
               className="min-w-[16ch]"
               value={propertyFilters.bathrooms ?? ""}
               onChange={(e) =>
-                updatePropertyFilters({
+                setPropertyFilters({
                   bathrooms: e.target.value ? +e.target.value : undefined,
                 })
               }
