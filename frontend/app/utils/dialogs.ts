@@ -1,5 +1,6 @@
 /**
- * Creates a handler to close modals that also expects to set initialState of an object with useObjectState
+ * Creates a handler to close modals that also expects to set initialState of an object with useObjectState.
+ * The state is still taken a Partial, even if used for the whole object interfaces so far.
  */
 export function createDialogCloseHandler<T>(
   setDialogOpen: (isOpen: boolean) => void,

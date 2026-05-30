@@ -1,8 +1,16 @@
 import { useState } from "react";
+import {
+  Link,
+  NavLink,
+  useRouteLoaderData,
+  useNavigate,
+  useRevalidator,
+} from "react-router";
+
+import { getAssetUrl } from "~/utils/display";
+
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
-import { Link, NavLink, useRouteLoaderData } from "react-router";
-import { getAssetUrl } from "~/utils/display";
 
 interface NavLinks {
   name: string;
@@ -72,7 +80,27 @@ export default function Header() {
   const user = useRouteLoaderData("root");
   const isUser = !!user;
 
+  const navigate = useNavigate();
+  const { revalidate, state: headerRevalidateState } = useRevalidator();
+
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        if (headerRevalidateState === "idle") revalidate();
+
+        navigate("/");
+      }
+    } catch (err) {
+      console.error(`Failed to remove session cookie (Log Out): ${err}`);
+    }
+  };
 
   return (
     <header className="max-sm:bg-amber-100 relative z-50 grid grid-cols-[65%_35%] md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
@@ -108,7 +136,18 @@ export default function Header() {
       <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
         <div className="space-x-2 md:space-x-6">
           {isUser ? (
-            <UserLink isBurger={false} user={user} />
+            <>
+              <button
+                onClick={handleLogout}
+                className="py-1.5 px-2 text-sm text-amber-700/84 rounded-sm bg-amber-200/28 shadow-sm
+                outline outline-amber-300/18 hover:outline-rose-500/12
+                hover:text-rose-700/84 hover:bg-rose-200/24 gen-btn-hovaction
+                transition-all duration-300"
+              >
+                Log Out
+              </button>
+              <UserLink isBurger={false} user={user} />
+            </>
           ) : (
             signingLinks.map((link: NavLinks) => (
               <Link

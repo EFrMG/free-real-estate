@@ -38,7 +38,7 @@ export default function ChangePasswordModal({
       successMessage: "",
     });
 
-  const handleCloseDialog = createDialogCloseHandler(
+  const handleCloseDialog = createDialogCloseHandler<PasswordForm>(
     openCloseDialog,
     updatePasswordForm,
     {

@@ -87,7 +87,7 @@ export default function EditProfileModal({
     }
   };
 
-  const handleCloseDialog = createDialogCloseHandler(
+  const handleCloseDialog = createDialogCloseHandler<ProfileState>(
     openCloseDialog,
     updateProfileState,
     {
