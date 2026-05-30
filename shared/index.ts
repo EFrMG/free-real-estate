@@ -38,30 +38,10 @@ export type MessageData = OptionalNullable<
   InferSelectModel<typeof schema.messages>
 >;
 
-// Extended Types (Used for UI and specific API responses)
-// Property Item page
-export interface PropertyWithAuthor extends PropertyData {
-  author: UserData;
-}
-
-// User Profile pages
-export interface UserWithPropertiesBookmarks extends UserData {
-  properties: PropertyData[];
-  bookmarks: PropertyData[];
-}
-
-// Blog section
+// TODO: Blog section
 // export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
 
-// export interface PostWithAuthor extends PostData {
-//   author: UserData;
-// }
-
-// Join table representation
-export interface Bookmarks {
-  propertyIds: number[];
-}
-
+// Extended Types (Used for UI and specific API responses)
 // Chat with nested participants and last message
 export interface Chat extends ChatData {
   participants: UserData[];

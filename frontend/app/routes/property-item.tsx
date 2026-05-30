@@ -1,10 +1,12 @@
 import type { Route } from "./+types/property-item";
+
 import { lazy, Suspense } from "react";
+import { useFetcher } from "react-router";
+
 import ClientOnly from "~/components/ClientOnly";
-import type { PropertyData, UserBasic } from "~/data/generalData";
+import PropertyGallery from "~/components/property-item/Gallery";
 import { getAssetUrl } from "~/utils/display";
 
-import PropertyGallery from "~/components/property-item/Gallery";
 import {
   GoBookmark,
   GoBookmarkSlash,
@@ -13,35 +15,9 @@ import {
 } from "react-icons/go";
 import { LiaHandshake } from "react-icons/lia";
 
+import type { PropertyData, UserBasic, UserProfile } from "~/data/generalData";
+
 const Map = lazy(() => import("~/components/Map"));
-
-export async function loader({ params }: Route.LoaderArgs) {
-  const { id } = params;
-
-  const resProperty = await fetch(`http://localhost:3000/api/properties/${id}`);
-
-  if (!resProperty.ok) {
-    if (resProperty.status === 404) {
-      throw new Response("Property Not Found", { status: 404 });
-    }
-    throw new Response("Failed to fetch property", { status: 500 });
-  }
-
-  const property: PropertyData = await resProperty.json();
-
-  let userPoster: UserBasic | null = null;
-
-  if (property.userId) {
-    const resUser = await fetch(
-      `http://localhost:3000/api/users/${property.userId}`,
-    );
-    if (resUser.ok) {
-      userPoster = await resUser.json();
-    }
-  }
-
-  return { property, userPoster };
-}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -54,8 +30,110 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function loader({ request, params }: Route.LoaderArgs) {
+  const { id } = params;
+  const cookie = request.headers.get("Cookie") || "";
+
+  // Property data
+  const resProperty = await fetch(`http://localhost:3000/api/properties/${id}`);
+
+  if (!resProperty.ok) {
+    if (resProperty.status === 404) {
+      throw new Response("Property Not Found", { status: 404 });
+    }
+    throw new Response("Failed to fetch property", { status: 500 });
+  }
+
+  const property: PropertyData = await resProperty.json();
+
+  // User agent poster (of the property listing)
+  let userPoster: UserBasic | null = null;
+
+  if (property.userId) {
+    const userPosterRes = await fetch(
+      `http://localhost:3000/api/users/${property.userId}`,
+    );
+    if (userPosterRes.ok) {
+      userPoster = await userPosterRes.json();
+    }
+  }
+
+  // User profile
+  let user: UserProfile | null = null;
+
+  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+    method: "GET",
+    headers: { Cookie: cookie },
+  });
+
+  if (userRes.ok) {
+    user = await userRes.json();
+  }
+
+  // User bookmarks
+  let userBookmarks: PropertyData[] | null = null;
+
+  if (user) {
+    const userBookmarksRes = await fetch(
+      `http://localhost:3000/api/users/${user.id}/bookmarks`,
+      {
+        method: "GET",
+        headers: { Cookie: cookie },
+      },
+    );
+
+    if (userBookmarksRes.ok) {
+      userBookmarks = await userBookmarksRes.json();
+    }
+  }
+
+  return { property, userPoster, userBookmarks };
+}
+
+export async function action({ request, params }: Route.ActionArgs) {
+  const { id: propertyId } = params;
+
+  const formData = await request.formData();
+  const bookmarkingIntent = formData.get("bookmarkingIntent");
+
+  const cookie = request.headers.get("Cookie") || "";
+
+  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+    method: "GET",
+    headers: { Cookie: cookie },
+  });
+
+  if (!userRes.ok) return new Response("Unauthorized", { status: 401 });
+
+  const user = await userRes.json();
+
+  if (bookmarkingIntent === "bookmark") {
+    await fetch(`http://localhost:3000/api/users/${user.id}/bookmarks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookie,
+      },
+      body: JSON.stringify({ propertyId }),
+    });
+  } else if (bookmarkingIntent === "remove-bookmark") {
+    await fetch(
+      `http://localhost:3000/api/users/${user.id}/bookmarks/${propertyId}`,
+      {
+        method: "DELETE",
+        headers: { Cookie: cookie },
+      },
+    );
+  }
+
+  return null;
+}
+
 export default function PropertyItem({ loaderData }: Route.ComponentProps) {
-  const { property, userPoster } = loaderData;
+  const { property, userPoster, userBookmarks } = loaderData;
+
+  const fetcher = useFetcher();
+
   const {
     id,
     transactionType,
@@ -177,25 +255,42 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   />
                 </button>
 
-                {true ? (
-                  <button className="bg-amber-100/24 gen-btn-border gen-btn-hovaction">
-                    <GoBookmark
-                      size={28}
-                      color="var(--color-amber-500)"
-                      title="Bookmark"
+                {userBookmarks?.some((b) => b.id === property.id) ? (
+                  <fetcher.Form method="post">
+                    <input
+                      type="hidden"
+                      name="bookmarkingIntent"
+                      value="remove-bookmark"
                     />
-                  </button>
+                    <button
+                      type="submit"
+                      className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                    >
+                      <GoBookmarkSlash
+                        size={28}
+                        color="var(--color-amber-500)"
+                        title="Remove bookmark"
+                      />
+                    </button>
+                  </fetcher.Form>
                 ) : (
-                  <button
-                    className="bg-amber-100/24 border border-amber-200 cursor-pointer
-                      gen-btn-hovaction"
-                  >
-                    <GoBookmarkSlash
-                      size={28}
-                      color="var(--color-amber-500)"
-                      title="Remove bookmark"
+                  <fetcher.Form method="post">
+                    <input
+                      type="hidden"
+                      name="bookmarkingIntent"
+                      value="bookmark"
                     />
-                  </button>
+                    <button
+                      type="submit"
+                      className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                    >
+                      <GoBookmark
+                        size={28}
+                        color="var(--color-amber-500)"
+                        title="Bookmark"
+                      />
+                    </button>
+                  </fetcher.Form>
                 )}
               </div>
             </div>
