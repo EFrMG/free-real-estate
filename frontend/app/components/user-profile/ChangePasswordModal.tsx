@@ -4,6 +4,7 @@ import type { ModalProps } from "./modalTypes";
 
 import { GoEye, GoEyeClosed, GoX } from "react-icons/go";
 import useObjectState from "~/hooks/useObjectState";
+import { createDialogCloseHandler } from "~/utils/dialogs";
 
 interface PasswordForm {
   currentPassword: string;
@@ -36,6 +37,21 @@ export default function ChangePasswordModal({
       errorMessage: "",
       successMessage: "",
     });
+
+  const handleCloseDialog = createDialogCloseHandler(
+    openCloseDialog,
+    updatePasswordForm,
+    {
+      currentPassword: "",
+      showCurrent: false,
+      newPassword: "",
+      showNew: false,
+      confirmPassword: "",
+      showConfirm: false,
+      errorMessage: "",
+      successMessage: "",
+    },
+  );
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -92,8 +108,7 @@ export default function ChangePasswordModal({
     <dialog
       ref={dialogRef}
       onCancel={(e) => {
-        e.preventDefault();
-        openCloseDialog(false);
+        handleCloseDialog(e);
       }}
       className="inset-0 w-full h-full max-w-none max-h-none
       backdrop:bg-transparent bg-transparent 
@@ -111,7 +126,7 @@ export default function ChangePasswordModal({
             {/* Custom backdrop */}
             <div
               className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
-              onClick={() => openCloseDialog(false)}
+              onClick={(e) => handleCloseDialog(e)}
             />
 
             <motion.div
@@ -126,7 +141,7 @@ export default function ChangePasswordModal({
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  onClick={() => openCloseDialog(false)}
+                  onClick={(e) => handleCloseDialog(e)}
                   className="profile-modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
@@ -257,7 +272,7 @@ export default function ChangePasswordModal({
                   <fieldset className="flex flex-row justify-end gap-4 mt-8">
                     <button
                       type="button"
-                      onClick={() => openCloseDialog(false)}
+                      onClick={(e) => handleCloseDialog(e)}
                       className="profile-modal-cancel-btn"
                     >
                       Cancel

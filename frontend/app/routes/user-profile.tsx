@@ -329,8 +329,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           dialogRef: editProfileRef,
           openCloseDialog: setEditProfileOpen,
         }}
-        userRole={user.role}
-        userId={user.id}
+        user={user}
         profileState={profileState}
         updateProfileState={updateProfileState}
       />

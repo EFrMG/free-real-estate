@@ -141,6 +141,7 @@ The runtime is `Node.js` via `@hono/node-server`.
     - `GET /api/users`: Gets list of user agents (not normal users, as this is for Our Agents page).
     - `GET /api/users/:id`: Gets profile details of a specific user.
     - `PUT /api/users/:id`: Updates a user's profile (name, profile picture, bio, etc).
+    - `PUT /api/users/:id/password`: Updates a user's password, including verification with Argon2.
     - `POST /api/users/:id/promote`: Promotes a normal user to Agent status using a secret code.
     - `GET /api/users/:id/properties`: Gets properties owned by a user.
     - `GET /api/users/:id/bookmarks`: Gets a user's bookmarked properties.

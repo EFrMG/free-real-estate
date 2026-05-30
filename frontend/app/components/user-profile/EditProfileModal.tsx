@@ -6,19 +6,18 @@ import type { UserProfile } from "~/data/generalData";
 import type { ProfileState } from "~/routes/user-profile";
 import type { ModalProps } from "./modalTypes";
 import { getAssetUrl } from "~/utils/display";
+import { createDialogCloseHandler } from "~/utils/dialogs";
 
 import { GoPencil, GoX } from "react-icons/go";
 
 export default function EditProfileModal({
   editProfileProps,
-  userId,
-  userRole,
+  user,
   profileState,
   updateProfileState,
 }: {
   editProfileProps: ModalProps;
-  userRole: UserProfile["role"];
-  userId: UserProfile["id"];
+  user: UserProfile;
   profileState: ProfileState;
   updateProfileState: (updates: Partial<ProfileState>) => void;
 }) {
@@ -27,6 +26,7 @@ export default function EditProfileModal({
   const { revalidate, state: revalidateState } = useRevalidator();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const handleProfileChange = async (profileState: ProfileState) => {
     const formData = new FormData();
@@ -37,7 +37,7 @@ export default function EditProfileModal({
       formData.append("profilePicture", selectedFile);
     }
 
-    if (userRole === "agent") {
+    if (user.role === "agent") {
       if (profileState.phoneNumber)
         formData.append("phoneNumber", String(profileState.phoneNumber));
 
@@ -46,7 +46,7 @@ export default function EditProfileModal({
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/users/${userId}`,
+        `http://localhost:3000/api/users/${user.id}`,
         {
           method: "PUT",
           body: formData,
@@ -71,8 +71,6 @@ export default function EditProfileModal({
     }
   };
 
-  const fileRef = useRef<HTMLInputElement>(null);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -89,12 +87,22 @@ export default function EditProfileModal({
     }
   };
 
+  const handleCloseDialog = createDialogCloseHandler(
+    openCloseDialog,
+    updateProfileState,
+    {
+      name: user.name,
+      profilePicture: user.profilePicture,
+      phoneNumber: user.phoneNumber,
+      bio: user.bio,
+    },
+  );
+
   return (
     <dialog
       ref={dialogRef}
       onCancel={(e) => {
-        e.preventDefault();
-        openCloseDialog(false);
+        handleCloseDialog(e);
       }}
       className="inset-0 w-full h-full max-w-none max-h-none
       backdrop:bg-transparent bg-transparent 
@@ -112,7 +120,7 @@ export default function EditProfileModal({
             {/* Custom backdrop */}
             <div
               className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
-              onClick={() => openCloseDialog(false)}
+              onClick={(e) => handleCloseDialog(e)}
             />
 
             <motion.div
@@ -127,7 +135,7 @@ export default function EditProfileModal({
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  onClick={() => openCloseDialog(false)}
+                  onClick={(e) => handleCloseDialog(e)}
                   className="profile-modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
@@ -190,7 +198,7 @@ export default function EditProfileModal({
                     />
                   </fieldset>
 
-                  {userRole === "agent" && (
+                  {user.role === "agent" && (
                     <>
                       <fieldset className="stack-0 gen-form-labels">
                         <label htmlFor="edit-phone-number">Phone Number:</label>
@@ -222,7 +230,7 @@ export default function EditProfileModal({
                   <fieldset className="flex justify-end gap-3 pt-2">
                     <button
                       type="button"
-                      onClick={() => openCloseDialog(false)}
+                      onClick={(e) => handleCloseDialog(e)}
                       className="profile-modal-cancel-btn"
                     >
                       Cancel
