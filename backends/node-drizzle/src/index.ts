@@ -295,6 +295,10 @@ api.get("/users/:id", async (c) => {
 
 // Update user profile (both regular and agent fields)
 api.put("/users/:id", requireAuth, async (c) => {
+  // Constants for file upload security
+  const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
@@ -320,7 +324,25 @@ api.put("/users/:id", requireAuth, async (c) => {
   // Handle profile picture file upload
   if (profilePicture instanceof File) {
     const file = profilePicture;
-    const fileName = `${id}-${Date.now()}-${file.name}`; // Good enough to avoid duplicates
+
+    // Check MIME type
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      return c.json(
+        {
+          error: "Invalid file type. Only JPEG, PNG and WEBP are allowed",
+        },
+        400,
+      );
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return c.json({ error: "File size exceeds the 5MB limit" }, 400);
+    }
+
+    // Sanitize filename and prepare path
+    const extension = file.type.split("/")[1];
+    const fileName = `${id}-${Date.now()}.${extension}`;
 
     const filePath = path.join(
       "public",
