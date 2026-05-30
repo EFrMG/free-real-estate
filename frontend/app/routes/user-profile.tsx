@@ -172,7 +172,11 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     <button
                       onClick={() => setEditProfileOpen(true)}
                       className="profile-pencil-btn"
-                      title="Edit name & profile picture"
+                      title={
+                        user.role === "agent"
+                          ? "Edit Name, Profile Picture, Telephone Number & Biography"
+                          : "Edit Name & Profile Picture"
+                      }
                     >
                       <GoPencil size={16} />
                     </button>
