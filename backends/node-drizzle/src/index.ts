@@ -395,6 +395,37 @@ api.put("/users/:id", requireAuth, async (c) => {
   });
 });
 
+// Change user password
+api.put("/users/:id/password", requireAuth, async (c) => {
+  const id = Number(c.req.param("id"));
+
+  if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
+
+  const { currentPassword, newPassword } = await c.req.json();
+
+  if (!currentPassword || !newPassword) {
+    return c.json({ error: "Missing required fields" }, 400);
+  }
+
+  const user = await db.select().from(users).where(eq(users.id, id)).get();
+
+  if (!user) return c.json({ error: "User not found" }, 404);
+
+  const passwordVerify = await argon2.verify(
+    user.passwordHash,
+    currentPassword,
+  );
+
+  if (!passwordVerify)
+    return c.json({ error: "Invalid current password!" }, 401);
+
+  const passwordHash = await argon2.hash(newPassword);
+
+  await db.update(users).set({ passwordHash }).where(eq(users.id, id));
+
+  return c.json({ ok: true });
+});
+
 // Promote a normal user to agent
 api.post("/users/:id/promote", requireAuth, async (c) => {
   const id = Number(c.req.param("id"));

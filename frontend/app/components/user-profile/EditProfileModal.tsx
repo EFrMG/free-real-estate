@@ -133,9 +133,7 @@ export default function EditProfileModal({
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="ml-2 text-xl font-semibold text-amber-950">
-                  Edit Profile
-                </h2>
+                <h2 className="profile-modal-title">Edit Profile</h2>
 
                 <form
                   onSubmit={(e) => {
@@ -225,17 +223,11 @@ export default function EditProfileModal({
                     <button
                       type="button"
                       onClick={() => openCloseDialog(false)}
-                      className="px-4 py-2 text-amber-800 rounded-md
-            hover:bg-amber-200/68  transition-colors cursor-pointer"
+                      className="profile-modal-cancel-btn"
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="px-5 py-2 bg-amber-600/94 text-white font-medium
-            rounded-md shadow-md hover:bg-amber-700/94
-            transition-colors cursor-pointer"
-                    >
+                    <button type="submit" className="profile-modal-accept-btn">
                       Save Changes
                     </button>
                   </fieldset>

@@ -341,6 +341,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           dialogRef: changePasswordRef,
           openCloseDialog: setChangePasswordOpen,
         }}
+        userId={user.id}
       />
     </>
   );

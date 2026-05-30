@@ -135,19 +135,15 @@
     disabled:opacity-75 disabled:cursor-none;
   }
 
-  .gen-backdrop {
-    background-color: theme(--color-black/42);
-    backdrop-filter: theme(--blur-xs);
-
-    @starting-style {
-      background-color: transparent;
-      backdrop-filter: none;
-    }
+  .profile-modal-cancel-btn {
+    @apply px-4 py-2 text-amber-800 rounded-md
+    hover:bg-amber-200/68 transition-colors duration-150;
   }
 
-  .gen-backdrop-b {
-    background-color: transparent;
-    backdrop-filter: none;
+  .profile-modal-accept-btn {
+    @apply px-5 py-2 bg-amber-600/94
+    text-white font-medium rounded-md shadow-md
+    hover:bg-amber-700/94 transition-colors duration-150;
   }
 
   .profile-pencil-btn {
@@ -166,12 +162,24 @@
     @apply absolute top-3 right-3 p-2 rounded-lg bg-amber-200/68 hover:bg-amber-200/44 transition-colors;
   }
 
-  .profile-password-eye {
+  .profile-modal-title {
+    @apply ml-2 text-xl font-semibold text-amber-950;
+  }
+
+  .profile-modal-password-eye {
     @apply absolute right-2 top-1/2 -translate-y-1/2 p-1 text-amber-700/88 hover:text-amber-800 transition-colors;
   }
 
   .gen-form-error {
-    @apply p-3 bg-rose-100 border border-rose-200 text-rose-600 text-sm rounded-md;
+    @apply p-3 bg-rose-100 border border-rose-200/64 text-rose-600 text-sm rounded-md;
+  }
+
+  .gen-form-success {
+    @apply p-3 bg-emerald-100 border border-emerald-200/48 text-emerald-600 text-sm rounded-md;
+  }
+
+  .gen-form-message-space {
+    @apply text-sm h-[calc(var(--spacing)*6+1lh+2px)];
   }
 
   .gen-left-column {
