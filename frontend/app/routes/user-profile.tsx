@@ -283,13 +283,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
             </div>
           </section>
 
-          {/* TODO: bookmarks */}
           <ProfileSection
             title="Bookmarked Properties"
             icon={<GoBookmark size={24} />}
           >
             {userBookmarks?.length ? (
-              <div className="stack-3">
+              <div className="profile-bookmarks--properties">
                 {userBookmarks.map((property: PropertyData) => (
                   <MiniPropertyCard
                     key={`bookmark-${property.id}`}
@@ -311,7 +310,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               icon={<GoPackage size={24} />}
             >
               {userProperties?.length ? (
-                <div className="max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4">
+                <div className="profile-bookmarks--properties">
                   {userProperties.map((property: PropertyData) => (
                     <MiniPropertyCard
                       key={`property-${property.id}`}
