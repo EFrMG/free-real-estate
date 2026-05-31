@@ -55,7 +55,7 @@ export default function EditProfileModal({
       );
 
       if (response.ok) {
-        // The backend returns the new path if we have a new picture
+        // The backend returns the path if we have a new picture
         const data = await response.json();
 
         if (data.profilePicture) {

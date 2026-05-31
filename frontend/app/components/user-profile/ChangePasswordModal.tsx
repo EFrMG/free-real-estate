@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
+import { useFetcher } from "react-router";
+
 import { motion, AnimatePresence } from "motion/react";
 
 import type { ModalProps } from "./modalTypes";
 
-import { GoEye, GoEyeClosed, GoX } from "react-icons/go";
 import useObjectState from "~/hooks/useObjectState";
 import { createDialogCloseHandler } from "~/utils/dialogs";
+
+import { GoEye, GoEyeClosed, GoX } from "react-icons/go";
 
 interface PasswordForm {
   currentPassword: string;
@@ -13,18 +17,17 @@ interface PasswordForm {
   showNew: boolean;
   confirmPassword: string;
   showConfirm: boolean;
-  errorMessage: string;
-  successMessage: string;
 }
 
 export default function ChangePasswordModal({
   changePasswordProps,
-  userId,
 }: {
   changePasswordProps: ModalProps;
-  userId: number;
 }) {
   const { isDialogOpen, dialogRef, openCloseDialog } = changePasswordProps;
+
+  const [fetcherKey, setFetcherKey] = useState(() => crypto.randomUUID());
+  const fetcher = useFetcher({ key: fetcherKey });
 
   const { state: passwordForm, updateState: updatePasswordForm } =
     useObjectState<PasswordForm>({
@@ -34,8 +37,6 @@ export default function ChangePasswordModal({
       showNew: false,
       confirmPassword: "",
       showConfirm: false,
-      errorMessage: "",
-      successMessage: "",
     });
 
   const handleCloseDialog = createDialogCloseHandler<PasswordForm>(
@@ -48,67 +49,30 @@ export default function ChangePasswordModal({
       showNew: false,
       confirmPassword: "",
       showConfirm: false,
-      errorMessage: "",
-      successMessage: "",
     },
   );
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
-    e.preventDefault();
-    updatePasswordForm({ errorMessage: "", successMessage: "" });
-
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      updatePasswordForm({ errorMessage: "New passwords must match!" });
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/users/${userId}/password`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            currentPassword: passwordForm.currentPassword,
-            newPassword: passwordForm.newPassword,
-          }),
-          credentials: "include",
-        },
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        updatePasswordForm({
-          successMessage: "Password updated successfully.",
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
-
-        setTimeout(() => {
-          openCloseDialog(false);
-          updatePasswordForm({ successMessage: "" });
-        }, 3000);
-      } else {
-        updatePasswordForm({
-          errorMessage: data.error || "Failed to update password.",
-        });
-      }
-    } catch (err) {
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data?.success) {
       updatePasswordForm({
-        errorMessage: "An error occurred. Please try again.",
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
       });
+
+      setTimeout(() => {
+        openCloseDialog(false);
+        setFetcherKey(crypto.randomUUID());
+      }, 3000);
     }
-  };
+  }, [fetcher.state, fetcher.data]);
 
   return (
     <dialog
       ref={dialogRef}
       onCancel={(e) => {
         handleCloseDialog(e);
+        setFetcherKey(crypto.randomUUID());
       }}
       className="inset-0 w-full h-full max-w-none max-h-none
       backdrop:bg-transparent bg-transparent 
@@ -126,7 +90,10 @@ export default function ChangePasswordModal({
             {/* Custom backdrop */}
             <div
               className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
-              onClick={(e) => handleCloseDialog(e)}
+              onClick={(e) => {
+                handleCloseDialog(e);
+                setFetcherKey(crypto.randomUUID());
+              }}
             />
 
             <motion.div
@@ -141,7 +108,10 @@ export default function ChangePasswordModal({
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  onClick={(e) => handleCloseDialog(e)}
+                  onClick={(e) => {
+                    handleCloseDialog(e);
+                    setFetcherKey(crypto.randomUUID());
+                  }}
                   className="profile-modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
@@ -149,17 +119,14 @@ export default function ChangePasswordModal({
 
                 <h2 className="profile-modal-title">Change Password</h2>
 
-                <form
-                  className="stack-4 gen-form-labels"
-                  onSubmit={handleSubmit}
-                >
-                  {passwordForm.errorMessage ? (
-                    <p className="mt-4 gen-form-error">
-                      {passwordForm.errorMessage}
-                    </p>
-                  ) : passwordForm.successMessage ? (
+                <fetcher.Form method="PUT" className="stack-4 gen-form-labels">
+                  <input type="hidden" name="intent" value="password-change" />
+
+                  {fetcher.data?.error ? (
+                    <p className="mt-4 gen-form-error">{fetcher.data.error}</p>
+                  ) : fetcher.data?.success ? (
                     <p className="mt-4 gen-form-success">
-                      {passwordForm.successMessage}
+                      Password updated successfully.
                     </p>
                   ) : (
                     <div className="mt-4 gen-form-message-space" />
@@ -171,6 +138,7 @@ export default function ChangePasswordModal({
                     <div className="relative">
                       <input
                         id="current-password"
+                        name="currentPassword"
                         type={passwordForm.showCurrent ? "text" : "password"}
                         className="gen-input-forms w-full pr-10"
                         placeholder="••••••••"
@@ -206,6 +174,7 @@ export default function ChangePasswordModal({
                     <div className="relative">
                       <input
                         id="new-password"
+                        name="newPassword"
                         type={passwordForm.showNew ? "text" : "password"}
                         className="gen-input-forms w-full pr-10"
                         placeholder="••••••••"
@@ -240,6 +209,7 @@ export default function ChangePasswordModal({
                     <div className="relative">
                       <input
                         id="confirm-password"
+                        name="confirmPassword"
                         type={passwordForm.showConfirm ? "text" : "password"}
                         className="gen-input-forms w-full pr-10"
                         placeholder="••••••••"
@@ -272,7 +242,10 @@ export default function ChangePasswordModal({
                   <fieldset className="flex flex-row justify-end gap-4 mt-8">
                     <button
                       type="button"
-                      onClick={(e) => handleCloseDialog(e)}
+                      onClick={(e) => {
+                        handleCloseDialog(e);
+                        setFetcherKey(crypto.randomUUID());
+                      }}
                       className="profile-modal-cancel-btn"
                     >
                       Cancel
@@ -281,7 +254,7 @@ export default function ChangePasswordModal({
                       Update Password
                     </button>
                   </fieldset>
-                </form>
+                </fetcher.Form>
               </div>
             </motion.div>
           </motion.div>

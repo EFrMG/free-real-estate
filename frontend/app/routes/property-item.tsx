@@ -90,11 +90,12 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return { property, userPoster, userBookmarks };
 }
 
+// TODO: optimistic UI for the bookmark button; although, if there is no suitable place to show errors in the present layout this would also necessitate a popover, for which I have no other use yet other than indicating a successful login
 export async function action({ request, params }: Route.ActionArgs) {
   const { id: propertyId } = params;
 
   const formData = await request.formData();
-  const bookmarkingIntent = formData.get("bookmarkingIntent");
+  const intent = formData.get("intent");
 
   const cookie = request.headers.get("Cookie") || "";
 
@@ -107,7 +108,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const user = await userRes.json();
 
-  if (bookmarkingIntent === "bookmark") {
+  if (intent === "bookmark") {
     await fetch(`http://localhost:3000/api/users/${user.id}/bookmarks`, {
       method: "POST",
       headers: {
@@ -116,7 +117,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
       body: JSON.stringify({ propertyId }),
     });
-  } else if (bookmarkingIntent === "remove-bookmark") {
+  } else if (intent === "remove-bookmark") {
     await fetch(
       `http://localhost:3000/api/users/${user.id}/bookmarks/${propertyId}`,
       {
@@ -259,7 +260,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   <fetcher.Form method="post">
                     <input
                       type="hidden"
-                      name="bookmarkingIntent"
+                      name="intent"
                       value="remove-bookmark"
                     />
                     <button
@@ -275,11 +276,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   </fetcher.Form>
                 ) : (
                   <fetcher.Form method="post">
-                    <input
-                      type="hidden"
-                      name="bookmarkingIntent"
-                      value="bookmark"
-                    />
+                    <input type="hidden" name="intent" value="bookmark" />
                     <button
                       type="submit"
                       className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"

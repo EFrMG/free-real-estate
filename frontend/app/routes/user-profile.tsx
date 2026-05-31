@@ -1,5 +1,5 @@
 import type { Route } from "./+types/user-profile";
-import { Link, redirect } from "react-router";
+import { Link, redirect, type ActionFunctionArgs } from "react-router";
 
 import type {
   PropertyData,
@@ -70,6 +70,49 @@ export async function loader({ request }: Route.LoaderArgs) {
   const userMessages = null;
 
   return { user, userProperties, userBookmarks, userMessages };
+}
+
+export async function action({ request, params }: ActionFunctionArgs) {
+  const data = await request.formData();
+  const intent = data.get("intent");
+
+  if (intent === "password-change") {
+    const currentPassword = data.get("currentPassword") as string;
+    const newPassword = data.get("newPassword") as string;
+    const confirmPassword = data.get("confirmPassword") as string;
+
+    if (newPassword !== confirmPassword)
+      return { error: "New passwords must match!" };
+
+    const response = await fetch(
+      `http://localhost:3000/api/users/${params.id}/password`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: request.headers.get("Cookie") ?? "",
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok)
+      return {
+        error:
+          result.error || "Failed to update your password. Please, try again.",
+      };
+
+    return { success: true };
+  }
+
+  if (intent === "profile-change") {
+    return { success: true };
+  }
 }
 
 function ProfileSection({
@@ -344,7 +387,6 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           dialogRef: changePasswordRef,
           openCloseDialog: setChangePasswordOpen,
         }}
-        userId={user.id}
       />
     </>
   );

@@ -15,6 +15,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+// TODO: show successful login
 export default function LogIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
