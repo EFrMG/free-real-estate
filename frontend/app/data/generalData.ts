@@ -228,7 +228,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 8,
-    userId: 4,
+    userId: 1,
     transactionType: "rent",
     status: "unavailable",
     propertyType: "apartment",
@@ -255,7 +255,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 9,
-    userId: 4,
+    userId: 1,
     transactionType: "buy",
     status: "unavailable",
     propertyType: "apartment",
@@ -317,7 +317,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 11,
-    userId: 3,
+    userId: 2,
     transactionType: "rent",
     status: "free",
     propertyType: "house",
@@ -347,7 +347,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 12,
-    userId: 4,
+    userId: 1,
     transactionType: "rent",
     status: "inactive",
     propertyType: "house",
@@ -436,7 +436,7 @@ export const propertyData: PropertyData[] = [
   },
   {
     id: 15,
-    userId: 3,
+    userId: 2,
     transactionType: "buy",
     status: "free",
     propertyType: "condominium",

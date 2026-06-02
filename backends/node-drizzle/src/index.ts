@@ -226,15 +226,9 @@ api.get("/auth/me", requireAuth, async (c) => {
       name: users.name,
       role: users.role,
       profilePicture: users.profilePicture,
-      // We could omit this conditional spread to better match UserProfile, given that the fields are nullable anyhow
-      // I just think this way the DB has to do less work
-      ...(session.role === "agent"
-        ? {
-            licenseNumber: agentProfiles.licenseNumber,
-            phoneNumber: agentProfiles.phoneNumber,
-            bio: agentProfiles.bio,
-          }
-        : {}),
+      licenseNumber: agentProfiles.licenseNumber,
+      phoneNumber: agentProfiles.phoneNumber,
+      bio: agentProfiles.bio,
     })
     .from(users)
     .leftJoin(agentProfiles, eq(users.id, agentProfiles.userId))
@@ -426,18 +420,18 @@ api.put("/users/:id/password", requireAuth, async (c) => {
   return c.json({ ok: true });
 });
 
-// Promote a normal user to agent
+// Promote a normal user to agent user
 api.post("/users/:id/promote", requireAuth, async (c) => {
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
-  const { adminCode, licenseNumber } = await c.req.json();
+  const { agencyPassword, licenseNumber } = await c.req.json();
   const secret =
     process.env.AGENT_PROMOTION_CODE ?? "agent-code--change-in-prod";
 
-  if (adminCode !== secret)
-    return c.json({ error: "Invalid promotion code" }, 401);
+  if (agencyPassword !== secret)
+    return c.json({ error: "Invalid promotion password!" }, 401);
 
   // Update role to agent
   await db.update(users).set({ role: "agent" }).where(eq(users.id, id));
@@ -446,6 +440,8 @@ api.post("/users/:id/promote", requireAuth, async (c) => {
     .insert(agentProfiles)
     .values({ userId: id, licenseNumber })
     .onConflictDoNothing();
+
+  await setSessionCookie(c, { id, role: "agent" });
 
   return c.json({ ok: true });
 });

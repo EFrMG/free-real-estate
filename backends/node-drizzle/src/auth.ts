@@ -41,6 +41,7 @@ export const requireAuth = createMiddleware<{
       id: payload["id"] as number,
       role: payload["role"] as "agent" | "user",
     };
+
     c.set("user", user);
     await next();
   } catch {

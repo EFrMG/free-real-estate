@@ -12,6 +12,7 @@ import { getAssetUrl } from "~/utils/display";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
+import AgentPromotionModal from "~/components/user-profile/AgentPromotionModal";
 import MiniPropertyCard from "~/components/user-profile/MiniPropertyCard";
 
 import {
@@ -129,14 +130,39 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
     const result = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok)
       return {
         error:
           result.error || "Failed to update your profile. Please, try again.",
       };
-    }
 
     return result;
+  }
+
+  if (intent === "agent-promotion") {
+    const response = await fetch(
+      `http://localhost:3000/api/users/${params.id}/promote`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: request.headers.get("Cookie") ?? "",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          licenseNumber: data.get("licenseNumber") as string,
+          agencyPassword: data.get("agencyPassword") as string,
+        }),
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok)
+      return {
+        error: result.error || "Failed to promote to agent user.",
+      };
+
+    return { success: true };
   }
 }
 
@@ -183,6 +209,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
     openCloseDialog: setChangePasswordOpen,
   } = useDialog();
 
+  const {
+    isDialogOpen: isAgentPromotionOpen,
+    dialogRef: agentPromotionRef,
+    openCloseDialog: setAgentPromotionOpen,
+  } = useDialog();
+
   return (
     <>
       <main className="gen-main">
@@ -222,7 +254,11 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                         {user.email}
                         {user.role === "user" && (
                           //  TODO: agent promotion
-                          <button className="text-amber-900/58">
+                          <button
+                            className="text-amber-900/58 hover:text-amber-900
+                            transition-colors duration-150"
+                            onClick={() => setAgentPromotionOpen(true)}
+                          >
                             become an agent
                           </button>
                         )}
@@ -410,6 +446,14 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           isDialogOpen: isChangePasswordOpen,
           dialogRef: changePasswordRef,
           openCloseDialog: setChangePasswordOpen,
+        }}
+      />
+
+      <AgentPromotionModal
+        agentPromotionProps={{
+          isDialogOpen: isAgentPromotionOpen,
+          dialogRef: agentPromotionRef,
+          openCloseDialog: setAgentPromotionOpen,
         }}
       />
     </>
