@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { useRevalidator } from "react-router";
+import { useRef, useEffect } from "react";
+import { useFetcher } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
 import type { UserProfile } from "~/data/generalData";
@@ -23,59 +23,23 @@ export default function EditProfileModal({
 }) {
   const { isDialogOpen, dialogRef, openCloseDialog } = editProfileProps;
 
-  const { revalidate, state: revalidateState } = useRevalidator();
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fetcher = useFetcher();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleProfileChange = async (profileState: ProfileState) => {
-    const formData = new FormData();
-
-    formData.append("name", profileState.name);
-
-    if (selectedFile) {
-      formData.append("profilePicture", selectedFile);
-    }
-
-    if (user.role === "agent") {
-      if (profileState.phoneNumber)
-        formData.append("phoneNumber", String(profileState.phoneNumber));
-
-      if (profileState.bio) formData.append("bio", String(profileState.bio));
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/users/${user.id}`,
-        {
-          method: "PUT",
-          body: formData,
-          credentials: "include",
-        },
-      );
-
-      if (response.ok) {
-        // The backend returns the path if we have a new picture
-        const data = await response.json();
-
-        if (data.profilePicture) {
-          updateProfileState({ profilePicture: data.profilePicture });
-        }
-
-        openCloseDialog(false);
-
-        if (revalidateState === "idle") revalidate();
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data && !fetcher.data.error) {
+      if (fetcher.data.profilePicture) {
+        updateProfileState({ profilePicture: fetcher.data.profilePicture });
       }
-    } catch (error) {
-      console.error("Failed to update profile:", error);
+
+      openCloseDialog(false);
     }
-  };
+  }, [fetcher.state, fetcher.data]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
-      setSelectedFile(file);
       const reader = new FileReader();
 
       reader.onload = (e) =>
@@ -143,13 +107,13 @@ export default function EditProfileModal({
 
                 <h2 className="profile-modal-title">Edit Profile</h2>
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleProfileChange(profileState);
-                  }}
+                <fetcher.Form
+                  method="PUT"
+                  encType="multipart/form-data"
                   className="space-y-4 mt-4"
                 >
+                  <input type="hidden" name="intent" value="profile-change" />
+
                   {/* Picture preview + upload */}
                   <fieldset className="flex flex-col items-center gap-3">
                     <div className="relative group">
@@ -170,6 +134,7 @@ export default function EditProfileModal({
                         <GoPencil size={14} />
                       </button>
                     </div>
+
                     <input
                       ref={fileRef}
                       type="file"
@@ -190,6 +155,7 @@ export default function EditProfileModal({
                     <input
                       id="edit-name"
                       type="text"
+                      name="name"
                       value={profileState.name}
                       onChange={(e) =>
                         updateProfileState({ name: e.target.value })
@@ -205,6 +171,7 @@ export default function EditProfileModal({
                         <input
                           id="edit-phone-number"
                           type="tel"
+                          name="phoneNumber"
                           value={String(profileState.phoneNumber ?? "")}
                           onChange={(e) =>
                             updateProfileState({ phoneNumber: e.target.value })
@@ -217,6 +184,7 @@ export default function EditProfileModal({
                         <label htmlFor="edit-biography">Biography</label>
                         <textarea
                           id="edit-biography"
+                          name="bio"
                           value={String(profileState.bio ?? "")}
                           onChange={(e) =>
                             updateProfileState({ bio: e.target.value })
@@ -239,7 +207,7 @@ export default function EditProfileModal({
                       Save Changes
                     </button>
                   </fieldset>
-                </form>
+                </fetcher.Form>
               </div>
             </motion.div>
           </motion.div>

@@ -111,7 +111,32 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (intent === "profile-change") {
-    return { success: true };
+    const profilePicture = data.get("profilePicture");
+    if (profilePicture instanceof File && profilePicture.size === 0) {
+      data.delete("profilePicture");
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/api/users/${params.id}`,
+      {
+        headers: {
+          Cookie: request.headers.get("Cookie") ?? "",
+        },
+        method: "PUT",
+        body: data,
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        error:
+          result.error || "Failed to update your profile. Please, try again.",
+      };
+    }
+
+    return result;
   }
 }
 
