@@ -162,7 +162,21 @@ export async function action({ request, params }: ActionFunctionArgs) {
         error: result.error || "Failed to promote to agent user.",
       };
 
-    return { success: true };
+    const cookieHeader = response.headers.get("Set-Cookie");
+
+    if (cookieHeader) {
+      return new Response(JSON.stringify({ success: true }), {
+        headers: {
+          "Content-Type": "application/json",
+          "Set-Cookie": cookieHeader,
+        },
+      });
+    }
+
+    return {
+      success: false,
+      error: "Cookie might have failed to update! Please, log out and back in.",
+    };
   }
 }
 
