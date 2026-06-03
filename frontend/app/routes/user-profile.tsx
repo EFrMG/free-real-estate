@@ -1,5 +1,11 @@
 import type { Route } from "./+types/user-profile";
-import { Link, redirect, type ActionFunctionArgs } from "react-router";
+import {
+  type ActionFunctionArgs,
+  Link,
+  Form,
+  redirect,
+  data,
+} from "react-router";
 
 import type {
   PropertyData,
@@ -74,13 +80,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  const data = await request.formData();
-  const intent = data.get("intent");
+  const fetcherData = await request.formData();
+  const intent = fetcherData.get("intent");
 
   if (intent === "password-change") {
-    const currentPassword = data.get("currentPassword") as string;
-    const newPassword = data.get("newPassword") as string;
-    const confirmPassword = data.get("confirmPassword") as string;
+    const currentPassword = fetcherData.get("currentPassword") as string;
+    const newPassword = fetcherData.get("newPassword") as string;
+    const confirmPassword = fetcherData.get("confirmPassword") as string;
 
     if (newPassword !== confirmPassword)
       return { error: "New passwords must match!" };
@@ -112,9 +118,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (intent === "profile-change") {
-    const profilePicture = data.get("profilePicture");
+    const profilePicture = fetcherData.get("profilePicture");
     if (profilePicture instanceof File && profilePicture.size === 0) {
-      data.delete("profilePicture");
+      fetcherData.delete("profilePicture");
     }
 
     const response = await fetch(
@@ -124,7 +130,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
           Cookie: request.headers.get("Cookie") ?? "",
         },
         method: "PUT",
-        body: data,
+        body: fetcherData,
       },
     );
 
@@ -140,6 +146,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (intent === "agent-promotion") {
+    const licenseNumber = fetcherData.get("licenseNumber") as string;
+    const agencyPassword = fetcherData.get("agencyPassword") as string;
+
+    if (!licenseNumber.length)
+      return { error: "You must include your full license number." };
+
     const response = await fetch(
       `http://localhost:3000/api/users/${params.id}/promote`,
       {
@@ -149,8 +161,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
         },
         method: "POST",
         body: JSON.stringify({
-          licenseNumber: data.get("licenseNumber") as string,
-          agencyPassword: data.get("agencyPassword") as string,
+          licenseNumber,
+          agencyPassword,
         }),
       },
     );
@@ -162,21 +174,36 @@ export async function action({ request, params }: ActionFunctionArgs) {
         error: result.error || "Failed to promote to agent user.",
       };
 
-    const cookieHeader = response.headers.get("Set-Cookie");
+    const headers = new Headers();
+    const setCookieHeader = response.headers.get("Set-Cookie");
 
-    if (cookieHeader) {
-      return new Response(JSON.stringify({ success: true }), {
-        headers: {
-          "Content-Type": "application/json",
-          "Set-Cookie": cookieHeader,
-        },
-      });
+    if (setCookieHeader) {
+      headers.set("Set-Cookie", setCookieHeader);
     }
 
-    return {
-      success: false,
-      error: "Cookie might have failed to update! Please, log out and back in.",
-    };
+    return data({ success: true }, { headers });
+  }
+
+  if (intent === "logout") {
+    const response = await fetch("http://localhost:3000/api/auth/logout", {
+      headers: {
+        Cookie: request.headers.get("Cookie") ?? "",
+      },
+      method: "POST",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) return { error: result.error };
+
+    const headers = new Headers();
+    const setCookieHeader = response.headers.get("Set-Cookie");
+
+    if (setCookieHeader) {
+      headers.set("Set-Cookie", setCookieHeader);
+    }
+
+    return redirect("/", { headers });
   }
 }
 
@@ -322,13 +349,29 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     •••••••••
                   </p>
                 </div>
-                <button
-                  onClick={() => setChangePasswordOpen(true)}
-                  className="px-4 py-2 text-sm font-medium text-amber-800
+                <div className="flex gap-4">
+                  <Form>
+                    <button
+                      type="submit"
+                      name="intent"
+                      value="logout"
+                      className="py-1.5 px-2 text-sm text-amber-700/84 rounded-sm bg-amber-200/36 shadow-sm
+                    outline outline-amber-300/18 hover:outline-rose-500/12
+                    hover:text-rose-700/84 hover:bg-rose-200/24 active:bg-rose-300/30
+                    gen-btn-hovaction transition-all duration-300"
+                    >
+                      Log Out
+                    </button>
+                  </Form>
+
+                  <button
+                    onClick={() => setChangePasswordOpen(true)}
+                    className="px-4 py-2 text-sm font-medium text-amber-800
                   bg-amber-200/36 rounded-sm shadow-sm gen-btn-border gen-btn-hovaction-sm"
-                >
-                  Change Password
-                </button>
+                  >
+                    Change Password
+                  </button>
+                </div>
               </div>
 
               {/* Agent details */}
