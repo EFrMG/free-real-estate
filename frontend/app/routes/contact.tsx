@@ -24,7 +24,7 @@ export default function Contact() {
         <form
           action=""
           onSubmit={(e) => e.preventDefault()}
-          className="stack-6 max-w-lg mx-auto mb-12 p-6 rounded-lg bg-amber-100/74 shadow-lg
+          className="stack-6 max-w-lg mx-auto mb-24 p-6 rounded-lg bg-amber-100/74 shadow-lg
           gen-form-labels"
         >
           <fieldset>
@@ -80,7 +80,9 @@ export default function Contact() {
         </form>
 
         <div className="stack-4 mt-8 min-h-112">
-          <h2 className="text-xl mb-4">Directly Given Assertions</h2>
+          <h2 className="text-xl mb-4 text-amber-800">
+            Directly Given Assertions
+          </h2>
           <details name="assertion" className="details-card group">
             <summary className="details-summary">
               Are these properties real?
