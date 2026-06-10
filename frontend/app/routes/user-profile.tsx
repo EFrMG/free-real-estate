@@ -349,7 +349,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     •••••••••
                   </p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex items-center gap-4">
                   <Form>
                     <button
                       type="submit"
@@ -411,6 +411,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   <MiniPropertyCard
                     key={`bookmark-${property.id}`}
                     property={property}
+                    clearBackground={true}
                   />
                 ))}
               </div>
@@ -433,6 +434,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     <MiniPropertyCard
                       key={`property-${property.id}`}
                       property={property}
+                      clearBackground={true}
                     />
                   ))}
                 </div>

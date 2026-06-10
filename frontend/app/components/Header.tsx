@@ -48,7 +48,7 @@ function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
       className={isBurger ? "sm:hidden" : "hidden sm:inline-block"}
     >
       <div className="flex items-center gap-2">
-        <span>{user.name}</span>
+        <span className="text-center line-clamp-1">{user.name}</span>
         <div className="relative">
           <img
             src={getAssetUrl(user.profilePicture)}

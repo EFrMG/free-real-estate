@@ -39,7 +39,8 @@ export default function PropertyCard({
   return (
     <Link to={`/properties/${id}`} className="block hover:opacity-100 group">
       <div
-        className="relative grid grid-cols-[5fr_8fr] gap-4 pl-3 pr-4 py-3 bg-amber-100/28 rounded-lg shadow-lg inset-shadow-sm
+        className="relative grid grid-cols-[5fr_8fr] gap-4 pl-3 pr-4 py-3
+        bg-amber-100/28 rounded-lg shadow-lg inset-shadow-sm
         hover:shadow-md transition-shadow duration-250"
       >
         <div

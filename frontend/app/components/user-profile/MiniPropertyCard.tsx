@@ -15,6 +15,7 @@ type MiniPropertyCardProps = {
     | "bathrooms"
     | "price"
   >;
+  clearBackground: boolean;
 };
 
 export default function MiniPropertyCard({
@@ -29,12 +30,15 @@ export default function MiniPropertyCard({
     bathrooms,
     price,
   },
+  clearBackground,
 }: MiniPropertyCardProps) {
   return (
     <Link to={`/properties/${id}`} className="block hover:opacity-100 group">
       <div
-        className="grid grid-cols-[3fr_7fr] gap-4 h-full pl-3 pr-4 py-3 bg-amber-50/68 rounded-lg shadow-md inset-shadow-sm
-        hover:shadow-sm transition-shadow duration-250"
+        className={`grid grid-cols-[3fr_7fr] gap-4 h-full pl-3 pr-4 py-3
+        rounded-lg shadow-md inset-shadow-sm
+        hover:shadow-sm transition-shadow duration-250
+        ${clearBackground ? "bg-amber-50/68" : "bg-amber-100/28"}`}
       >
         <div className="relative w-full h-full">
           <div
@@ -55,13 +59,13 @@ export default function MiniPropertyCard({
             src={exteriorImage}
             alt={title}
             draggable="false"
-            className="w-full h-full max-h-36 object-cover rounded-md"
+            className="w-full h-36 object-cover rounded-md"
           />
         </div>
 
         <div className="stack-2">
           <h2
-            className="text-center font-bold text-amber-900
+            className="text-center font-bold text-amber-900 line-clamp-1
             group-hover:text-amber-700 transition-colors duration-425 delay-75"
           >
             {title}
@@ -70,7 +74,7 @@ export default function MiniPropertyCard({
             <div className="shrink-0">
               <GoLocation size={18} color="var(--color-amber-800)" />
             </div>
-            <p className="text-gray-600 text-xs sm:text-sm">
+            <p className="text-gray-600 text-xs sm:text-sm line-clamp-1">
               {province}, {city}
             </p>
           </div>

@@ -293,7 +293,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             </div>
           </div>
 
-          <div className="h-fit p-4 bg-amber-100/28 rounded-lg shadow-md inset-shadow-xs">
+          <div className="h-fit my-auto p-4 bg-amber-100/28 rounded-lg shadow-md inset-shadow-xs">
             <h3 className="mb-2 text-center font-semibold text-lg">Details</h3>
             <div
               className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&_p]:items-center

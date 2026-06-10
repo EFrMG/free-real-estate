@@ -82,6 +82,10 @@
     @apply hover:scale-105 active:scale-100 transition-transform duration-150;
   }
 
+  .gen-btn-hovaction-xs {
+    @apply hover:scale-102 active:scale-100 transition-transform duration-150;
+  }
+
   .details-card {
     @apply border border-amber-700/26 rounded-lg bg-amber-100/28 shadow-md overflow-hidden transition-all duration-300;
   }
@@ -187,7 +191,7 @@
   }
 
   .gen-left-column {
-    @apply p-2 sm:p-4 md:p-6 stack-8;
+    @apply p-2 sm:p-4 md:p-6 stack-12;
   }
 
   @keyframes details-show {
