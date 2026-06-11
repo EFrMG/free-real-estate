@@ -348,7 +348,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   </p>
                 </div>
                 <div className="flex items-center gap-4 ml-auto max-xs:mt-1">
-                  <Form>
+                  <Form method="POST">
                     <button
                       type="submit"
                       name="intent"
