@@ -16,7 +16,7 @@ interface AgentBasic {
   role: string;
 }
 
-interface AgentDetail extends AgentBasic {
+export interface Agent extends AgentBasic {
   profile?: {
     userId: number;
     licenseNumber: string;
@@ -55,33 +55,30 @@ export async function action({ request }: Route.ActionArgs) {
     return { agentDetail: null, agentProperties: [] };
   }
 
-  const [detailRes, propertiesRes] = await Promise.all([
+  const [profileRes, propertiesRes] = await Promise.all([
     fetch(`http://localhost:3000/api/users/${id}`),
     fetch(`http://localhost:3000/api/users/${id}/properties`),
   ]);
 
-  const detail: AgentDetail | null = detailRes.ok
-    ? await detailRes.json()
-    : null;
+  const profile: Agent | null = profileRes.ok ? await profileRes.json() : null;
 
-  const props: PropertyData[] = propertiesRes.ok
+  const properties: PropertyData[] = propertiesRes.ok
     ? await propertiesRes.json()
     : [];
 
-  return { agentDetail: detail, agentProperties: props };
+  return { agent: profile, agentProperties: properties };
 }
 
 export default function OurAgents({ loaderData }: Route.ComponentProps) {
   const { agents } = loaderData;
   const fetcher = useFetcher<typeof action>();
-
-  const [view, setView] = useState<"grid" | "detail">("grid");
-
-  // agentId check is necessary to ensure that no skeleton is shown when handleDeselect runs
+  // agentId check is necessary so no skeleton shows when handleDeselect runs
   const isLoading =
     fetcher.state !== "idle" && Boolean(fetcher.formData?.get("agentId"));
-  const agentDetail = fetcher.data?.agentDetail || null;
+  const agent = fetcher.data?.agent || null;
   const agentProperties = fetcher.data?.agentProperties || [];
+
+  const [view, setView] = useState<"grid" | "detail">("grid");
 
   // Stores the id of the next agent to load, queued while exit plays
   const pendingAgentId = useRef<number | null>(null);
@@ -91,7 +88,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
   };
 
   const handleSelectAgent = (id: number) => {
-    if (id === agentDetail?.id && view === "detail") return;
+    if (id === agent?.id && view === "detail") return;
 
     pendingAgentId.current = id;
 
@@ -154,12 +151,10 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <h2 className="mb-2 text-xl text-amber-950 tracking-tight">
-                {agentDetail?.name
-                  ? `${agentDetail.name}'s Listings`
-                  : "Agent Listings"}
+                {agent?.name ? `${agent.name}'s Listings` : "Agent Listings"}
               </h2>
               <p className="mb-6 text-amber-800/74">
-                Properties managed by this agent.
+                Properties managed by the agent.
               </p>
 
               {isLoading ? (
@@ -196,9 +191,11 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
-                  className="py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/48"
+                  className="py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/52"
                 >
-                  <span className="text-3xl opacity-42 block mb-3">🏠</span>
+                  <span className="block mb-4 text-3xl opacity-42 select-none">
+                    🏠
+                  </span>
                   <p className="inline-block text-sm text-amber-800/94 italic">
                     This agent doesn't have any listed properties yet.
                   </p>
@@ -210,10 +207,10 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
       </div>
 
       {/* Right column */}
-      <div className="max-md:order-0 md:bg-amber-100 max-md:mt-4 md:p-6">
+      <div className="max-md:order-0 max-md:mt-4 md:p-6 md:bg-amber-100">
         <AgentDetailPanel
-          agent={agentDetail}
           isLoading={isLoading}
+          agent={agent}
           onDeselect={handleDeselect}
         />
       </div>

@@ -1,10 +1,10 @@
-import { useRef, useEffect } from "react";
-import { useFetcher } from "react-router";
-import { motion, AnimatePresence } from "motion/react";
-
 import type { UserProfile } from "~/data/generalData";
 import type { ProfileState } from "~/routes/user-profile";
 import type { ModalProps } from "./modalTypes";
+
+import { useRef, useEffect } from "react";
+import { useFetcher } from "react-router";
+import { motion, AnimatePresence } from "motion/react";
 import { getAssetUrl } from "~/utils/display";
 import { createDialogCloseHandler } from "~/utils/dialogs";
 

@@ -1,8 +1,9 @@
+import type { PropertyData } from "~/data/generalData";
+
 import { Link } from "react-router";
+
 import { GoLocation } from "react-icons/go";
 import { LuBed, LuBath } from "react-icons/lu";
-
-import type { PropertyData } from "@free-real-estate/shared";
 
 type PropertyCardProps = {
   property: Pick<

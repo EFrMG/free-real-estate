@@ -1,28 +1,20 @@
+import type { Agent } from "~/routes/our-agents";
+
 import { motion, AnimatePresence } from "motion/react";
-import { GoShieldCheck, GoQuote } from "react-icons/go";
-import { LuPhone } from "react-icons/lu";
 import { getAssetUrl } from "~/utils/display";
 
-type AgentDetailData = {
-  id: number;
-  name: string;
-  profilePicture: string;
-  profile?: {
-    licenseNumber: string;
-    phoneNumber?: string | null;
-    bio?: string | null;
-  };
-};
+import { GoShieldCheck, GoQuote } from "react-icons/go";
+import { LuPhone } from "react-icons/lu";
 
-type AgentDetailPanelProps = {
-  agent: AgentDetailData | null;
+interface AgentDetailPanelProps {
   isLoading: boolean;
+  agent: Agent | null;
   onDeselect: () => void;
-};
+}
 
 export default function AgentDetailPanel({
-  agent,
   isLoading,
+  agent,
   onDeselect,
 }: AgentDetailPanelProps) {
   const panelKey = isLoading
@@ -33,7 +25,7 @@ export default function AgentDetailPanel({
 
   return (
     <div
-      className="md:sticky md:top-[7.5vh] px-6 pt-4 pb-5
+      className="md:sticky md:top-[7.5vh] px-4 pb-3 xs:px-6 xs:pt-4 xs:pb-5
       bg-amber-100/64 md:bg-amber-50/64 rounded-xl shadow-md
       border border-amber-200/40 grid"
     >
@@ -91,8 +83,8 @@ export default function AgentDetailPanel({
               <div className="w-full mt-2 py-5 bg-amber-200/40 rounded-lg animate-pulse" />
             </div>
           ) : agent ? (
-            <div className="pt-4 stack-6">
-              <div className="flex flex-col items-center gap-4">
+            <div className="pt-5 xs:pt-4 stack-6">
+              <div className="stack-2 items-center">
                 <motion.img
                   src={getAssetUrl(agent.profilePicture)}
                   alt={`${agent.name} profile`}
@@ -112,8 +104,8 @@ export default function AgentDetailPanel({
                   {agent.name}
                 </h2>
                 <span
-                  className="px-3 py-0.5 text-xs bg-amber-300/30 text-amber-900 font-medium
-                rounded-full border border-amber-300/50 capitalize"
+                  className="px-3 py-0.5 text-xs bg-amber-300/34 text-amber-900 font-medium
+                rounded-full border border-amber-300/60 capitalize"
                 >
                   Agent
                 </span>

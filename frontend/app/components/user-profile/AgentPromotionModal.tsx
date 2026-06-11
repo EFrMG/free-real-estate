@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
-
-import { motion, AnimatePresence } from "motion/react";
-
 import type { ModalProps } from "./modalTypes";
 
-import { GoX } from "react-icons/go";
+import { useEffect, useState } from "react";
+import { useFetcher } from "react-router";
+import { motion, AnimatePresence } from "motion/react";
+
 import useObjectState from "~/hooks/useObjectState";
 import { createDialogCloseHandler } from "~/utils/dialogs";
+
+import { GoX } from "react-icons/go";
 
 interface AgentPromotionForm {
   licenseNumber: string;

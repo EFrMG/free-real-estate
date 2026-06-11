@@ -17,7 +17,9 @@ export default function About() {
   return (
     <main className="gen-main">
       <div className="gen-left space-y-8 [&_p]:leading-relaxed">
-        <h1 className="mt-12 text-2xl">Welcome to Free Real Estate</h1>
+        <h1 className="mt-12 text-2xl text-amber-950">
+          Welcome to Free Real Estate
+        </h1>
         <p>
           This is your premier destination for finding the perfect property and
           deals. Whether you are looking to buy, rent, or just exploring, our

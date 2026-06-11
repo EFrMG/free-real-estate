@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+
 import { LuBed, LuBath } from "react-icons/lu";
 import { Link } from "react-router";
 

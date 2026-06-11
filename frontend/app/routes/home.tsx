@@ -32,7 +32,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="gen-left">
-        <h1 className="text-3xl">
+        <h1 className="text-3xl text-amber-950">
           Find the place of your dreams at unmatched discounts
         </h1>
         <p className="pt-12 text-lg">
@@ -40,7 +40,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           life is in the end. We provide the best places at a price that might
           as well not be real.
         </p>
-        <h2 className="py-6 text-xl">Get your deal today!</h2>
+        <h2 className="py-6 text-xl text-amber-800">Get your deal today!</h2>
 
         <SearchInput cities={cities} />
 

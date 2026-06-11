@@ -1,9 +1,8 @@
+import type { ModalProps } from "./modalTypes";
+
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-
 import { motion, AnimatePresence } from "motion/react";
-
-import type { ModalProps } from "./modalTypes";
 
 import useObjectState from "~/hooks/useObjectState";
 import { createDialogCloseHandler } from "~/utils/dialogs";

@@ -1,6 +1,6 @@
 import type { Route } from "./+types/contact";
-import { RiArrowDownSLine } from "react-icons/ri";
 
+import { RiArrowDownSLine } from "react-icons/ri";
 import HeroRightSide from "~/components/HeroRightSide";
 
 export function meta({}: Route.MetaArgs) {
@@ -35,7 +35,7 @@ export default function Contact() {
               id="email"
               name="email"
               type="email"
-              className="gen-input-forms"
+              className="mx-2 gen-input-forms"
             />
           </fieldset>
           <fieldset>

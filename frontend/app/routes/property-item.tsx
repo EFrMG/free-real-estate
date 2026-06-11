@@ -3,9 +3,9 @@ import type { Route } from "./+types/property-item";
 import { lazy, Suspense } from "react";
 import { useFetcher } from "react-router";
 
+import { getAssetUrl } from "~/utils/display";
 import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
-import { getAssetUrl } from "~/utils/display";
 
 import {
   GoBookmark,

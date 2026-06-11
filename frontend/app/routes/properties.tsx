@@ -1,10 +1,11 @@
 import type { Route } from "./+types/properties";
+import type { PropertyData } from "@free-real-estate/shared";
 
 import { lazy, Suspense } from "react";
-import type { PropertyData } from "@free-real-estate/shared";
+
+import ClientOnly from "~/components/ClientOnly";
 import FilterInput from "~/components/properties/FilterInput";
 import PropertyCard from "~/components/properties/PropertyCard";
-import ClientOnly from "~/components/ClientOnly";
 
 const Map = lazy(() => import("~/components/Map"));
 

@@ -1,19 +1,19 @@
 import { getAssetUrl } from "~/utils/display";
 
-type AgentCardProps = {
+interface AgentCardProps {
   agent: {
     id: number;
     name: string;
     profilePicture: string;
   };
   onSelect: (id: number) => void;
-};
+}
 
 export default function AgentCard({ agent, onSelect }: AgentCardProps) {
   return (
     <button
       onClick={() => onSelect(agent.id)}
-      className="group stack-3 items-center w-full h-full max-lg:px-4 max-lg:py-6 p-6 rounded-xl
+      className="group stack-2 items-center w-full h-full max-lg:px-4 max-lg:py-6 p-6 rounded-xl
       bg-amber-100/28 hover:bg-amber-100/48 border border-amber-200/36
       shadow-md inset-shadow-sm hover:shadow-lg active:shadow-md
       gen-btn-hovaction-xs transition-all"
@@ -29,7 +29,7 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
         />
         <div
           className="absolute inset-0 rounded-full
-          bg-amber-400/0 group-hover:bg-amber-400/8 transition-colors duration-300"
+          bg-transparent group-hover:bg-amber-400/8 transition-colors duration-450"
         />
       </div>
       <p

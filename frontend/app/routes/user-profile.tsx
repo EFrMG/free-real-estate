@@ -6,7 +6,6 @@ import {
   redirect,
   data,
 } from "react-router";
-
 import type {
   PropertyData,
   UserProfile as UserProfileData,
@@ -268,17 +267,17 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
             border border-amber-200/48"
           >
             <div
-              className="absolute top-0 inset-x-0 h-24
+              className="absolute top-0 inset-x-0 lg:h-24 md:h-42 sm:h-22 h-44
               bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/26"
             />
 
             <div className="relative z-10 p-5 sm:p-6">
               {/* Avatar + Info row */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                <div>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-6">
+                <div className="shrink-0">
                   <img
                     src={getAssetUrl(user.profilePicture)}
-                    alt={`${user.name}-profile-picture`}
+                    alt={`${user.name}'s profile picture`}
                     draggable={false}
                     className="profile-picture-big"
                   />
@@ -294,7 +293,6 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       <p className="flex items-center gap-4 text-sm text-amber-800/84">
                         {user.email}
                         {user.role === "user" && (
-                          //  TODO: agent promotion
                           <button
                             className="text-amber-900/58 hover:text-amber-900
                             transition-colors duration-150"
@@ -305,13 +303,13 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                         )}
                       </p>
                       <p
-                        className="w-fit mt-1 px-3 py-0.5 text-xs 
-                    bg-amber-300/30 text-amber-900 font-medium
-                    rounded-full border border-amber-300/50 capitalize
+                        className="w-fit mt-2 px-3 py-0.5 text-xs 
+                    bg-amber-300/34 text-amber-900 font-medium
+                    rounded-full border border-amber-300/60 capitalize
                     mx-auto sm:mx-0"
                       >
                         {user.role}
-                      </p>{" "}
+                      </p>
                     </div>
 
                     <button
@@ -331,10 +329,10 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
               {/* Password section */}
               <div
-                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/64
-                flex items-center justify-between flex-wrap gap-3"
+                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/52
+                flex items-center justify-between flex-wrap"
               >
-                <div className="stack-1">
+                <div className="stack-1 mr-2">
                   <p className="flex items-center gap-2 text-sm font-medium text-amber-900 leading-none">
                     <GoShieldLock
                       size={20}
@@ -349,7 +347,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     •••••••••
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 ml-auto max-xs:mt-1">
                   <Form>
                     <button
                       type="submit"
@@ -378,7 +376,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               {user.role === "agent" && (
                 <div
                   className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50/84
-                  border border-amber-200/64 space-y-3
+                  border border-amber-200/52 space-y-3
                   [&_div]:flex [&_div]:justify-between [&_div]:items-center
                   [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
                   [&_h2]:text-lg [&_h2]:text-amber-950
@@ -452,7 +450,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
         {/* Right column */}
         <div className="md:bg-amber-100 max-md:mt-4 md:p-6">
           <div
-            className="md:sticky md:top-[7.5vh] p-5
+            className="md:sticky md:top-[7.5vh] px-6 py-5
             bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md
             border border-amber-200/40"
           >
@@ -466,7 +464,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               {!userMessages && (
                 <>
                   <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
-                    <span className="text-2xl opacity-42">💬</span>
+                    <span className="text-2xl opacity-42 select-none">💬</span>
                   </div>
                   <p className="text-sm text-amber-800/74 italic">
                     Your chats will appear here.

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { GoChevronLeft, GoChevronRight, GoX } from "react-icons/go";
+
 import useDialog from "~/hooks/useDialog";
+
+import { GoChevronLeft, GoChevronRight, GoX } from "react-icons/go";
 
 export default function PropertyGallery({
   interiorGallery,

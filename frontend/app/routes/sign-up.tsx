@@ -1,6 +1,7 @@
+import type { Route } from "./+types/sign-up";
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
-import type { Route } from "./+types/sign-up";
 
 import HeroRightSide from "~/components/HeroRightSide";
 

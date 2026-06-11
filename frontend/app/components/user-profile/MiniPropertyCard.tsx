@@ -1,6 +1,7 @@
+import type { PropertyData } from "@free-real-estate/shared";
+
 import { Link } from "react-router";
 import { GoLocation } from "react-icons/go";
-import type { PropertyData } from "@free-real-estate/shared";
 
 type MiniPropertyCardProps = {
   property: Pick<
