@@ -43,7 +43,7 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
   };
 
   return (
-    <div className="py-12 px-3">
+    <div className="pt-8 lg:pt-12 px-2">
       <div className="*:px-6 *:py-2 *:border-2 *:border-amber-500 *:focus:outline-0">
         <button
           onClick={() => updateQuery({ type: "any" })}
