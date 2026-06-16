@@ -37,7 +37,7 @@ const signingLinks: NavLinks[] = [
   },
   {
     name: "Sign up",
-    key: "sign-up",
+    key: "log-in?mode=signup",
   },
 ];
 

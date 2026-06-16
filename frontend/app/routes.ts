@@ -6,7 +6,6 @@ export default [
   route("contact", "routes/contact.tsx"),
   route("our-agents", "routes/our-agents.tsx"),
   route("log-in", "routes/log-in.tsx"),
-  route("sign-up", "routes/sign-up.tsx"),
   route("properties", "routes/properties.tsx"),
   route("properties/:id", "routes/property-item.tsx"),
   route("user-profile/:id", "routes/user-profile.tsx"),

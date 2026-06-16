@@ -159,7 +159,7 @@ api.post("/auth/register", async (c) => {
     .where(eq(users.email, email))
     .get();
 
-  if (existing) return c.json({ error: "Email is already in use!" }, 409);
+  if (existing) return c.json({ error: "Email is already in use." }, 409);
 
   const passwordHash = await argon2.hash(password);
 
@@ -196,11 +196,11 @@ api.post("/auth/login", async (c) => {
     .where(eq(users.email, email))
     .get();
 
-  if (!user) return c.json({ error: "Invalid credentials!" }, 401);
+  if (!user) return c.json({ error: "Invalid email." }, 401);
 
   const passwordVerify = await argon2.verify(user.passwordHash, password);
 
-  if (!passwordVerify) return c.json({ error: "Invalid credentials!" }, 401);
+  if (!passwordVerify) return c.json({ error: "Invalid password!" }, 401);
 
   const session = { id: user.id, role: user.role } as UserSession;
   await setSessionCookie(c, session);
