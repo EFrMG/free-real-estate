@@ -1,4 +1,4 @@
-// Authentication utilities for Free Real Estate backend
+import type { Context } from "hono";
 
 import { createMiddleware } from "hono/factory";
 import { sign, verify } from "hono/jwt";
@@ -13,7 +13,7 @@ export interface UserSession {
   role: "agent" | "user";
 }
 
-export async function setSessionCookie(c: any, user: UserSession) {
+export async function setSessionCookie(c: Context, user: UserSession) {
   const token = await sign(
     { ...user, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7 }, // 7 days
     JWT_KEY,

@@ -48,7 +48,6 @@ export async function action({ request }: Route.ActionArgs) {
 
     const signupData = await signupRes.json();
 
-    // TODO: handle zod validation for login too.
     if (!signupRes.ok) {
       // Zod validation
       if (
@@ -102,7 +101,23 @@ export async function action({ request }: Route.ActionArgs) {
     const loginData = await loginRes.json();
 
     if (!loginRes.ok) {
-      return { error: loginData.error || "Login failed" };
+      // Zod validation
+      if (typeof loginData.error === "object" && loginData.error.fieldErrors) {
+        const firstKey = Object.keys(loginData.error.fieldErrors)[0];
+
+        if (firstKey) {
+          return { error: loginData.error.fieldErrors[firstKey][0] };
+        }
+
+        if (loginData.error.formErrors?.length) {
+          return { error: loginData.error.formErrors[0] };
+        }
+      }
+
+      const message =
+        typeof loginData.error === "string" ? loginData.error : "Login failed.";
+
+      return { error: message };
     }
 
     const headers = new Headers();

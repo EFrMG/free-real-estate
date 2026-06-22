@@ -163,7 +163,7 @@ api.post("/auth/register", async (c) => {
 
   const passwordHash = await argon2.hash(password);
 
-  const [user] = await db
+  const user = await db
     .insert(users)
     .values({
       email,
@@ -178,7 +178,8 @@ api.post("/auth/register", async (c) => {
       name: users.name,
       role: users.role,
       profilePicture: users.profilePicture,
-    });
+    })
+    .get();
 
   const session = { id: user.id, role: user.role } as UserSession;
   await setSessionCookie(c, session);
@@ -186,9 +187,20 @@ api.post("/auth/register", async (c) => {
   return c.json(user, 201);
 });
 
+const loginSchema = z.object({
+  email: z.email({ pattern: z.regexes.html5Email }),
+  password: z.string().min(1, "A password is required!"),
+});
+
 // Log in as a user
 api.post("/auth/login", async (c) => {
-  const { email, password } = await c.req.json();
+  const bodyRes = loginSchema.safeParse(await c.req.json());
+
+  if (!bodyRes.success) {
+    return c.json({ error: z.flattenError(bodyRes.error) }, 400);
+  }
+
+  const { email, password } = bodyRes.data;
 
   const user = await db
     .select()
@@ -198,9 +210,9 @@ api.post("/auth/login", async (c) => {
 
   if (!user) return c.json({ error: "Invalid email." }, 401);
 
-  const passwordVerify = await argon2.verify(user.passwordHash, password);
+  const passwordVerified = await argon2.verify(user.passwordHash, password);
 
-  if (!passwordVerify) return c.json({ error: "Invalid password!" }, 401);
+  if (!passwordVerified) return c.json({ error: "Invalid password!" }, 401);
 
   const session = { id: user.id, role: user.role } as UserSession;
   await setSessionCookie(c, session);
