@@ -124,7 +124,6 @@ const LogInForm = ({
 }: LogInFormProps) => {
   return (
     <motion.div
-      key="login-form"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -162,6 +161,7 @@ export default function LogIn() {
           <AnimatePresence mode="wait">
             {mode === "login" ? (
               <LogInForm
+                key="login-form"
                 fetcher={fetcher}
                 titleText="Welcome Back"
                 paragraphText="Log in to access your saved properties and messages."
@@ -211,6 +211,7 @@ export default function LogIn() {
             ) : (
               mode === "signup" && (
                 <LogInForm
+                  key="signup-form"
                   fetcher={fetcher}
                   titleText="Create an Account"
                   paragraphText="Join Free Real Estate to find your perfect place to live."
