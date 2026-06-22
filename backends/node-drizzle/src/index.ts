@@ -51,8 +51,8 @@ api.use(
   "/*",
   cors({
     credentials: true,
-    // TODO: Add specific route if hosted.
-    // When developing, ports might change so we let Hono decide it for the headers
+    /* TODO: Add specific route if hosted.
+      When developing, ports might change so we let Hono decide it for the headers */
   }),
 );
 
@@ -228,7 +228,7 @@ api.get("/auth/me", requireAuth, async (c) => {
       profilePicture: users.profilePicture,
       licenseNumber: agentProfiles.licenseNumber,
       phoneNumber: agentProfiles.phoneNumber,
-      bio: agentProfiles.bio,
+      biography: agentProfiles.biography,
     })
     .from(users)
     .leftJoin(agentProfiles, eq(users.id, agentProfiles.userId))
@@ -307,7 +307,7 @@ api.put("/users/:id", requireAuth, async (c) => {
     body = await c.req.json();
   }
 
-  const { name, licenseNumber, phoneNumber, bio } = body;
+  const { name, licenseNumber, phoneNumber, biography } = body;
   let profilePicture = body.profilePicture;
 
   // Core users table
@@ -373,7 +373,7 @@ api.put("/users/:id", requireAuth, async (c) => {
 
     if (phoneNumber !== undefined) agentUpdates["phoneNumber"] = phoneNumber;
 
-    if (bio !== undefined) agentUpdates["bio"] = bio;
+    if (biography !== undefined) agentUpdates["biography"] = biography;
 
     if (Object.keys(agentUpdates).length) {
       await db

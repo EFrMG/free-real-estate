@@ -90,7 +90,9 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return { property, userPoster, userBookmarks };
 }
 
-// TODO: optimistic UI for the bookmark button; although, if there is no suitable place to show errors in the present layout this would also necessitate a popover, for which I have no other use yet other than indicating a successful login
+/* TODO: optimistic UI for the bookmark button
+  Although, if there is no suitable place to show errors in the present layout this would also necessitate a popover,
+  for which I have no other use yet other than indicating a successful login */
 export async function action({ request, params }: Route.ActionArgs) {
   const { id: propertyId } = params;
 

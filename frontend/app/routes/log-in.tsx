@@ -1,10 +1,10 @@
 import type { Route } from "./+types/log-in";
+import type { FetcherWithComponents } from "react-router";
 
 import { useSearchParams, useFetcher, Link, redirect } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
 import HeroRightSide from "~/components/HeroRightSide";
-import type { FetcherWithComponents } from "react-router";
 
 interface ActionData {
   error?: string;

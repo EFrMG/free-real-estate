@@ -21,7 +21,7 @@ export interface Agent extends AgentBasic {
     userId: number;
     licenseNumber: string;
     phoneNumber?: string | null;
-    bio?: string | null;
+    biography?: string | null;
   };
 }
 

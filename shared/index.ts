@@ -21,7 +21,7 @@ export interface UserBasic extends Omit<UserData, "passwordHash"> {}
 export interface UserProfile extends UserBasic {
   licenseNumber?: string | null;
   phoneNumber?: string | null;
-  bio?: string | null;
+  biography?: string | null;
 }
 
 export type AgentProfileData = OptionalNullable<

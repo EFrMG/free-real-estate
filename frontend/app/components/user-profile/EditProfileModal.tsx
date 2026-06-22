@@ -58,7 +58,7 @@ export default function EditProfileModal({
       name: user.name,
       profilePicture: user.profilePicture,
       phoneNumber: user.phoneNumber,
-      bio: user.bio,
+      biography: user.biography,
     },
   );
 
@@ -69,7 +69,7 @@ export default function EditProfileModal({
         handleCloseDialog(e);
       }}
       className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent 
+      backdrop:bg-transparent bg-transparent
       overflow-hidden border-none outline-none"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
@@ -184,10 +184,10 @@ export default function EditProfileModal({
                         <label htmlFor="edit-biography">Biography</label>
                         <textarea
                           id="edit-biography"
-                          name="bio"
-                          value={String(profileState.bio ?? "")}
+                          name="biography"
+                          value={String(profileState.biography ?? "")}
                           onChange={(e) =>
-                            updateProfileState({ bio: e.target.value })
+                            updateProfileState({ biography: e.target.value })
                           }
                           className="gen-input-forms max-h-[8lh]"
                         />

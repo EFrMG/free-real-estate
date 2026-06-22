@@ -234,7 +234,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
       name: user.name,
       profilePicture: user.profilePicture,
       phoneNumber: user.phoneNumber,
-      bio: user.bio,
+      biography: user.biography,
     });
 
   const {
@@ -303,7 +303,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                         )}
                       </p>
                       <p
-                        className="w-fit mt-2 px-3 py-0.5 text-xs 
+                        className="w-fit mt-2 px-3 py-0.5 text-xs
                     bg-amber-300/34 text-amber-900 font-medium
                     rounded-full border border-amber-300/60 capitalize
                     mx-auto sm:mx-0"
@@ -392,7 +392,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   </div>
                   <div>
                     <h2>Biography:</h2>
-                    <p className="text-slate-900/72!">{user.bio}</p>
+                    <p className="text-slate-900/72!">{user.biography}</p>
                   </div>
                 </div>
               )}

@@ -504,13 +504,15 @@ export const userData: UserData[] = [
 export const agentProfileData: AgentProfileData[] = [
   {
     userId: 1,
-    bio: "With over 10 years of experience in the Buenos Aires real estate market, I specialize in finding the perfect luxury apartments and investments for my clients.",
+    biography:
+      "With over 10 years of experience in the Buenos Aires real estate market, I specialize in finding the perfect luxury apartments and investments for my clients.",
     licenseNumber: "CUCICBA-1234",
     phoneNumber: "+54 9 11 1234-5678",
   },
   {
     userId: 2,
-    bio: "Passionate about matching people with their dream homes. I have a deep knowledge of the Córdoba and Salta markets, ensuring smooth transactions from start to finish.",
+    biography:
+      "Passionate about matching people with their dream homes. I have a deep knowledge of the Córdoba and Salta markets, ensuring smooth transactions from start to finish.",
     licenseNumber: "CPI-5678",
   },
 ];

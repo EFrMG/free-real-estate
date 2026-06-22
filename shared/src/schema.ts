@@ -38,7 +38,7 @@ export const agentProfiles = sqliteTable("agent_profiles", {
     .references(() => users.id, { onDelete: "cascade" }),
   licenseNumber: text().notNull(),
   phoneNumber: text(),
-  bio: text(),
+  biography: text(),
 });
 
 export const properties = sqliteTable("properties", {

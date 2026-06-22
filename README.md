@@ -5,7 +5,7 @@
 
 Real Estate company demo website and testing ground for numerous backends.
 
-So far, I am working with Drizzle and SQLite, although I expect to use Prisma and MongoDB, and Golang too.
+So far, I am working with Drizzle and SQLite, although I expect to use Prisma with MongoDB, and Golang too.
 
 This present document serves as a General Design Document.
 
@@ -71,9 +71,9 @@ The main parts of this monorepo are as follows (dependencies and their web links
 
 #### 1.1.1 Framework
 
-The frontend is designed to be a high-performance, modern web application built with `React Router v7` (in _SPA_ mode).
+The frontend is designed to be a modern web application built with `React Router v7`.
 
-It was decided to organize `React` components simply in `/frontend/app/components/`.
+It was decided to organize `React` components simply in `/frontend/app/components/*` and `/frontend/app/components/*/*`, where subdirectories are respective to different routes.
 
 #### 1.1.2 Styling
 
@@ -85,7 +85,7 @@ With `Tailwind CSS v4` We utilize a custom theme and general reset that extends 
 
 #### 1.1.4 State Management
 
-React Router's `loader` and `action` patterns are used for data fetching and mutations, minimizing the need for complex global state libraries
+React Router's `loader` and `action` patterns are used for data fetching and mutations, minimizing the need for global state libraries.
 
 #### 1.1.5 Previews of the frontend:
 
@@ -140,7 +140,7 @@ The runtime is `Node.js` via `@hono/node-server`.
   - _Users & Bookmarks_:
     - `GET /api/users`: Gets list of user agents (not normal users, as this is for Our Agents page).
     - `GET /api/users/:id`: Gets profile details of a specific user.
-    - `PUT /api/users/:id`: Updates a user's profile (name, profile picture, bio, etc).
+    - `PUT /api/users/:id`: Updates a user's profile (name, profile picture, biography, etc).
     - `PUT /api/users/:id/password`: Updates a user's password, including verification with Argon2.
     - `POST /api/users/:id/promote`: Promotes a normal user to Agent status using a secret code.
     - `GET /api/users/:id/properties`: Gets properties owned by a user.
@@ -190,6 +190,7 @@ pnpm push:be && pnpm seed:be && pnpm run dev
 
 ## 3. Future Considerations
 
-- **Messaging System**: Implementation of real-time or persistent chat functionality between users and agents.
-- **Image Hosting**: Transitioning from local assets to a CDN or cloud storage (this could be useful in cases where projects need to scale).
+- **Messaging System**: Implementation of real-time and persistent chat functionality between users and agents, including an emoji picker which could be interesting.
+- **Blogs**: A blog feature with rich text support. I am delaying this for a while.
+- **Agents Adding new Property Listings**: Agents should be able to add new properties from their profile.
 - **Backend Diversification**: Implementing the same API specifications in Go to compare performance and developer experience could be very interesting from a certain perspective.

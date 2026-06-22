@@ -133,7 +133,7 @@ export default function AgentDetailPanel({
                     </div>
                   </div>
 
-                  {agent.profile.bio && (
+                  {agent.profile.biography && (
                     <div>
                       <GoQuote
                         size={18}
@@ -142,10 +142,10 @@ export default function AgentDetailPanel({
                       />
                       <div>
                         <p className="text-sm text-amber-800/64 font-medium uppercase tracking-wide">
-                          Bio
+                          Biography
                         </p>
                         <p className="text-sm text-amber-950/84 leading-relaxed">
-                          {agent.profile.bio}
+                          {agent.profile.biography}
                         </p>
                       </div>
                     </div>
