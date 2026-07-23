@@ -77,10 +77,9 @@ export async function action({ request }: Route.ActionArgs) {
     }
 
     const headers = new Headers();
-    const setCookieHeader = signupRes.headers.get("Set-Cookie");
 
-    if (setCookieHeader) {
-      headers.set("Set-Cookie", setCookieHeader);
+    for (const cookie of signupRes.headers.getSetCookie()) {
+      headers.append("Set-Cookie", cookie);
     }
 
     return redirect("/", { headers });
@@ -121,10 +120,9 @@ export async function action({ request }: Route.ActionArgs) {
     }
 
     const headers = new Headers();
-    const setCookieHeader = loginRes.headers.get("Set-Cookie");
 
-    if (setCookieHeader) {
-      headers.set("Set-Cookie", setCookieHeader);
+    for (const cookie of loginRes.headers.getSetCookie()) {
+      headers.append("Set-Cookie", cookie);
     }
 
     return redirect("/", { headers });

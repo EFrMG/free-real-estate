@@ -113,7 +113,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
           result.error || "Failed to update your password. Please, try again.",
       };
 
-    return { success: true };
+    const headers = new Headers();
+
+    for (const cookie of response.headers.getSetCookie()) {
+      headers.append("Set-Cookie", cookie);
+    }
+
+    return data({ success: true }, { headers });
   }
 
   if (intent === "profile-change") {
@@ -174,10 +180,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
       };
 
     const headers = new Headers();
-    const setCookieHeader = response.headers.get("Set-Cookie");
 
-    if (setCookieHeader) {
-      headers.set("Set-Cookie", setCookieHeader);
+    for (const cookie of response.headers.getSetCookie()) {
+      headers.append("Set-Cookie", cookie);
     }
 
     return data({ success: true }, { headers });
@@ -196,10 +201,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
     if (!response.ok) return { error: result.error };
 
     const headers = new Headers();
-    const setCookieHeader = response.headers.get("Set-Cookie");
 
-    if (setCookieHeader) {
-      headers.set("Set-Cookie", setCookieHeader);
+    for (const cookie of response.headers.getSetCookie()) {
+      headers.append("Set-Cookie", cookie);
     }
 
     return redirect("/", { headers });

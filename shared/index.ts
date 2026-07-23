@@ -38,6 +38,10 @@ export type MessageData = OptionalNullable<
   InferSelectModel<typeof schema.messages>
 >;
 
+export type RefreshTokenData = OptionalNullable<
+  InferSelectModel<typeof schema.refreshTokens>
+>;
+
 // TODO: Blog section
 // export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
 

@@ -131,3 +131,15 @@ export const bookmarks = sqliteTable(
   },
   (table) => [primaryKey({ columns: [table.userId, table.propertyId] })],
 );
+
+// Refresh Tokens for revocable session management
+export const refreshTokens = sqliteTable("refresh_tokens", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  userId: integer()
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tokenHash: text().notNull().unique(), // SHA-256 of the opaque token
+  family: text().notNull(), // Rotation family ID (UUID)
+  expiresAt: text().notNull(), // ISO 8601 timestamp
+  createdAt: text().notNull(), // ISO 8601 timestamp
+});

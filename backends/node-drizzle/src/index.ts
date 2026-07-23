@@ -25,8 +25,9 @@ import {
   type UserSession,
   requireAuth,
   setSessionCookie,
-  deleteCookie,
-  COOKIE_NAME,
+  createRefreshToken,
+  revokeAllUserSessions,
+  clearAuthCookies,
 } from "./auth.ts";
 
 import type {
@@ -153,13 +154,13 @@ api.post("/auth/register", async (c) => {
 
   const { email, password, name, profilePicture } = bodyRes.data;
 
-  const existing = await db
+  const emailExists = await db
     .select()
     .from(users)
     .where(eq(users.email, email))
     .get();
 
-  if (existing) return c.json({ error: "Email is already in use." }, 409);
+  if (emailExists) return c.json({ error: "Email is already in use." }, 409);
 
   const passwordHash = await argon2.hash(password);
 
@@ -183,6 +184,7 @@ api.post("/auth/register", async (c) => {
 
   const session = { id: user.id, role: user.role } as UserSession;
   await setSessionCookie(c, session);
+  await createRefreshToken(c, user.id);
 
   return c.json(user, 201);
 });
@@ -216,13 +218,17 @@ api.post("/auth/login", async (c) => {
 
   const session = { id: user.id, role: user.role } as UserSession;
   await setSessionCookie(c, session);
+  await createRefreshToken(c, user.id);
 
   return c.json(session);
 });
 
 // Log out
-api.post("/auth/logout", (c) => {
-  deleteCookie(c, COOKIE_NAME, { path: "/" });
+api.post("/auth/logout", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+
+  await revokeAllUserSessions(session.id);
+  clearAuthCookies(c);
 
   return c.json({ ok: true });
 });
@@ -410,7 +416,7 @@ api.put("/users/:id/password", requireAuth, async (c) => {
   const { currentPassword, newPassword } = await c.req.json();
 
   if (!currentPassword || !newPassword) {
-    return c.json({ error: "Missing required fields" }, 400);
+    return c.json({ error: "Missing required fields." }, 400);
   }
 
   const user = await db.select().from(users).where(eq(users.id, id)).get();
@@ -428,6 +434,11 @@ api.put("/users/:id/password", requireAuth, async (c) => {
   const passwordHash = await argon2.hash(newPassword);
 
   await db.update(users).set({ passwordHash }).where(eq(users.id, id));
+
+  // Revoke all existing sessions, then re-issue for the current device
+  await revokeAllUserSessions(id);
+  await setSessionCookie(c, { id, role: user.role } as UserSession);
+  await createRefreshToken(c, id);
 
   return c.json({ ok: true });
 });
@@ -453,7 +464,10 @@ api.post("/users/:id/promote", requireAuth, async (c) => {
     .values({ userId: id, licenseNumber })
     .onConflictDoNothing();
 
+  // Re-issue tokens with the new role
+  await revokeAllUserSessions(id);
   await setSessionCookie(c, { id, role: "agent" });
+  await createRefreshToken(c, id);
 
   return c.json({ ok: true });
 });
