@@ -5,7 +5,7 @@ import { useFetcher } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
 import useObjectState from "~/hooks/useObjectState";
-import { createDialogCloseHandler } from "~/utils/dialogs";
+import createDialogCloseHandler from "~/utils/createDialogCloseHandler";
 
 import { GoX } from "react-icons/go";
 
@@ -55,7 +55,7 @@ export default function AgentPromotionModal({
         setFetcherKey(crypto.randomUUID());
       }}
       className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent 
+      backdrop:bg-transparent bg-transparent
       overflow-hidden border-none outline-none"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>

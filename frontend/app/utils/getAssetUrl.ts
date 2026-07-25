@@ -8,7 +8,7 @@
  *   - External URLs (^http)
  *   - Base64 data (^data:)
  */
-export const getAssetUrl = (path: string | null | undefined) => {
+export default function getAssetUrl(path: string | null | undefined) {
   if (!path) return "/app/assets/images/profile-pictures/placeholder.png";
 
   if (
@@ -24,4 +24,4 @@ export const getAssetUrl = (path: string | null | undefined) => {
   }
 
   return path;
-};
+}

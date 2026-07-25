@@ -13,7 +13,7 @@ import type {
 
 import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
-import { getAssetUrl } from "~/utils/display";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";

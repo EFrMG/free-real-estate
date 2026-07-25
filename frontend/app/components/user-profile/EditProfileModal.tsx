@@ -5,8 +5,8 @@ import type { ModalProps } from "./modalTypes";
 import { useRef, useEffect } from "react";
 import { useFetcher } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { getAssetUrl } from "~/utils/display";
-import { createDialogCloseHandler } from "~/utils/dialogs";
+import getAssetUrl from "~/utils/getAssetUrl";
+import createDialogCloseHandler from "~/utils/createDialogCloseHandler";
 
 import { GoPencil, GoX } from "react-icons/go";
 

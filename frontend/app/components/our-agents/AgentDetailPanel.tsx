@@ -1,7 +1,7 @@
 import type { Agent } from "~/routes/our-agents";
 
 import { motion, AnimatePresence } from "motion/react";
-import { getAssetUrl } from "~/utils/display";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 import { GoShieldCheck, GoQuote } from "react-icons/go";
 import { LuPhone } from "react-icons/lu";

@@ -1,4 +1,4 @@
-import { getAssetUrl } from "~/utils/display";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 interface AgentCardProps {
   agent: {

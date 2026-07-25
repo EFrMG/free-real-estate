@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useRouteLoaderData } from "react-router";
 
-import { getAssetUrl } from "~/utils/display";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
