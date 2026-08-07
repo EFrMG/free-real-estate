@@ -14,6 +14,7 @@ import type {
 import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
 import getAssetUrl from "~/utils/getAssetUrl";
+import forwardCookies from "~/utils/forwardCookies";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
@@ -75,7 +76,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   // TODO: messaging feature
   const userMessages = null;
 
-  return { user, userProperties, userBookmarks, userMessages };
+  return data(
+    { user, userProperties, userBookmarks, userMessages },
+    { headers: forwardCookies(userRes, userPropertiesRes, userBookmarksRes) },
+  );
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -113,13 +117,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
           result.error || "Failed to update your password. Please, try again.",
       };
 
-    const headers = new Headers();
-
-    for (const cookie of response.headers.getSetCookie()) {
-      headers.append("Set-Cookie", cookie);
-    }
-
-    return data({ success: true }, { headers });
+    return data({ success: true }, { headers: forwardCookies(response) });
   }
 
   if (intent === "profile-change") {
@@ -147,7 +145,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
           result.error || "Failed to update your profile. Please, try again.",
       };
 
-    return result;
+    return data(result, { headers: forwardCookies(response) });
   }
 
   if (intent === "agent-promotion") {
@@ -179,13 +177,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
         error: result.error || "Failed to promote to agent user.",
       };
 
-    const headers = new Headers();
-
-    for (const cookie of response.headers.getSetCookie()) {
-      headers.append("Set-Cookie", cookie);
-    }
-
-    return data({ success: true }, { headers });
+    return data({ success: true }, { headers: forwardCookies(response) });
   }
 
   if (intent === "logout") {
@@ -200,13 +192,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
     if (!response.ok) return { error: result.error };
 
-    const headers = new Headers();
-
-    for (const cookie of response.headers.getSetCookie()) {
-      headers.append("Set-Cookie", cookie);
-    }
-
-    return redirect("/", { headers });
+    return redirect("/", { headers: forwardCookies(response) });
   }
 }
 

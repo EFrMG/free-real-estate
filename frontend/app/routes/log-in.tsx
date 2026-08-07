@@ -5,6 +5,7 @@ import { useSearchParams, useFetcher, Link, redirect } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
 import HeroRightSide from "~/components/HeroRightSide";
+import forwardCookies from "~/utils/forwardCookies";
 
 interface ActionData {
   error?: string;
@@ -76,13 +77,7 @@ export async function action({ request }: Route.ActionArgs) {
       return { error: message };
     }
 
-    const headers = new Headers();
-
-    for (const cookie of signupRes.headers.getSetCookie()) {
-      headers.append("Set-Cookie", cookie);
-    }
-
-    return redirect("/", { headers });
+    return redirect("/", { headers: forwardCookies(signupRes) });
   }
 
   if (mode === "login") {
@@ -119,13 +114,7 @@ export async function action({ request }: Route.ActionArgs) {
       return { error: message };
     }
 
-    const headers = new Headers();
-
-    for (const cookie of loginRes.headers.getSetCookie()) {
-      headers.append("Set-Cookie", cookie);
-    }
-
-    return redirect("/", { headers });
+    return redirect("/", { headers: forwardCookies(loginRes) });
   }
 }
 

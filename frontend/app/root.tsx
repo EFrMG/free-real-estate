@@ -5,12 +5,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  data,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 
 import Header from "~/components/Header";
+import forwardCookies from "~/utils/forwardCookies";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
@@ -21,7 +23,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
 
     if (authRes.ok) {
-      return await authRes.json();
+      const userData = await authRes.json();
+      return data(userData, { headers: forwardCookies(authRes) });
     }
   } catch (error) {
     console.error(error); // The backend should handle this on requireAuth regardless

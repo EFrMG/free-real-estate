@@ -1,11 +1,12 @@
 import type { Route } from "./+types/property-item";
 
 import { lazy, Suspense } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, data } from "react-router";
 
 import getAssetUrl from "~/utils/getAssetUrl";
 import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
+import forwardCookies from "~/utils/forwardCookies";
 
 import {
   GoBookmark,
@@ -35,22 +36,23 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const cookie = request.headers.get("Cookie") || "";
 
   // Property data
-  const resProperty = await fetch(`http://localhost:3000/api/properties/${id}`);
+  const propertyRes = await fetch(`http://localhost:3000/api/properties/${id}`);
 
-  if (!resProperty.ok) {
-    if (resProperty.status === 404) {
+  if (!propertyRes.ok) {
+    if (propertyRes.status === 404) {
       throw new Response("Property Not Found", { status: 404 });
     }
     throw new Response("Failed to fetch property", { status: 500 });
   }
 
-  const property: PropertyData = await resProperty.json();
+  const property: PropertyData = await propertyRes.json();
 
   // User agent poster (of the property listing)
   let userPoster: UserBasic | null = null;
+  let userPosterRes: Response | null = null;
 
   if (property.userId) {
-    const userPosterRes = await fetch(
+    userPosterRes = await fetch(
       `http://localhost:3000/api/users/${property.userId}`,
     );
     if (userPosterRes.ok) {
@@ -72,9 +74,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   // User bookmarks
   let userBookmarks: PropertyData[] | null = null;
+  let userBookmarksRes: Response | null = null;
 
   if (user) {
-    const userBookmarksRes = await fetch(
+    userBookmarksRes = await fetch(
       `http://localhost:3000/api/users/${user.id}/bookmarks`,
       {
         method: "GET",
@@ -87,12 +90,22 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
   }
 
-  return { property, userPoster, userBookmarks };
+  return data(
+    { property, userPoster, userBookmarks },
+    {
+      headers: forwardCookies(
+        propertyRes,
+        userPosterRes,
+        userRes,
+        userBookmarksRes,
+      ),
+    },
+  );
 }
 
 /* TODO: optimistic UI for the bookmark button
-  Although, if there is no suitable place to show errors in the present layout this would also necessitate a popover,
-  for which I have no other use yet other than indicating a successful login */
+ * Although, if there is no suitable place to show errors in the present layout this would also necessitate a popover,
+ * for which I have no other use yet other than indicating a successful login */
 export async function action({ request, params }: Route.ActionArgs) {
   const { id: propertyId } = params;
 
@@ -111,25 +124,30 @@ export async function action({ request, params }: Route.ActionArgs) {
   const user = await userRes.json();
 
   if (intent === "bookmark") {
-    await fetch(`http://localhost:3000/api/users/${user.id}/bookmarks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookie,
+    const bookmarkRes = await fetch(
+      `http://localhost:3000/api/users/${user.id}/bookmarks`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookie,
+        },
+        body: JSON.stringify({ propertyId }),
       },
-      body: JSON.stringify({ propertyId }),
-    });
+    );
+    return data(null, { headers: forwardCookies(userRes, bookmarkRes) });
   } else if (intent === "remove-bookmark") {
-    await fetch(
+    const removeRes = await fetch(
       `http://localhost:3000/api/users/${user.id}/bookmarks/${propertyId}`,
       {
         method: "DELETE",
         headers: { Cookie: cookie },
       },
     );
+    return data(null, { headers: forwardCookies(userRes, removeRes) });
   }
 
-  return null;
+  return data(null, { headers: forwardCookies(userRes) });
 }
 
 export default function PropertyItem({ loaderData }: Route.ComponentProps) {
