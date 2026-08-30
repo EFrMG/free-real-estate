@@ -66,9 +66,9 @@ sequenceDiagram
     participant B as GET /bookmarks
     participant DB as refresh_tokens
 
-    Note over L: JWT expired; one cookie header, sent to both
-    L->>A: Cookie: session=<expired>; refresh=T1
-    L->>B: Cookie: session=<expired>; refresh=T1
+    Note over L: JWT expired, one cookie header sent to both
+    L->>A: Cookie: session=<expired>, refresh=T1
+    L->>B: Cookie: session=<expired>, refresh=T1
     A->>DB: find hash(T1)
     DB-->>A: found
     A->>DB: delete T1, insert T2
