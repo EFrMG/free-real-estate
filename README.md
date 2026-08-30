@@ -93,35 +93,52 @@ Chats are kept fresh by re-running the active loaders on an interval (see [usePo
 
 #### 1.1.5 Previews of the frontend:
 
-<img width="1608" height="1007" alt="home" src="https://github.com/user-attachments/assets/9a1e2dc0-2db9-460d-b7cd-0a8d4954e500" />
+<details>
 
----
+<summary>Open the screencaptures</summary>
 
-<img width="1575" height="1417" alt="properties" src="https://github.com/user-attachments/assets/3f6b3e75-e64e-47da-8e4f-c520ad4d0bbd" />
+##### Homepage:
 
----
+<img width="1610" height="1011" alt="homepage" src="https://github.com/user-attachments/assets/69919ea0-1ae7-4356-84ce-cdc752c43bfd" />
 
-<img width="1593" height="1107" alt="property-item" src="https://github.com/user-attachments/assets/a8310b77-3d77-430b-a34a-562297da7468" />
+##### Properties:
 
----
+<img width="1610" height="1869" alt="properties" src="https://github.com/user-attachments/assets/83e8d82c-b9d7-4edb-b8e9-4a55766ce9f0" />
 
-<img width="1577" height="1295" alt="contact" src="https://github.com/user-attachments/assets/3f465533-eca7-4f0f-9ca8-ae846ac041b7" />
+<img width="1610" height="1108" alt="property-item" src="https://github.com/user-attachments/assets/e35e2cde-d41b-4d9b-9020-7dc4740510bb" />
 
----
+<img width="1610" height="1009" alt="property-item--gallery" src="https://github.com/user-attachments/assets/284a039a-5a72-433b-bd96-9db9aec0fc2d" />
 
-<img width="1592" height="1007" alt="sign-up" src="https://github.com/user-attachments/assets/c09d94c2-b7ed-4421-90cc-6a0d89456b10" />
+##### About:
 
----
+<img width="1610" height="1018" alt="about" src="https://github.com/user-attachments/assets/bd70aefa-7fba-4d79-84bd-1e62c827432b" />
 
-<img width="1592" height="1007" alt="log-in" src="https://github.com/user-attachments/assets/86883455-53bb-4967-ad5d-a7da59278f36" />
+##### Contact:
 
----
+<img width="1610" height="1343" alt="contact" src="https://github.com/user-attachments/assets/14e63261-dbce-43ae-960c-bce036e6d4ae" />
 
-<img width="1592" height="1007" alt="user-profile_0" src="https://github.com/user-attachments/assets/af661908-ca35-4425-87bd-c3a54f679502" />
+##### Our Agents:
 
----
+<img width="1610" height="1011" alt="our-agents" src="https://github.com/user-attachments/assets/32d381a2-05ca-4b01-bd62-61c5ce728937" />
 
-<img width="1592" height="1007" alt="user-profile_1" src="https://github.com/user-attachments/assets/68fd766c-8fd5-4f8e-a7ce-d4434820a0a8" />
+<img width="1610" height="1011" alt="our-agents--modal" src="https://github.com/user-attachments/assets/52f605bd-cd01-46d3-83ee-e203801c30c8" />
+
+##### Profile / Chats:
+
+<img width="1610" height="1032" alt="user-profile--agent" src="https://github.com/user-attachments/assets/096c07ac-862d-43dd-b479-10d01fb7a862" />
+
+<img width="1610" height="1003" alt="user-profile--agent-edit" src="https://github.com/user-attachments/assets/ad911c37-fffe-4e36-8be9-6742efa3253f" />
+
+<img width="1610" height="1011" alt="user-profile--new-user" src="https://github.com/user-attachments/assets/7cde6fcc-beac-4766-8da1-0401b13beb43" />
+
+<img width="1610" height="1011" alt="user-profile--new-user-become-agent" src="https://github.com/user-attachments/assets/f8dbba4a-0630-4af0-99d4-936f12da4259" />
+
+<img width="1610" height="1011" alt="user-profile--new-user-edit" src="https://github.com/user-attachments/assets/4e5e046c-b93d-4804-ba62-083a65130345" />
+
+<img width="1610" height="1011" alt="user-profile--new-user-change-pass" src="https://github.com/user-attachments/assets/f4030c84-99ec-4c31-b04e-a3876bf90743" />
+
+</details>
+
 
 ### 1.2 Backends
 
