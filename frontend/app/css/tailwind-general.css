@@ -45,6 +45,22 @@
   gap: --spacing(--value(number));
 }
 
+@utility gen-btn-border {
+  @apply border border-amber-200/48;
+}
+
+@utility gen-btn-hovaction {
+  @apply hover:scale-110 active:scale-100 transition-transform duration-150;
+}
+
+@utility gen-btn-hovaction-sm {
+  @apply hover:scale-105 active:scale-100 transition-transform duration-150;
+}
+
+@utility gen-btn-hovaction-xs {
+  @apply hover:scale-102 active:scale-100 transition-transform duration-150;
+}
+
 @layer components {
   .btn-click-soft {
     @apply active:scale-98 transition-transform ease-in duration-85;
@@ -72,18 +88,6 @@
     &:hover {
       text-decoration: underline solid 1px theme(--color-blue-600);
     }
-  }
-
-  .gen-btn-hovaction {
-    @apply hover:scale-110 active:scale-100 transition-transform duration-150;
-  }
-
-  .gen-btn-hovaction-sm {
-    @apply hover:scale-105 active:scale-100 transition-transform duration-150;
-  }
-
-  .gen-btn-hovaction-xs {
-    @apply hover:scale-102 active:scale-100 transition-transform duration-150;
   }
 
   .details-card {
@@ -114,10 +118,6 @@
 
   .details-icon {
     @apply text-2xl transition-transform duration-300 group-open:rotate-90;
-  }
-
-  .gen-btn-border {
-    @apply border border-amber-200/48;
   }
 
   .gen-form-labels {
@@ -192,6 +192,16 @@
 
   .gen-left-column {
     @apply p-2 sm:p-4 md:p-6 stack-12;
+  }
+
+  .panel-action {
+    @apply flex items-center justify-center gap-[1ch]
+    w-full px-3 py-2.5 text-sm font-medium rounded-lg shadow-sm
+    gen-btn-border gen-btn-hovaction-xs transition-all;
+  }
+
+  .chat-card {
+    @apply pl-5 pr-6 py-5 bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md border border-amber-200/40;
   }
 
   @keyframes details-show {

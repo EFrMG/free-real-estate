@@ -2,7 +2,19 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { type SQL, eq, and, gte, lte, like, asc } from "drizzle-orm";
+import {
+  type SQL,
+  eq,
+  ne,
+  and,
+  gt,
+  gte,
+  lte,
+  like,
+  asc,
+  desc,
+  inArray,
+} from "drizzle-orm";
 import argon2 from "argon2";
 import { z } from "zod";
 import fs from "node:fs/promises";
@@ -30,10 +42,16 @@ import {
   clearAuthCookies,
 } from "./auth.ts";
 
+import selectUserChats from "./utils/selectUserChats.ts";
+import toChatSummary from "./utils/toChatSummary.ts";
+
 import type {
   AgentProfileData,
   UserBasic,
   UserProfile,
+  ChatSummary,
+  ChatThreadData,
+  MessageData,
 } from "@free-real-estate/shared";
 
 const app = new Hono();
@@ -532,6 +550,236 @@ api.delete("/users/:id/bookmarks/:propertyId", requireAuth, async (c) => {
     );
 
   return c.json({ ok: true }, 200);
+});
+
+// Chats --.
+
+// GET the number of people with unread messages
+api.get("/chats/unread-count", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+
+  const senders = await db
+    .selectDistinct({ senderId: messages.senderId })
+    .from(messages)
+    .innerJoin(
+      chatParticipants,
+      and(
+        eq(chatParticipants.chatId, messages.chatId),
+        eq(chatParticipants.userId, session.id),
+      ),
+    )
+    .where(
+      and(
+        ne(messages.senderId, session.id),
+        // ISO 8601 sorts lexicographically, so a string compare is chronological
+        gt(messages.createdAt, chatParticipants.lastReadAt),
+      ),
+    );
+
+  return c.json({ count: senders.length });
+});
+
+// GET every conversation of the authenticated user, most recent first
+api.get("/chats", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+
+  const rows = await selectUserChats(session.id).orderBy(desc(chats.updatedAt));
+
+  if (!rows.length) return c.json([] satisfies ChatSummary[]);
+
+  // One extra query for every chat at once, rather than one per chat
+  const chatMessages = await db
+    .select()
+    .from(messages)
+    .where(
+      inArray(
+        messages.chatId,
+        rows.map((row) => row.id),
+      ),
+    )
+    .orderBy(asc(messages.createdAt));
+
+  const result = rows.map((row) =>
+    toChatSummary(
+      row,
+      chatMessages.filter((message) => message.chatId === row.id),
+      session.id,
+    ),
+  );
+
+  return c.json(result satisfies ChatSummary[]);
+});
+
+// GET a single conversation along with its full message history
+api.get("/chats/:id/messages", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+  const chatId = Number(c.req.param("id"));
+
+  // Non-participants get a 404 rather than a 403 for chats to stay unenumerable
+  const row = await selectUserChats(session.id)
+    .where(eq(chats.id, chatId))
+    .get();
+
+  if (!row) return c.json({ error: "Chat not found" }, 404);
+
+  const chatMessages = await db
+    .select()
+    .from(messages)
+    .where(eq(messages.chatId, chatId))
+    .orderBy(asc(messages.createdAt));
+
+  const result = {
+    ...toChatSummary(row, chatMessages, session.id),
+    messages: chatMessages,
+  };
+
+  return c.json(result satisfies ChatThreadData);
+});
+
+const startChatSchema = z.object({
+  agentId: z.number().int().positive(),
+  propertyId: z.number().int().positive(),
+});
+
+// Open the conversation with an agent about one of their properties, reusing it if it exists
+api.post("/chats", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+
+  const bodyRes = startChatSchema.safeParse(await c.req.json());
+
+  if (!bodyRes.success) {
+    return c.json({ error: z.flattenError(bodyRes.error) }, 400);
+  }
+
+  const { agentId, propertyId } = bodyRes.data;
+
+  if (agentId === session.id) {
+    return c.json({ error: "You cannot start a chat with yourself." }, 400);
+  }
+
+  const agent = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.id, agentId), eq(users.role, "agent")))
+    .get();
+
+  if (!agent) return c.json({ error: "Agent not found." }, 404);
+
+  const property = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.id, propertyId))
+    .get();
+
+  if (!property) return c.json({ error: "Property not found." }, 404);
+
+  if (property.userId !== agentId) {
+    return c.json(
+      { error: "That property is not managed by this agent." },
+      400,
+    );
+  }
+
+  // Narrowing by users.id restricts the counterpart to the agent in question
+  const existing = await selectUserChats(session.id)
+    .where(and(eq(chats.propertyId, propertyId), eq(users.id, agentId)))
+    .get();
+
+  if (existing) return c.json({ chatId: existing.id });
+
+  const now = new Date().toISOString();
+
+  const chat = await db
+    .insert(chats)
+    .values({ propertyId, updatedAt: now })
+    .returning({ id: chats.id })
+    .get();
+
+  await db.insert(chatParticipants).values([
+    { chatId: chat.id, userId: session.id, lastReadAt: now },
+    { chatId: chat.id, userId: agentId, lastReadAt: now },
+  ]);
+
+  return c.json({ chatId: chat.id }, 201);
+});
+
+const sendMessageSchema = z.object({
+  text: z
+    .string()
+    .trim()
+    .min(1, "Write something before sending.")
+    .max(2000, "Messages are limited to 2000 characters."),
+});
+
+// Post a message into a conversation
+api.post("/chats/:id/messages", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+  const chatId = Number(c.req.param("id"));
+
+  const bodyRes = sendMessageSchema.safeParse(await c.req.json());
+
+  if (!bodyRes.success) {
+    return c.json({ error: z.flattenError(bodyRes.error) }, 400);
+  }
+
+  const participation = await db
+    .select()
+    .from(chatParticipants)
+    .where(
+      and(
+        eq(chatParticipants.chatId, chatId),
+        eq(chatParticipants.userId, session.id),
+      ),
+    )
+    .get();
+
+  if (!participation) return c.json({ error: "Chat not found" }, 404);
+
+  const now = new Date().toISOString();
+
+  const message = await db
+    .insert(messages)
+    .values({
+      chatId,
+      senderId: session.id,
+      text: bodyRes.data.text,
+      createdAt: now,
+    })
+    .returning()
+    .get();
+
+  // Bump the conversation so it sorts first and keep the sender updated
+  await db.update(chats).set({ updatedAt: now }).where(eq(chats.id, chatId));
+
+  await db
+    .update(chatParticipants)
+    .set({ lastReadAt: now })
+    .where(
+      and(
+        eq(chatParticipants.chatId, chatId),
+        eq(chatParticipants.userId, session.id),
+      ),
+    );
+
+  return c.json(message satisfies MessageData, 201);
+});
+
+// Move the reader's watermark up to now, clearing the conversation's unread count
+api.post("/chats/:id/read", requireAuth, async (c) => {
+  const session = c.get("user") as UserSession;
+  const chatId = Number(c.req.param("id"));
+
+  await db
+    .update(chatParticipants)
+    .set({ lastReadAt: new Date().toISOString() })
+    .where(
+      and(
+        eq(chatParticipants.chatId, chatId),
+        eq(chatParticipants.userId, session.id),
+      ),
+    );
+
+  return c.json({ ok: true });
 });
 
 // Posts --.

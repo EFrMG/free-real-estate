@@ -41,7 +41,15 @@ const signingLinks: NavLinks[] = [
   },
 ];
 
-function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
+function UserLink({
+  isBurger,
+  user,
+  unreadSenders,
+}: {
+  isBurger: boolean;
+  user: any;
+  unreadSenders: number;
+}) {
   return (
     <Link
       to={`/user-profile/${user.id}`}
@@ -56,14 +64,18 @@ function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
             draggable={false}
             className="w-12 h-12 rounded-full object-cover"
           />
-          {/* TODO: implement notifications and show the real number */}
-          <span
-            className="absolute top-[-0.75ch] left-[-0.5ch]
+          {unreadSenders > 0 && (
+            <span
+              title={`${unreadSenders} ${unreadSenders === 1 ? "person is" : "people are"} waiting on a reply`}
+              className="absolute top-[-0.75ch] left-[-0.5ch]
                     px-1.5 py-1 bg-rose-700 rounded-full
                     text-sm text-yellow-50 leading-none font-bold"
-          >
-            <span className="translate-y-px inline-block">N</span>
-          </span>
+            >
+              <span className="translate-y-px inline-block">
+                {unreadSenders}
+              </span>
+            </span>
+          )}
         </div>
       </div>
     </Link>
@@ -71,7 +83,10 @@ function UserLink({ isBurger, user }: { isBurger: boolean; user: any }) {
 }
 
 export default function Header() {
-  const user = useRouteLoaderData("root");
+  const rootData = useRouteLoaderData("root");
+  const user = rootData?.user ?? null;
+
+  const unreadSenders: number = rootData?.unreadSenders ?? 0;
   const isUser = !!user;
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -110,7 +125,11 @@ export default function Header() {
       <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
         <div className="space-x-2 md:space-x-6">
           {isUser ? (
-            <UserLink isBurger={false} user={user} />
+            <UserLink
+              isBurger={false}
+              user={user}
+              unreadSenders={unreadSenders}
+            />
           ) : (
             signingLinks.map((link: NavLinks) => (
               <Link
@@ -150,7 +169,11 @@ export default function Header() {
             ))}
 
             {isUser ? (
-              <UserLink isBurger={true} user={user} />
+              <UserLink
+                isBurger={true}
+                user={user}
+                unreadSenders={unreadSenders}
+              />
             ) : (
               signingLinks.map((link: NavLinks) => (
                 <Link key={link.key} to={`/${link.key}`}>

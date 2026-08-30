@@ -23,8 +23,21 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
 
     if (authRes.ok) {
-      const userData = await authRes.json();
-      return data(userData, { headers: forwardCookies(authRes) });
+      const user = await authRes.json();
+
+      // The badge counts people waiting on a reply, not individual messages
+      const unreadRes = await fetch(
+        "http://localhost:3000/api/chats/unread-count",
+        { headers: cookieHeader ? { Cookie: cookieHeader } : undefined },
+      );
+
+      const unreadSenders = unreadRes.ok ? (await unreadRes.json()).count : 0;
+
+      // A failed 'unread' request may carry cookie-clearing headers (its refresh token was already rotated by the call above), we only forward it when it succeeded
+      return data(
+        { user, unreadSenders },
+        { headers: forwardCookies(authRes, unreadRes.ok ? unreadRes : null) },
+      );
     }
   } catch (error) {
     console.error(error); // The backend should handle this on requireAuth regardless
@@ -50,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="custom-scrollbar-light">
         <Header />
         {children}
         <ScrollRestoration />

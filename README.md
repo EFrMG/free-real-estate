@@ -11,9 +11,9 @@ This present document serves as a General Design Document.
 
 ## 1. Project Structure
 
-The project is structured as a **monorepo** managed by `pnpm` workspaces. This approach allows for tight integration between the frontend, backend and shared resources while maintaining a certain level of organizational boundaries.
+The project is structured as a **monorepo** managed by `pnpm` workspaces.
 
-A general overview of the current state of the project:
+A general overview of its current state:
 
 ```mermaid
 graph TD
@@ -65,7 +65,7 @@ graph TD
     style DB fill:#3f3f3f,stroke:#909090,color:#f5f5f5
 ```
 
-The main parts of this monorepo are as follows (dependencies and their web links are listed in their respective README documents):
+The main parts consist of what follows (dependencies and their web links are listed in their respective README documents):
 
 ### 1.1 Frontend
 
@@ -73,7 +73,7 @@ The main parts of this monorepo are as follows (dependencies and their web links
 
 The frontend is designed to be a modern web application built with `React Router v7`.
 
-It was decided to organize `React` components simply in `/frontend/app/components/*` and `/frontend/app/components/*/*`, where subdirectories are respective to different routes.
+It was decided to organize `React` components simply in `/frontend/app/components/*` and `/frontend/app/components/*/*`, where subdirectories respect to different routes.
 
 #### 1.1.2 Styling
 
@@ -86,6 +86,10 @@ With `Tailwind CSS v4` We utilize a custom theme and general reset that extends 
 #### 1.1.4 State Management
 
 React Router's `loader` and `action` patterns are used for data fetching and mutations, minimizing the need for global state libraries.
+
+This extends to transient UI state that would otherwise live in `useState`. We use URL parameters for filtering the real estate properties and chat conversations, with the one currently open in the chat panel being held in the URL as a `?chat=<id>` search parameter, which lets the route `loader` fetch the thread on the server, survives a page reload, and makes a given conversation linkable.
+
+Chats are kept fresh by re-running the active loaders on an interval (see [usePollingRevalidation](/frontend/apps/hooks/usePollingRevalidation.ts)) rather than by a socket.
 
 #### 1.1.5 Previews of the frontend:
 
@@ -147,13 +151,20 @@ The runtime is `Node.js` via `@hono/node-server`.
     - `GET /api/users/:id/bookmarks`: Gets a user's bookmarked properties.
     - `POST /api/users/:id/bookmarks`: Saves a property to a user's bookmarks.
     - `DELETE /api/users/:id/bookmarks/:propertyId`: Removes a property from a user's bookmarks.
+  - _Chats & Messages_:
+    - `GET /api/chats`: Gets the authenticated user's conversations, most recently active first, each with its counterpart, property, last message and unread count.
+    - `GET /api/chats/unread-count`: Counts the distinct people with unread messages, which is what the notification badge displays.
+    - `GET /api/chats/:id/messages`: Gets a single conversation with its full message history.
+    - `POST /api/chats`: Opens the conversation with an agent about one of their properties, reusing an existing one if it exists.
+    - `POST /api/chats/:id/messages`: Posts a message into a conversation.
+    - `POST /api/chats/:id/read`: Marks a conversation as read up to the present moment.
 
 ##### 1.2.1.1 Core Database Entities
 
 - **Users**: Represents real estate agents and their clients. It stores identity and profile information.
 - **Properties**: The central entity. It stores listing details, location (latitude/longitude), pricing and media (images, galleries).
 - **Posts**: Blog or news entries for the platform.
-- **Chats & Messages**: Support for real-time and persistent communication between users.
+- **Chats, Chat Participants & Messages**: Persistent conversations between a user and an agent. Every chat is scoped to one property, so a conversation always has a subject; participants are a many-to-many join table that also carries each side's `lastReadAt` read watermark, from which unread counts are derived without storing per-message read flags.
 - **Bookmarks**: Users are able to save favorite properties to look up later from their respective profile pages.
 
 ##### 1.2.1.2 Schema Implementation
@@ -190,7 +201,10 @@ pnpm push:be && pnpm seed:be && pnpm run dev
 
 ## 3. Future Considerations
 
-- **Messaging System**: Implementation of real-time and persistent chat functionality between users and agents, including an emoji picker which could be interesting.
-- **Blogs**: A blog feature with rich text support. I am delaying this for a while.
-- **Agents Adding new Property Listings**: Agents should be able to add new properties from their profile.
+In order of relevant importance:
+
+- **Session Refresh Concurrency**: Refresh token rotation currently misbehaves when a single route loader fires several authenticated requests in parallel. The problem, the mitigation in place and the candidate fixes are documented in [the refresh token rotation document](/docs/REFRESH_TOKEN_ROTATION_CONCURRENCY.md).
+- **Agents Adding new Property Listings**: Agents should be able to create, edit and remove new properties from their profile.
+- **Messaging System**: What remains could be making delivery real-time instead of polled, plus niceties such as an emoji picker, attachments, ability to edit and delete messages, and typing indicators.
+- **Blogs**: A blog feature with rich text support. I am delaying this for a good while.
 - **Backend Diversification**: Implementing the same API specifications in Go to compare performance and developer experience could be very interesting from a certain perspective.

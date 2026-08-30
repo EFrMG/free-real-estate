@@ -34,6 +34,10 @@ export type PropertyData = OptionalNullable<
 
 export type ChatData = OptionalNullable<InferSelectModel<typeof schema.chats>>;
 
+export type ChatParticipantData = OptionalNullable<
+  InferSelectModel<typeof schema.chatParticipants>
+>;
+
 export type MessageData = OptionalNullable<
   InferSelectModel<typeof schema.messages>
 >;
@@ -42,12 +46,24 @@ export type RefreshTokenData = OptionalNullable<
   InferSelectModel<typeof schema.refreshTokens>
 >;
 
+// Extended Types (Used for UI and specific API responses)
+
+// A conversation as returned by GET /chats
+// Every chat is about one property and holds exactly two participants, so the counterpart is flattened into otherUser
+export interface ChatSummary {
+  id: number;
+  updatedAt: string;
+  // Messages from otherUser that arrived after this user's read watermark
+  unreadCount: number;
+  otherUser: Omit<UserBasic, "email">;
+  property: Pick<PropertyData, "id" | "title" | "exteriorImage">;
+  lastMessage: MessageData | null;
+}
+
+// A single conversation with its messages, as returned by GET /chats/:id/messages
+export interface ChatThreadData extends ChatSummary {
+  messages: MessageData[];
+}
+
 // TODO: Blog section
 // export type PostData = OptionalNullable<InferSelectModel<typeof schema.posts>>;
-
-// Extended Types (Used for UI and specific API responses)
-// Chat with nested participants and last message
-export interface Chat extends ChatData {
-  participants: UserData[];
-  lastMessage?: MessageData;
-}

@@ -1,7 +1,13 @@
 import type { Route } from "./+types/property-item";
 
 import { lazy, Suspense } from "react";
-import { useFetcher, data } from "react-router";
+import {
+  Link,
+  useFetcher,
+  useRouteLoaderData,
+  data,
+  redirect,
+} from "react-router";
 
 import getAssetUrl from "~/utils/getAssetUrl";
 import ClientOnly from "~/components/ClientOnly";
@@ -123,6 +129,33 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const user = await userRes.json();
 
+  if (intent === "start-chat") {
+    const chatRes = await fetch("http://localhost:3000/api/chats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookie,
+      },
+      body: JSON.stringify({
+        agentId: Number(formData.get("agentId")),
+        propertyId: Number(propertyId),
+      }),
+    });
+
+    if (!chatRes.ok) {
+      return data(
+        { error: "We could not open that conversation." },
+        { headers: forwardCookies(userRes) },
+      );
+    }
+
+    const { chatId } = await chatRes.json();
+
+    return redirect(`/user-profile/${user.id}?chat=${chatId}`, {
+      headers: forwardCookies(userRes, chatRes),
+    });
+  }
+
   if (intent === "bookmark") {
     const bookmarkRes = await fetch(
       `http://localhost:3000/api/users/${user.id}/bookmarks`,
@@ -152,6 +185,9 @@ export async function action({ request, params }: Route.ActionArgs) {
 
 export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   const { property, userPoster, userBookmarks } = loaderData;
+
+  const rootData = useRouteLoaderData("root");
+  const currentUserId: number | null = rootData?.user?.id ?? null;
 
   const fetcher = useFetcher();
 
@@ -267,14 +303,41 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 </div>
               )}
 
-              <div className="flex gap-4 w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md">
-                <button className="bg-amber-100/24 gen-btn-border gen-btn-hovaction">
-                  <GoCommentDiscussion
-                    size={28}
-                    color="var(--color-amber-500)"
-                    title="Enter chat"
-                  />
-                </button>
+              <div className="flex gap-4 w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md [&_button]:px-1.5 [&_button]:py-1 [&_a]:px-1.5 [&_a]:py-1">
+                {/* Chats are always about a listing, so this one needs no property picker */}
+                {userPoster &&
+                  currentUserId !== userPoster.id &&
+                  (currentUserId === null ? (
+                    <Link
+                      to="/log-in"
+                      className="bg-amber-100/24 rounded-sm shadow-md gen-btn-border gen-btn-hovaction"
+                    >
+                      <GoCommentDiscussion
+                        size={28}
+                        color="var(--color-amber-500)"
+                        title="Log in to message this agent"
+                      />
+                    </Link>
+                  ) : (
+                    <fetcher.Form method="post">
+                      <input type="hidden" name="intent" value="start-chat" />
+                      <input
+                        type="hidden"
+                        name="agentId"
+                        value={userPoster.id}
+                      />
+                      <button
+                        type="submit"
+                        className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                      >
+                        <GoCommentDiscussion
+                          size={28}
+                          color="var(--color-amber-500)"
+                          title={`Message ${userPoster.name}`}
+                        />
+                      </button>
+                    </fetcher.Form>
+                  ))}
 
                 {userBookmarks?.some((b) => b.id === property.id) ? (
                   <fetcher.Form method="post">

@@ -4,6 +4,9 @@ import type {
   UserBasic,
   AgentProfileData,
   UserProfile,
+  ChatData,
+  ChatParticipantData,
+  MessageData,
   // PostData,
 } from "@free-real-estate/shared";
 
@@ -517,6 +520,98 @@ export const agentProfileData: AgentProfileData[] = [
   },
 ];
 
+// Chats are always about one property between one user and that property's agent
+export const chatData: ChatData[] = [
+  { id: 1, propertyId: 1, updatedAt: "2026-08-10T14:32:00.000Z" },
+  { id: 2, propertyId: 2, updatedAt: "2026-08-11T09:15:00.000Z" },
+  { id: 3, propertyId: 8, updatedAt: "2026-08-05T18:40:00.000Z" },
+  { id: 4, propertyId: 6, updatedAt: "2026-08-09T11:40:00.000Z" },
+];
+
+// `lastReadAt` is the read watermark: anything a counterpart sent after it is unread
+//  Facundo (3) is left with unread messages from two different agents, so his badge reads "2"
+export const chatParticipantData: ChatParticipantData[] = [
+  // Facundo & Johnathan
+  { chatId: 1, userId: 3, lastReadAt: "2026-08-10T14:00:00.000Z" },
+  { chatId: 1, userId: 1, lastReadAt: "2026-08-10T14:32:00.000Z" },
+  // Facundo & Martina
+  { chatId: 2, userId: 3, lastReadAt: "2026-08-11T09:00:00.000Z" },
+  { chatId: 2, userId: 2, lastReadAt: "2026-08-11T09:15:00.000Z" },
+  // Facundo & Johnathan; here it is the agent who is behind
+  { chatId: 3, userId: 3, lastReadAt: "2026-08-06T00:00:00.000Z" },
+  { chatId: 3, userId: 1, lastReadAt: "2026-08-05T18:15:00.000Z" },
+  // Sofia & Martina
+  { chatId: 4, userId: 4, lastReadAt: "2026-08-09T11:20:00.000Z" },
+  { chatId: 4, userId: 2, lastReadAt: "2026-08-09T11:40:00.000Z" },
+];
+
+export const messageData: MessageData[] = [
+  {
+    id: 1,
+    chatId: 1,
+    senderId: 3,
+    text: "Hi! Is the Palermo Soho loft still available for a viewing this week?",
+    createdAt: "2026-08-10T13:45:00.000Z",
+  },
+  {
+    id: 2,
+    chatId: 1,
+    senderId: 1,
+    text: "Hello Facundo! It is. I have slots on Thursday and Friday morning.",
+    createdAt: "2026-08-10T14:20:00.000Z",
+  },
+  {
+    id: 3,
+    chatId: 1,
+    senderId: 1,
+    text: "The balcony gets wonderful light around 11am, if you want to see it at its best.",
+    createdAt: "2026-08-10T14:32:00.000Z",
+  },
+  {
+    id: 4,
+    chatId: 2,
+    senderId: 3,
+    text: "Good morning! Does the Nueva Córdoba apartment allow pets?",
+    createdAt: "2026-08-11T08:52:00.000Z",
+  },
+  {
+    id: 5,
+    chatId: 2,
+    senderId: 2,
+    text: "Morning! Small pets are fine, the building only asks for a quick registration.",
+    createdAt: "2026-08-11T09:15:00.000Z",
+  },
+  {
+    id: 6,
+    chatId: 3,
+    senderId: 1,
+    text: "Following up on Ushuaia: the owner accepted a 12-month contract.",
+    createdAt: "2026-08-05T18:10:00.000Z",
+  },
+  {
+    id: 7,
+    chatId: 3,
+    senderId: 3,
+    text: "That is great news. How could I see the paperwork??",
+    createdAt: "2026-08-05T18:40:00.000Z",
+  },
+  {
+    id: 8,
+    chatId: 4,
+    senderId: 4,
+    text: "Hi Martina! Is the San Lorenzo estate still on the market?",
+    createdAt: "2026-08-09T11:05:00.000Z",
+  },
+  {
+    id: 9,
+    chatId: 4,
+    senderId: 2,
+    text: "Hi Sofia! It is. Would you like to schedule a visit this weekend?",
+    createdAt: "2026-08-09T11:40:00.000Z",
+  },
+];
+
+// TODO: blog posts
 // export const postData: PostData[] = [
 //   {
 //     id: 1,

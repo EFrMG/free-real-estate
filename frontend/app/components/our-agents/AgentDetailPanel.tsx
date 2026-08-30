@@ -1,21 +1,26 @@
 import type { Agent } from "~/routes/our-agents";
 
+import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import getAssetUrl from "~/utils/getAssetUrl";
 
-import { GoShieldCheck, GoQuote } from "react-icons/go";
+import { GoShieldCheck, GoQuote, GoComment } from "react-icons/go";
 import { LuPhone } from "react-icons/lu";
 
 interface AgentDetailPanelProps {
   isLoading: boolean;
   agent: Agent | null;
   onDeselect: () => void;
+  onStartChat: () => void;
+  currentUserId: number | null;
 }
 
 export default function AgentDetailPanel({
   isLoading,
   agent,
   onDeselect,
+  onStartChat,
+  currentUserId,
 }: AgentDetailPanelProps) {
   const panelKey = isLoading
     ? "loading"
@@ -171,13 +176,32 @@ export default function AgentDetailPanel({
                 </div>
               )}
 
+              {currentUserId === null ? (
+                <Link
+                  to="/log-in"
+                  className="panel-action min-h-12 group text-amber-50
+                  bg-amber-600/92 hover:bg-amber-700/92"
+                >
+                  <GoComment size={18} />
+                  <span>Log in to message</span>
+                </Link>
+              ) : (
+                currentUserId !== agent.id && (
+                  <button
+                    onClick={onStartChat}
+                    className="panel-action min-h-12 group text-amber-50
+                    bg-amber-600/92 hover:bg-amber-700/92 active:bg-amber-800/92"
+                  >
+                    <GoComment size={18} />
+                    <span>Message our agent</span>
+                  </button>
+                )
+              )}
+
               <button
                 onClick={onDeselect}
-                className="group flex items-center justify-center gap-[1ch]
-                w-full px-3 py-2.5 text-sm font-medium text-amber-800
-                bg-amber-200/36 rounded-lg shadow-sm
-                hover:bg-amber-200/60 active:bg-amber-300/42
-                gen-btn-border gen-btn-hovaction-xs transition-all"
+                className="panel-action min-h-12 group text-amber-800
+                bg-amber-200/36 hover:bg-amber-200/60 active:bg-amber-300/42"
               >
                 <span
                   className="inline-block text-base group-hover:translate-x-[-0.25ch]

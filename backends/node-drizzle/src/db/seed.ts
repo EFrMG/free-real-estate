@@ -9,7 +9,15 @@ import {
   bookmarks,
   agentProfiles,
 } from "./schema.ts";
-import { userData, propertyData, agentProfileData /*, postData */ } from "./generalDataSeed.ts";
+import {
+  userData,
+  propertyData,
+  agentProfileData,
+  chatData,
+  chatParticipantData,
+  messageData,
+  /*, postData */
+} from "./generalDataSeed.ts";
 import argon2 from "argon2";
 
 const clearAllColumns = true;
@@ -45,7 +53,23 @@ async function seed() {
     await db.insert(properties).values(propertyData).onConflictDoNothing();
 
     console.log("Seeding agent profiles...");
-    await db.insert(agentProfiles).values(agentProfileData).onConflictDoNothing();
+    await db
+      .insert(agentProfiles)
+      .values(agentProfileData)
+      .onConflictDoNothing();
+
+    // Chats reference properties, so they only go in once those exist
+    console.log("Seeding chats...");
+    await db.insert(chats).values(chatData).onConflictDoNothing();
+
+    console.log("Seeding chat participants...");
+    await db
+      .insert(chatParticipants)
+      .values(chatParticipantData)
+      .onConflictDoNothing();
+
+    console.log("Seeding messages...");
+    await db.insert(messages).values(messageData).onConflictDoNothing();
 
     // console.log("Seeding posts...");
     // await db.insert(posts).values(postData).onConflictDoNothing();

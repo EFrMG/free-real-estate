@@ -85,7 +85,7 @@ export const properties = sqliteTable("properties", {
 
 export const chats = sqliteTable("chats", {
   id: integer().primaryKey({ autoIncrement: true }),
-  updatedAt: text().notNull(),
+  updatedAt: text().notNull(), // ISO 8601 timestamp
   propertyId: integer()
     .notNull()
     .references(() => properties.id),
@@ -101,6 +101,8 @@ export const chatParticipants = sqliteTable(
     userId: integer()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    // messages newer than this are unread for this participant
+    lastReadAt: text().notNull(), // ISO 8601 timestamp
   },
   (table) => [primaryKey({ columns: [table.chatId, table.userId] })],
 );
@@ -115,7 +117,7 @@ export const messages = sqliteTable("messages", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   text: text().notNull(),
-  createdAt: text().notNull(),
+  createdAt: text().notNull(), // ISO 8601 timestamp
 });
 
 // Bookmarks (Many-to-Many)

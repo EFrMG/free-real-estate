@@ -52,7 +52,7 @@ export default function About() {
           We are excited to always share how many properties people could afford
           for free!
         </p>
-        <p className="text-gray-600/84">
+        <p className="mb-8 text-gray-600/84">
           This is a demo project for{" "}
           <a
             href="http://francisco.is-a.dev/"

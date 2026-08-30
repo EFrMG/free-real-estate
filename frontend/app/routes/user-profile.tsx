@@ -1,15 +1,10 @@
 import type { Route } from "./+types/user-profile";
-import {
-  type ActionFunctionArgs,
-  Link,
-  Form,
-  redirect,
-  data,
-} from "react-router";
+import { type ActionFunctionArgs, Form, redirect, data } from "react-router";
 import type {
   PropertyData,
   UserProfile as UserProfileData,
 } from "~/data/generalData";
+import type { ChatSummary, ChatThreadData } from "@free-real-estate/shared";
 
 import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
@@ -20,14 +15,9 @@ import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
 import AgentPromotionModal from "~/components/user-profile/AgentPromotionModal";
 import MiniPropertyCard from "~/components/user-profile/MiniPropertyCard";
+import ChatPanel from "~/components/user-profile/ChatPanel";
 
-import {
-  GoBookmark,
-  GoComment,
-  GoPencil,
-  GoShieldLock,
-  GoPackage,
-} from "react-icons/go";
+import { GoBookmark, GoPencil, GoShieldLock, GoPackage } from "react-icons/go";
 
 export interface ProfileState extends Omit<
   UserProfileData,
@@ -57,28 +47,59 @@ export async function loader({ request }: Route.LoaderArgs) {
   const user: UserProfileData = await userRes.json();
   const userId = user.id;
 
-  const [userPropertiesRes, userBookmarksRes] = await Promise.all([
-    fetch(`http://localhost:3000/api/users/${userId}/properties`),
-    fetch(`http://localhost:3000/api/users/${userId}/bookmarks`, {
-      headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-    }),
-  ]);
+  // The open conversation, if any, is carried by the URL rather than by state
+  const selectedChatId = new URL(request.url).searchParams.get("chat");
 
-  if (!userPropertiesRes.ok || !userBookmarksRes.ok) {
-    throw new Response("Failed to fetch user properties and/or bookmarks", {
-      status: 500,
-    });
+  const [userPropertiesRes, userBookmarksRes, userChatsRes, chatThreadRes] =
+    await Promise.all([
+      fetch(`http://localhost:3000/api/users/${userId}/properties`),
+      fetch(`http://localhost:3000/api/users/${userId}/bookmarks`, {
+        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
+      }),
+      fetch("http://localhost:3000/api/chats", {
+        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
+      }),
+      selectedChatId
+        ? fetch(`http://localhost:3000/api/chats/${selectedChatId}/messages`, {
+            headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
+          })
+        : null,
+    ]);
+
+  // Properties are public and carry no cookie, so they never lose the rotation race;
+  // a failure there is a genuine backend problem, not a stale refresh token.
+  if (!userPropertiesRes.ok) {
+    throw new Response("Failed to fetch user properties", { status: 500 });
   }
 
   const userProperties = await userPropertiesRes.json();
-  const userBookmarks = await userBookmarksRes.json();
 
-  // TODO: messaging feature
-  const userMessages = null;
+  // Bookmarks degrade to an empty list rather than taking the whole profile down
+  const userBookmarks = userBookmarksRes.ok ? await userBookmarksRes.json() : [];
 
+  // Chats degrade to an empty panel rather than taking the whole profile down
+  const userChats: ChatSummary[] = userChatsRes.ok
+    ? await userChatsRes.json()
+    : [];
+
+  // A stale ?chat= id simply resolves to no open thread
+  const chatThread: ChatThreadData | null = chatThreadRes?.ok
+    ? await chatThreadRes.json()
+    : null;
+
+  // WARN: A failed request may carry cookie-clearing headers (its refresh token was already rotated by a sibling call); those are only forwarded when it succeeded.
+  // See ../../../docs/REFRESH_TOKEN_ROTATION_CONCURRENCY.md
   return data(
-    { user, userProperties, userBookmarks, userMessages },
-    { headers: forwardCookies(userRes, userPropertiesRes, userBookmarksRes) },
+    { user, userProperties, userBookmarks, userChats, chatThread },
+    {
+      headers: forwardCookies(
+        userRes,
+        userPropertiesRes,
+        userBookmarksRes.ok ? userBookmarksRes : null,
+        userChatsRes.ok ? userChatsRes : null,
+        chatThreadRes?.ok ? chatThreadRes : null,
+      ),
+    },
   );
 }
 
@@ -180,6 +201,46 @@ export async function action({ request, params }: ActionFunctionArgs) {
     return data({ success: true }, { headers: forwardCookies(response) });
   }
 
+  if (intent === "send-message") {
+    const chatId = fetcherData.get("chatId") as string;
+    const text = fetcherData.get("text") as string;
+
+    const response = await fetch(
+      `http://localhost:3000/api/chats/${chatId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: request.headers.get("Cookie") ?? "",
+        },
+        body: JSON.stringify({ text }),
+      },
+    );
+
+    if (!response.ok) {
+      return { error: "Failed to send your message. Please, try again." };
+    }
+
+    return data({ success: true }, { headers: forwardCookies(response) });
+  }
+
+  if (intent === "mark-read") {
+    const chatId = fetcherData.get("chatId") as string;
+
+    const response = await fetch(
+      `http://localhost:3000/api/chats/${chatId}/read`,
+      {
+        method: "POST",
+        headers: { Cookie: request.headers.get("Cookie") ?? "" },
+      },
+    );
+
+    return data(
+      { success: response.ok },
+      { headers: forwardCookies(response) },
+    );
+  }
+
   if (intent === "logout") {
     const response = await fetch("http://localhost:3000/api/auth/logout", {
       headers: {
@@ -217,7 +278,8 @@ function ProfileSection({
 }
 
 export default function UserProfile({ loaderData }: Route.ComponentProps) {
-  const { user, userProperties, userBookmarks, userMessages } = loaderData;
+  const { user, userProperties, userBookmarks, userChats, chatThread } =
+    loaderData;
 
   const { state: profileState, updateState: updateProfileState } =
     useObjectState<ProfileState>({
@@ -438,41 +500,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Right column */}
-        <div className="md:bg-amber-100 max-md:mt-4 md:p-6">
-          <div
-            className="md:sticky md:top-[7.5vh] px-6 py-5
-            bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md
-            border border-amber-200/40"
-          >
-            <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
-              <span className="text-amber-700">
-                <GoComment size={24} />
-              </span>
-              Messages
-            </h2>
-            <div className="stack-4 py-6 text-center">
-              {!userMessages && (
-                <>
-                  <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
-                    <span className="text-2xl opacity-42 select-none">💬</span>
-                  </div>
-                  <p className="text-sm text-amber-800/74 italic">
-                    Your chats will appear here.
-                  </p>
-                  <p className="text-xs text-amber-700/92">
-                    Visit{" "}
-                    <Link
-                      to="/our-agents"
-                      className="underline decoration-amber-700/76"
-                    >
-                      Our Agents
-                    </Link>{" "}
-                    profiles to send them a message.
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
+        <div className="md:h-full md:bg-amber-100 max-md:mt-4 md:p-6">
+          <ChatPanel
+            chats={userChats}
+            thread={chatThread}
+            currentUserId={user.id}
+          />
         </div>
       </main>
 
