@@ -89,7 +89,7 @@ React Router's `loader` and `action` patterns are used for data fetching and mut
 
 This extends to transient UI state that would otherwise live in `useState`. We use URL parameters for filtering the real estate properties and chat conversations, with the one currently open in the chat panel being held in the URL as a `?chat=<id>` search parameter, which lets the route `loader` fetch the thread on the server, survives a page reload, and makes a given conversation linkable.
 
-Chats are kept fresh by re-running the active loaders on an interval (see [usePollingRevalidation](/frontend/apps/hooks/usePollingRevalidation.ts)) rather than by a socket.
+Chats are kept fresh by re-running the active loaders on an interval (see [usePollingRevalidation](/frontend/app/hooks/usePollingRevalidation.ts)) rather than by a socket.
 
 #### 1.1.5 Previews of the frontend:
 
