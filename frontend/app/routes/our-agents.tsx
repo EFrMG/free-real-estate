@@ -170,7 +170,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
         {/* Left column */}
         <div className="max-md:order-1 gen-left-column">
           <hgroup>
-            <h1 className="mt-10 sm:mt-8 md:mt-6 mb-2 text-2xl text-amber-950">
+            <h1 className="page-title mt-10 sm:mt-8 md:mt-6 mb-2">
               Meet Our Agents
             </h1>
             <p className="text-amber-800/84 tracking-wide">

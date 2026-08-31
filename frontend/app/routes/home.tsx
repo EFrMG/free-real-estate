@@ -33,7 +33,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="gen-left stack-8">
-        <h1 className="text-3xl text-amber-950">
+        <h1 className="page-title text-3xl font-bold">
           Find the place of your dreams at unmatched discounts
         </h1>
         <p className="text-lg text-slate-700">

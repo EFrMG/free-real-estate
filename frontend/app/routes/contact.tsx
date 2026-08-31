@@ -18,7 +18,7 @@ export default function Contact() {
   return (
     <main className="gen-main">
       <div className="gen-left">
-        <h1 className="mt-12 mb-2 text-2xl text-amber-950">Contact Us Here!</h1>
+        <h1 className="page-title mt-12 mb-2">Contact Us Here!</h1>
         <p className="text-amber-800/84 mb-12 tracking-wide">
           Any questions or suggestions?
         </p>

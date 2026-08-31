@@ -74,6 +74,12 @@
     @apply p-2 sm:p-4 md:p-6 md:pb-12 stack-12;
   }
 
+  /* Typography */
+
+  .page-title {
+    @apply text-2xl font-semibold text-amber-950;
+  }
+
   /* Buttons and links */
   .sign-in-btn {
     @apply w-full mt-4 px-2 py-3 bg-amber-600/94

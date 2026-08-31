@@ -26,7 +26,7 @@ export default function About() {
   return (
     <main className="gen-main">
       <div className="gen-left space-y-8 [&_p]:leading-relaxed">
-        <h1 className="mt-12 text-2xl text-amber-950">
+        <h1 className="page-title mt-12">
           Welcome to Free Real Estate
         </h1>
         <p>

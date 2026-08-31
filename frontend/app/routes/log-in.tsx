@@ -132,7 +132,7 @@ const LogInForm = ({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
-      <h1 className="text-2xl font-semibold mb-2 text-amber-950">
+      <h1 className="page-title mb-2">
         {titleText}
       </h1>
       <p className="text-amber-900/74 mb-8">{paragraphText}</p>

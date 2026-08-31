@@ -324,7 +324,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                 </div>
 
                 <div className="text-center sm:text-left mt-2 sm:mt-4 stack-2 grow">
-                  <h1 className="text-2xl font-bold text-amber-950 tracking-tight">
+                  <h1 className="page-title tracking-tight">
                     {user.name}
                   </h1>
 

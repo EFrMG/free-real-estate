@@ -248,7 +248,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           />
         )}
 
-        <h1 className="my-6 text-center font-bold text-xl text-amber-900">
+        <h1 className="page-title my-6 text-center text-xl">
           {title}
         </h1>
 
