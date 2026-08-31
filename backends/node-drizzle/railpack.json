@@ -2,5 +2,5 @@
   "build": {
     "cmd": "pnpm run build:be"
   },
-  "include": ["node_modules", "shared"]
+  "include": ["node_modules", "dist", "src"]
 }
