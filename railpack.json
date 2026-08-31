@@ -1,0 +1,11 @@
+{
+  "build": {
+    "cmd": "pnpm run build:be"
+  },
+  "include": [
+    "node_modules",
+    "backends/node-drizzle/dist",
+    "backends/node-drizzle/src",
+    "shared"
+  ]
+}
