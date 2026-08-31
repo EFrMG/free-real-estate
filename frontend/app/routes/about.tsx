@@ -54,13 +54,13 @@ export default function About() {
               log in
             </Link>{" "}
             with any of the accounts below.
-            <p>
-              The password for all of them is{" "}
-              <code className="px-1 py-0.5 rounded bg-amber-200/68 font-mono text-amber-950">
-                password123
-              </code>
-              .
-            </p>
+          </p>
+          <p className="text-amber-900/84">
+            The password for all of them is{" "}
+            <code className="px-1 py-0.5 rounded bg-amber-200/68 font-mono text-amber-950">
+              password123
+            </code>
+            .
           </p>
 
           <ul className="stack-2">
