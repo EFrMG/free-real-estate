@@ -26,9 +26,7 @@ export default function About() {
   return (
     <main className="gen-main">
       <div className="gen-left space-y-8 [&_p]:leading-relaxed">
-        <h1 className="page-title mt-12">
-          Welcome to Free Real Estate
-        </h1>
+        <h1 className="page-title mt-12">Welcome to Free Real Estate</h1>
         <p>
           This is your premier destination for finding the perfect property and
           deals. Whether you are looking to buy, rent, or just exploring, our
@@ -98,7 +96,7 @@ export default function About() {
           </p>
         </section>
 
-        <p className="text-center text-amber-800/74">
+        <p className="text-center text-gray-800/74">
           This is a demo project for{" "}
           <a
             href="http://francisco.is-a.dev/"
