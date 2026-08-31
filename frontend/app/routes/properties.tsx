@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react";
 import ClientOnly from "~/components/ClientOnly";
 import FilterInput from "~/components/properties/FilterInput";
 import PropertyCard from "~/components/properties/PropertyCard";
+import { API_URL } from "~/utils/apiUrl";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -16,9 +17,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   // Fetch properties with search param filters and cities for datalist element
   const [propertiesRes, citiesRes] = await Promise.all([
     fetch(
-      `http://localhost:3000/api/properties${searchParams && `?${searchParams}`}`,
+      `${API_URL}/api/properties${searchParams && `?${searchParams}`}`,
     ),
-    fetch("http://localhost:3000/api/cities"),
+    fetch(API_URL + "/api/cities"),
   ]);
 
   if (!propertiesRes.ok || !citiesRes.ok) {

@@ -10,6 +10,7 @@ import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
 import getAssetUrl from "~/utils/getAssetUrl";
 import forwardCookies from "~/utils/forwardCookies";
+import { API_URL } from "~/utils/apiUrl";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
@@ -38,7 +39,7 @@ export function meta({}: Route.MetaArgs) {
 export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
 
-  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+  const userRes = await fetch(API_URL + "/api/auth/me", {
     headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
   });
 
@@ -52,15 +53,15 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const [userPropertiesRes, userBookmarksRes, userChatsRes, chatThreadRes] =
     await Promise.all([
-      fetch(`http://localhost:3000/api/users/${userId}/properties`),
-      fetch(`http://localhost:3000/api/users/${userId}/bookmarks`, {
+      fetch(`${API_URL}/api/users/${userId}/properties`),
+      fetch(`${API_URL}/api/users/${userId}/bookmarks`, {
         headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
       }),
-      fetch("http://localhost:3000/api/chats", {
+      fetch(API_URL + "/api/chats", {
         headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
       }),
       selectedChatId
-        ? fetch(`http://localhost:3000/api/chats/${selectedChatId}/messages`, {
+        ? fetch(`${API_URL}/api/chats/${selectedChatId}/messages`, {
             headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
           })
         : null,
@@ -116,7 +117,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       return { error: "New passwords must match!" };
 
     const response = await fetch(
-      `http://localhost:3000/api/users/${params.id}/password`,
+      `${API_URL}/api/users/${params.id}/password`,
       {
         method: "PUT",
         headers: {
@@ -148,7 +149,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
 
     const response = await fetch(
-      `http://localhost:3000/api/users/${params.id}`,
+      `${API_URL}/api/users/${params.id}`,
       {
         headers: {
           Cookie: request.headers.get("Cookie") ?? "",
@@ -177,7 +178,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       return { error: "You must include your full license number." };
 
     const response = await fetch(
-      `http://localhost:3000/api/users/${params.id}/promote`,
+      `${API_URL}/api/users/${params.id}/promote`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -206,7 +207,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     const text = fetcherData.get("text") as string;
 
     const response = await fetch(
-      `http://localhost:3000/api/chats/${chatId}/messages`,
+      `${API_URL}/api/chats/${chatId}/messages`,
       {
         method: "POST",
         headers: {
@@ -228,7 +229,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     const chatId = fetcherData.get("chatId") as string;
 
     const response = await fetch(
-      `http://localhost:3000/api/chats/${chatId}/read`,
+      `${API_URL}/api/chats/${chatId}/read`,
       {
         method: "POST",
         headers: { Cookie: request.headers.get("Cookie") ?? "" },
@@ -242,7 +243,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (intent === "logout") {
-    const response = await fetch("http://localhost:3000/api/auth/logout", {
+    const response = await fetch(API_URL + "/api/auth/logout", {
       headers: {
         Cookie: request.headers.get("Cookie") ?? "",
       },

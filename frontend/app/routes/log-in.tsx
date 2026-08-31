@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 import HeroRightSide from "~/components/HeroRightSide";
 import forwardCookies from "~/utils/forwardCookies";
+import { API_URL } from "~/utils/apiUrl";
 
 interface ActionData {
   error?: string;
@@ -39,7 +40,7 @@ export async function action({ request }: Route.ActionArgs) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const signupRes = await fetch("http://localhost:3000/api/auth/register", {
+    const signupRes = await fetch(API_URL + "/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +85,7 @@ export async function action({ request }: Route.ActionArgs) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const loginRes = await fetch("http://localhost:3000/api/auth/login", {
+    const loginRes = await fetch(API_URL + "/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

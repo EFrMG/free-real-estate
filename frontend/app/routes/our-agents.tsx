@@ -7,6 +7,7 @@ import { useFetcher, useRouteLoaderData, redirect } from "react-router";
 
 import useDialog from "~/hooks/useDialog";
 import forwardCookies from "~/utils/forwardCookies";
+import { API_URL } from "~/utils/apiUrl";
 
 import AgentCard from "~/components/our-agents/AgentCard";
 import AgentDetailPanel from "~/components/our-agents/AgentDetailPanel";
@@ -41,7 +42,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const agentsRes = await fetch("http://localhost:3000/api/users");
+  const agentsRes = await fetch(API_URL + "/api/users");
 
   if (!agentsRes.ok) {
     throw new Response("Failed to fetch agents", { status: 500 });
@@ -58,7 +59,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (formData.get("intent") === "start-chat") {
     const cookie = request.headers.get("Cookie") ?? "";
 
-    const userRes = await fetch("http://localhost:3000/api/auth/me", {
+    const userRes = await fetch(API_URL + "/api/auth/me", {
       headers: { Cookie: cookie },
     });
 
@@ -67,7 +68,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     const user = await userRes.json();
 
-    const chatRes = await fetch("http://localhost:3000/api/chats", {
+    const chatRes = await fetch(API_URL + "/api/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,8 +98,8 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const [profileRes, propertiesRes] = await Promise.all([
-    fetch(`http://localhost:3000/api/users/${id}`),
-    fetch(`http://localhost:3000/api/users/${id}/properties`),
+    fetch(`${API_URL}/api/users/${id}`),
+    fetch(`${API_URL}/api/users/${id}/properties`),
   ]);
 
   const profile: Agent | null = profileRes.ok ? await profileRes.json() : null;

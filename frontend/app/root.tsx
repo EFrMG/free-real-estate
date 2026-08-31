@@ -13,12 +13,13 @@ import "./app.css";
 
 import Header from "~/components/Header";
 import forwardCookies from "~/utils/forwardCookies";
+import { API_URL } from "~/utils/apiUrl";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
 
   try {
-    const authRes = await fetch("http://localhost:3000/api/auth/me", {
+    const authRes = await fetch(API_URL + "/api/auth/me", {
       headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     });
 
@@ -27,7 +28,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
       // The badge counts people waiting on a reply, not individual messages
       const unreadRes = await fetch(
-        "http://localhost:3000/api/chats/unread-count",
+        API_URL + "/api/chats/unread-count",
         { headers: cookieHeader ? { Cookie: cookieHeader } : undefined },
       );
 

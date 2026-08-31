@@ -13,6 +13,7 @@ import getAssetUrl from "~/utils/getAssetUrl";
 import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
 import forwardCookies from "~/utils/forwardCookies";
+import { API_URL } from "~/utils/apiUrl";
 
 import {
   GoBookmark,
@@ -42,7 +43,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const cookie = request.headers.get("Cookie") || "";
 
   // Property data
-  const propertyRes = await fetch(`http://localhost:3000/api/properties/${id}`);
+  const propertyRes = await fetch(`${API_URL}/api/properties/${id}`);
 
   if (!propertyRes.ok) {
     if (propertyRes.status === 404) {
@@ -59,7 +60,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   if (property.userId) {
     userPosterRes = await fetch(
-      `http://localhost:3000/api/users/${property.userId}`,
+      `${API_URL}/api/users/${property.userId}`,
     );
     if (userPosterRes.ok) {
       userPoster = await userPosterRes.json();
@@ -69,7 +70,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   // User profile
   let user: UserProfile | null = null;
 
-  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+  const userRes = await fetch(API_URL + "/api/auth/me", {
     method: "GET",
     headers: { Cookie: cookie },
   });
@@ -84,7 +85,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   if (user) {
     userBookmarksRes = await fetch(
-      `http://localhost:3000/api/users/${user.id}/bookmarks`,
+      `${API_URL}/api/users/${user.id}/bookmarks`,
       {
         method: "GET",
         headers: { Cookie: cookie },
@@ -120,7 +121,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const cookie = request.headers.get("Cookie") || "";
 
-  const userRes = await fetch("http://localhost:3000/api/auth/me", {
+  const userRes = await fetch(API_URL + "/api/auth/me", {
     method: "GET",
     headers: { Cookie: cookie },
   });
@@ -130,7 +131,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const user = await userRes.json();
 
   if (intent === "start-chat") {
-    const chatRes = await fetch("http://localhost:3000/api/chats", {
+    const chatRes = await fetch(API_URL + "/api/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,7 +159,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   if (intent === "bookmark") {
     const bookmarkRes = await fetch(
-      `http://localhost:3000/api/users/${user.id}/bookmarks`,
+      `${API_URL}/api/users/${user.id}/bookmarks`,
       {
         method: "POST",
         headers: {
@@ -171,7 +172,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     return data(null, { headers: forwardCookies(userRes, bookmarkRes) });
   } else if (intent === "remove-bookmark") {
     const removeRes = await fetch(
-      `http://localhost:3000/api/users/${user.id}/bookmarks/${propertyId}`,
+      `${API_URL}/api/users/${user.id}/bookmarks/${propertyId}`,
       {
         method: "DELETE",
         headers: { Cookie: cookie },

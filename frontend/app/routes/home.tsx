@@ -2,9 +2,10 @@ import type { Route } from "./+types/home";
 
 import SearchInput from "~/components/home/SearchInput";
 import HeroRightSide from "~/components/HeroRightSide";
+import { API_URL } from "~/utils/apiUrl";
 
 export async function loader() {
-  const citiesRes = await fetch("http://localhost:3000/api/cities");
+  const citiesRes = await fetch(API_URL + "/api/cities");
 
   if (!citiesRes.ok) {
     throw new Response("Failed to fetch cities", { status: 500 });

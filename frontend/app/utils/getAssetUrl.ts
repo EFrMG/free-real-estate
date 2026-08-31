@@ -1,3 +1,5 @@
+import { API_URL } from "~/utils/apiUrl";
+
 /**
  * Resolves a path to a full URL.
  *
@@ -18,7 +20,7 @@ export default function getAssetUrl(path: string | null | undefined) {
   ) {
     // If it's a backend upload path (starting with /public), point to the backend server
     if (path.startsWith("/public")) {
-      return `http://localhost:3000${path}`;
+      return `${API_URL}${path}`;
     }
     return path;
   }
