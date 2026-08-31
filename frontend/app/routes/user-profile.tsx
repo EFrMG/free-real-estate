@@ -324,9 +324,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                 </div>
 
                 <div className="text-center sm:text-left mt-2 sm:mt-4 stack-2 grow">
-                  <h1 className="page-title tracking-tight">
-                    {user.name}
-                  </h1>
+                  <h1 className="page-title tracking-tight">{user.name}</h1>
 
                   <div className="flex justify-between items-center">
                     <div>
@@ -373,7 +371,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                 flex items-center justify-between flex-wrap"
               >
                 <div className="stack-1 mr-2">
-                  <p className="flex items-center gap-2 text-sm font-medium text-amber-900 leading-none">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-amber-900 leading-none">
                     <GoShieldLock
                       size={20}
                       className="text-amber-600 shrink-0"
@@ -419,8 +417,8 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   border border-amber-200/60 space-y-3
                   [&_div]:flex [&_div]:justify-between [&_div]:items-center
                   [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
-                  [&_h2]:text-lg [&_h2]:text-amber-950
-                  [&_p]:ml-8 [&_p]:text-slate-900/94"
+                  [&_h2]:font-semibold [&_h2]:text-amber-950
+                  [&_p]:ml-8 [&_p]:text-amber-950/94"
                 >
                   <div>
                     <h2>License number:</h2>
@@ -432,7 +430,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   </div>
                   <div>
                     <h2>Biography:</h2>
-                    <p className="text-slate-900/74!">{user.biography}</p>
+                    <p className="text-amber-950/74!">{user.biography}</p>
                   </div>
                 </div>
               )}
@@ -454,7 +452,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                 ))}
               </div>
             ) : (
-              <p className="max-w-none py-4 text-sm text-amber-800/94 italic text-center">
+              <p className="max-w-none py-4 text-amber-800/74 italic text-center">
                 Your bookmarked properties will appear here.
               </p>
             )}
@@ -477,7 +475,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   ))}
                 </div>
               ) : (
-                <p className="py-4 text-sm text-amber-800/94 italic text-center">
+                <p className="py-4 text-amber-800/74 italic text-center">
                   You currently have no listed properties.
                 </p>
               )}

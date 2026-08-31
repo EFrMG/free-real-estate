@@ -244,12 +244,12 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
-                    className="py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/60"
+                    className="w-fit mx-auto px-6 py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/60"
                   >
-                    <span className="block mb-4 text-3xl opacity-42 select-none">
+                    <span className="block mb-4 text-3xl opacity-40 select-none">
                       🏠
                     </span>
-                    <p className="inline-block text-sm text-amber-800/94 italic">
+                    <p className="inline-block text-amber-800/74 italic">
                       This agent doesn't have any listed properties yet.
                     </p>
                   </motion.div>

@@ -248,9 +248,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           />
         )}
 
-        <h1 className="page-title my-6 text-center text-xl">
-          {title}
-        </h1>
+        <h1 className="page-title my-6 text-center text-xl">{title}</h1>
 
         <div className="grid md:grid-cols-[2fr_1fr] gap-12 md:gap-8">
           <div className="stack-8 md:stack-12 justify-between">
@@ -297,7 +295,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   </div>
                 </div>
               ) : (
-                <div className="mb-4 mr-4 pt-4 px-4 pr-6 text-gray-500 italic">
+                <div className="mb-4 mr-4 pt-4 px-4 pr-6 text-amber-800/74 italic">
                   Please, contact our agents for more information.
                 </div>
               )}

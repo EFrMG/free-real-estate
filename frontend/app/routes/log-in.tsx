@@ -135,7 +135,7 @@ const LogInForm = ({
       <h1 className="page-title mb-2">
         {titleText}
       </h1>
-      <p className="text-amber-900/74 mb-8">{paragraphText}</p>
+      <p className="text-amber-800/84 mb-8">{paragraphText}</p>
       <fetcher.Form
         method="post"
         className="stack-6 p-6 rounded-lg bg-amber-100/74 shadow-lg form-label"

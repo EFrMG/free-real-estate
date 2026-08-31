@@ -92,7 +92,7 @@ export default function StartChatModal({
 
                   {agentProperties.length ? (
                     <>
-                      <p className="text-slate-700/74">
+                      <p className="text-amber-800/74">
                         Conversations are tied to a property. Which one would
                         you like to ask about?
                       </p>
@@ -141,7 +141,7 @@ export default function StartChatModal({
                       </ul>
                     </>
                   ) : (
-                    <p className="py-6 text-sm text-center text-amber-800/94 italic">
+                    <p className="py-6 text-sm text-center text-amber-800/74 italic">
                       Our agent has no listed properties to discuss about yet.
                     </p>
                   )}
@@ -160,7 +160,7 @@ export default function StartChatModal({
                         !startChatForm.propertyId || fetcher.state !== "idle"
                       }
                       className="modal-accept-btn
-                      disabled:opacity-75 disabled:cursor-not-allowed"
+                      disabled:opacity-74 disabled:cursor-not-allowed"
                     >
                       {fetcher.state === "idle" ? "Start Chat" : "Opening..."}
                     </button>

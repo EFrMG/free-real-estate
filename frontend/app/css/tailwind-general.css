@@ -77,7 +77,7 @@
   /* Typography */
 
   .page-title {
-    @apply text-2xl font-semibold text-amber-950;
+    @apply text-2xl font-semibold text-amber-900;
   }
 
   /* Buttons and links */
@@ -85,7 +85,7 @@
     @apply w-full mt-4 px-2 py-3 bg-amber-600/94
     hover:bg-amber-700/94 transition-colors duration-150
     rounded-md text-slate-50 font-medium shadow-md
-    disabled:opacity-75 disabled:cursor-none;
+    disabled:opacity-74 disabled:cursor-none;
   }
 
   .profile-pencil-btn {

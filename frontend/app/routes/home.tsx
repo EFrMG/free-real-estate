@@ -33,10 +33,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="gen-left stack-8">
-        <h1 className="page-title text-3xl font-bold">
+        <h1 className="page-title text-3xl">
           Find the place of your dreams at unmatched discounts
         </h1>
-        <p className="text-lg text-slate-700">
+        <p className="text-lg text-gray-800/84">
           Aquiring a place to live the joy of life should not be as expensive as
           life is in the end. We provide the best places at a price that might
           as well not be real.
@@ -50,7 +50,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className="flex justify-center gap-8 max-sm:flex-wrap pt-12 lg:pt-16">
           <hgroup>
             <span className="block font-semibold text-center text-xl">3</span>
-            <h2 className="text-lg text-center text-slate-700">
+            <h2 className="text-lg text-center text-gray-800/84">
               Awarded Industry Prices
             </h2>
           </hgroup>
@@ -58,7 +58,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <span className="block font-semibold text-center text-xl">
               25<span className="opacity-lesser">+</span>
             </span>
-            <h2 className="text-lg text-center text-slate-700">
+            <h2 className="text-lg text-center text-gray-800/84">
               Years of Experience
             </h2>
           </hgroup>
@@ -66,7 +66,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <span className="block font-semibold text-center text-xl">
               200<span className="opacity-lesser">+</span>
             </span>
-            <h2 className="text-lg text-center text-slate-700">
+            <h2 className="text-lg text-center text-gray-800/84">
               Properties Ready
             </h2>
           </hgroup>

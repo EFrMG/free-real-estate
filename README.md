@@ -79,6 +79,35 @@ It was decided to organize `React` components simply in `/frontend/app/component
 
 With `Tailwind CSS v4` We utilize a custom theme and general reset that extends `preflight` along with utility classes.
 
+Global styles live in `/frontend/app/css/`, split by concern: `tailwind-theme.css` (theme tokens), `tailwind-reset.css` (the preflight extension), `tailwind-general.css` (layout primitives, typography and shared buttons), plus `contact.css`, `forms.css` and `modals.css` for their respective areas.
+
+Component-layer classes must be declared inside `@layer components`. Leaving a rule unlayered makes it beat **every** layer, including utilities, which silently breaks the ability to override it inline from a `className`.
+
+##### The opacity ladder
+
+Slash opacities (`bg-amber-100/74`, `text-amber-800/94`, `border-amber-200/48`, …) are restricted to ten rungs. This keeps transparency deliberate instead of drifting into a smear of near-identical values:
+
+|  Rung | Mostly used for      | Typical use                                                  |
+| ----: | -------------------- | ------------------------------------------------------------ |
+| `/12` | Outlines             | Hairline outlines on imagery; barely-there tints             |
+| `/28` | Backgrounds          | Skeleton fills; faint card tints; dashed empty-state borders |
+| `/36` | Backgrounds          | Card and badge tints                                         |
+| `/40` | Backgrounds; borders | Tinted surfaces and the borders that sit on them             |
+| `/48` | Backgrounds; borders | Button borders; image scrims; decorative underlines          |
+| `/60` | Backgrounds; borders | Panel backgrounds; dividers                                  |
+| `/64` | Mixed                | Panel tints; micro-labels; outlines                          |
+| `/74` | **Text**             | Secondary prose and muted small print                        |
+| `/84` | **Text**             | Body text on tinted cards, lead paragraphs                   |
+| `/94` | Backgrounds          | Near-solid action buttons                                    |
+
+> The rough shape is that the low rungs carry backgrounds and borders, `/74` and `/84` carry text, and `/94` is reserved for backgrounds that are _almost_ solid. `/64` is the one rung that genuinely does both.
+
+The two named helpers in `tailwind-general.css` sit on the same ladder on purpose: `opacity-less` is `0.84` and `opacity-lesser` is `0.6`.
+
+**When adding a new value, snap to the nearest existing rung rather than introducing a new one.** If a genuinely new rung is ever needed, the rule that produced this ladder is that the most repeated value in a cluster of near-identical ones becomes that cluster's rung.
+
+The bare `opacity-*` utilities follow the same rungs, so `opacity-28`, `opacity-40` and `opacity-74` are the values in use. The one exception is `opacity-100`, which is not a rung but the fully-opaque reset used by `hover:opacity-100` on the property card **links**.
+
 #### 1.1.3 Maps
 
 `React-leaflet` is used for interactive property maps that support adding markers. These are basically `open street maps` with some extra functionality.

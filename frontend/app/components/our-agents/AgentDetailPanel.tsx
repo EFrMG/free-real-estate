@@ -161,7 +161,7 @@ export default function AgentDetailPanel({
                       <LuPhone
                         size={18}
                         color="var(--color-amber-600)"
-                        className="shrink-0 opacity-76"
+                        className="shrink-0 opacity-74"
                       />
                       <div>
                         <p className="text-sm text-amber-800/64 font-medium uppercase tracking-wide">
@@ -213,15 +213,15 @@ export default function AgentDetailPanel({
               </button>
             </div>
           ) : (
-            <div className="stack-4 py-4 text-center">
+            <div className="stack-4 pt-4 text-center">
               <div className="mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-amber-200/48 border-2 border-dashed border-amber-400/48 flex items-center justify-center">
-                <span className="text-4xl opacity-42">👤</span>
+                <span className="text-4xl opacity-40">👤</span>
               </div>
               <div className="stack-2">
                 <div className="mx-auto w-32 h-4 bg-amber-200/48 rounded-full" />
                 <div className="mx-auto w-48 h-3 bg-amber-200/28 rounded-full" />
               </div>
-              <p className="text-sm text-amber-800/74 italic px-2">
+              <p className="text-amber-800/74 italic px-2">
                 Select an agent to view their profile and details.
               </p>
             </div>

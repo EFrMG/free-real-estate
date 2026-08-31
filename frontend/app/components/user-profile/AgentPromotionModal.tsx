@@ -148,7 +148,7 @@ export default function AgentPromotionModal({
                   </fieldset>
 
                   <div>
-                    <p className="text-sm text-slate-700/74">
+                    <p className="text-sm text-amber-800/74">
                       This is only meant for prospective agents. <br /> Please,
                       do not interact with this form if you are a normal user.
                       Thank you.

@@ -55,9 +55,9 @@ export default function ChatPanel({
 
         <div className="stack-4 my-auto py-6 text-center">
           <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
-            <span className="text-2xl opacity-42 select-none">💬</span>
+            <span className="text-2xl opacity-40 select-none">💬</span>
           </div>
-          <p className="text-sm text-amber-800/74 italic">
+          <p className="text-amber-800/74 italic">
             Your chats will appear here.
           </p>
           <p className="text-sm text-amber-700/94">
@@ -96,7 +96,7 @@ export default function ChatPanel({
         {thread ? (
           <ChatThread thread={thread} currentUserId={currentUserId} />
         ) : (
-          <p className="m-auto text-center text-amber-800/64 italic">
+          <p className="m-auto text-center text-amber-800/74 italic">
             Pick a conversation to read and continue it.
           </p>
         )}

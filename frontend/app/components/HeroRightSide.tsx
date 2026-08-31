@@ -2,7 +2,7 @@ export default function HeroRightSide() {
   return (
     <div
       className="relative max-md:absolute max-md:top-0 max-md:right-0 max-md:bottom-0
-        max-md:opacity-24 max-md:w-[50%]
+        max-md:opacity-28 max-md:w-[50%]
         w-full h-full md:flex items-center md:bg-amber-100 -z-1"
     >
       <img

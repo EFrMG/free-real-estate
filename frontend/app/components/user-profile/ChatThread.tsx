@@ -146,7 +146,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
             )}
           </>
         ) : (
-          <p className="py-6 text-sm text-center text-amber-800/74 italic">
+          <p className="my-auto py-6 text-center text-amber-800/48 italic">
             No messages yet. Say hello!
           </p>
         )}
@@ -178,7 +178,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
             title="Send message"
             className="p-2.5 bg-amber-600/94 text-slate-50 rounded-full shadow-md
             hover:bg-amber-700/94 transition-colors duration-150
-            disabled:opacity-75 disabled:cursor-not-allowed"
+            disabled:opacity-74 disabled:cursor-not-allowed"
           >
             <GoPaperAirplane size={16} />
           </button>
