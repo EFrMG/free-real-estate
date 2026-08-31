@@ -60,11 +60,11 @@ export default function ChatPanel({
           <p className="text-sm text-amber-800/74 italic">
             Your chats will appear here.
           </p>
-          <p className="text-sm text-amber-700/92">
+          <p className="text-sm text-amber-700/94">
             Visit{" "}
             <Link
               to="/our-agents"
-              className="underline decoration-amber-700/76"
+              className="underline decoration-amber-700/74"
             >
               Our Agents
             </Link>{" "}

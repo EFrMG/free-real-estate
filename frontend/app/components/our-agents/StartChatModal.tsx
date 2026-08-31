@@ -57,7 +57,7 @@ export default function StartChatModal({
           >
             {/* Custom backdrop */}
             <div
-              className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
+              className="absolute inset-0 bg-black/48 backdrop-blur-[1px]"
               onClick={handleCloseDialog}
             />
 
@@ -92,7 +92,7 @@ export default function StartChatModal({
 
                   {agentProperties.length ? (
                     <>
-                      <p className="text-slate-700/72">
+                      <p className="text-slate-700/74">
                         Conversations are tied to a property. Which one would
                         you like to ask about?
                       </p>
@@ -116,7 +116,7 @@ export default function StartChatModal({
                                 rounded-lg border transition-colors duration-150
                                 ${
                                   isSelected
-                                    ? "bg-amber-200/56 border-amber-300/72"
+                                    ? "bg-amber-200/60 border-amber-300/74"
                                     : "bg-amber-100/28 border-amber-200/40 hover:bg-amber-100/64"
                                 }`}
                               >
@@ -130,7 +130,7 @@ export default function StartChatModal({
                                   <p className="text-sm font-medium text-amber-950 line-clamp-1">
                                     {property.title}
                                   </p>
-                                  <p className="text-xs text-amber-800/72 line-clamp-1">
+                                  <p className="text-xs text-amber-800/74 line-clamp-1">
                                     {property.province}, {property.city}
                                   </p>
                                 </div>

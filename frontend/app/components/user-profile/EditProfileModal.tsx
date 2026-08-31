@@ -83,7 +83,7 @@ export default function EditProfileModal({
           >
             {/* Custom backdrop */}
             <div
-              className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
+              className="absolute inset-0 bg-black/48 backdrop-blur-[1px]"
               onClick={(e) => handleCloseDialog(e)}
             />
 
@@ -141,7 +141,7 @@ export default function EditProfileModal({
                       className="sr-only"
                     />
 
-                    <p className="text-xs text-amber-700/92">
+                    <p className="text-xs text-amber-700/94">
                       Click the pencil to upload a new photo
                     </p>
                   </fieldset>

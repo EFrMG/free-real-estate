@@ -278,7 +278,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
               {userPoster ? (
                 <div
                   className="flex items-center gap-4 mb-4 mr-4 pl-2 py-2 pr-3
-                  bg-amber-100/24 shadow-md rounded-lg border border-amber-200"
+                  bg-amber-100/28 shadow-md rounded-lg border border-amber-200"
                 >
                   <img
                     src={getAssetUrl(userPoster.profilePicture)}
@@ -309,7 +309,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   (currentUserId === null ? (
                     <Link
                       to="/log-in"
-                      className="bg-amber-100/24 rounded-sm shadow-md gen-btn-border btn-hovaction"
+                      className="bg-amber-100/28 rounded-sm shadow-md gen-btn-border btn-hovaction"
                     >
                       <GoCommentDiscussion
                         size={28}
@@ -327,7 +327,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                       />
                       <button
                         type="submit"
-                        className="bg-amber-100/24 gen-btn-border btn-hovaction"
+                        className="bg-amber-100/28 gen-btn-border btn-hovaction"
                       >
                         <GoCommentDiscussion
                           size={28}
@@ -347,7 +347,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     />
                     <button
                       type="submit"
-                      className="bg-amber-100/24 gen-btn-border btn-hovaction"
+                      className="bg-amber-100/28 gen-btn-border btn-hovaction"
                     >
                       <GoBookmarkSlash
                         size={28}
@@ -361,7 +361,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     <input type="hidden" name="intent" value="bookmark" />
                     <button
                       type="submit"
-                      className="bg-amber-100/24 gen-btn-border btn-hovaction"
+                      className="bg-amber-100/28 gen-btn-border btn-hovaction"
                     >
                       <GoBookmark
                         size={28}
@@ -428,7 +428,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             <h3 className="text-lg font-bold">Location:</h3>
           </div>
           <div className="block pb-4">
-            <div className="flex justify-between items-center mx-4 md:mx-6 p-3 bg-amber-50/66 rounded-lg border border-amber-200">
+            <div className="flex justify-between items-center mx-4 md:mx-6 p-3 bg-amber-50/64 rounded-lg border border-amber-200">
               <span className="text-amber-800">{city}</span>
               <span className="text-amber-600 text-lg">{province}</span>
             </div>
@@ -440,7 +440,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 {sizes.map((size, idx) => (
                   <span
                     key={idx}
-                    className="px-4 py-2 bg-amber-50/66 rounded-md border border-amber-200 text-amber-900"
+                    className="px-4 py-2 bg-amber-50/64 rounded-md border border-amber-200 text-amber-900"
                   >
                     Room {idx + 1}: {size} sqft
                   </span>
@@ -455,7 +455,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 {Object.entries(nearbyPlaces).map(([place, distance]) => (
                   <div
                     key={place}
-                    className="p-3 bg-amber-50/66 rounded-lg border border-amber-200 flex justify-between items-center gap-2"
+                    className="p-3 bg-amber-50/64 rounded-lg border border-amber-200 flex justify-between items-center gap-2"
                   >
                     <span className="capitalize text-amber-800">{place}</span>
                     <span className="font-mono text-amber-600">{distance}</span>

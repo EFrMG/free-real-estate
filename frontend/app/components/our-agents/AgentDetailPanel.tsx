@@ -57,7 +57,7 @@ export default function AgentDetailPanel({
                 [&>div]:pb-4 [&>div:not(:last-of-type)]:border-b [&>div]:border-amber-200/64"
               >
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/80 animate-pulse shrink-0 mt-0.5" />
+                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
                   <div className="stack-2 w-full">
                     <div className="w-20 h-3 bg-amber-200/60 rounded-full animate-pulse" />
                     <div className="w-32 h-4 bg-amber-200/40 rounded-full animate-pulse" />
@@ -65,7 +65,7 @@ export default function AgentDetailPanel({
                 </div>
 
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/80 animate-pulse shrink-0 mt-0.5" />
+                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
                   <div className="stack-2 w-full">
                     <div className="w-12 h-3 bg-amber-200/60 rounded-full animate-pulse" />
                     <div className="stack-2 w-full mt-1">
@@ -77,7 +77,7 @@ export default function AgentDetailPanel({
                 </div>
 
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/80 animate-pulse shrink-0 mt-0.5" />
+                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
                   <div className="stack-2 w-full">
                     <div className="w-16 h-3 bg-amber-200/60 rounded-full animate-pulse" />
                     <div className="w-28 h-4 bg-amber-200/40 rounded-full animate-pulse" />
@@ -103,13 +103,13 @@ export default function AgentDetailPanel({
                     delay: 0.3,
                   }}
                   className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg
-                  border-3 border-amber-50/82 outline-2 outline-amber-300/58"
+                  border-3 border-amber-50/84 outline-2 outline-amber-300/60"
                 />
                 <h2 className="text-xl font-medium text-amber-950 tracking-tight">
                   {agent.name}
                 </h2>
                 <span
-                  className="px-3 py-0.5 text-xs bg-amber-300/34 text-amber-900 font-medium
+                  className="px-3 py-0.5 text-xs bg-amber-300/36 text-amber-900 font-medium
                 rounded-full border border-amber-300/60 capitalize"
                 >
                   Agent
@@ -180,7 +180,7 @@ export default function AgentDetailPanel({
                 <Link
                   to="/log-in"
                   className="panel-action min-h-12 group text-amber-50
-                  bg-amber-600/92 hover:bg-amber-700/92"
+                  bg-amber-600/94 hover:bg-amber-700/94"
                 >
                   <GoComment size={18} />
                   <span>Log in to message</span>
@@ -190,7 +190,7 @@ export default function AgentDetailPanel({
                   <button
                     onClick={onStartChat}
                     className="panel-action min-h-12 group text-amber-50
-                    bg-amber-600/92 hover:bg-amber-700/92 active:bg-amber-800/92"
+                    bg-amber-600/94 hover:bg-amber-700/94 active:bg-amber-800/94"
                   >
                     <GoComment size={18} />
                     <span>Message our agent</span>
@@ -201,7 +201,7 @@ export default function AgentDetailPanel({
               <button
                 onClick={onDeselect}
                 className="panel-action min-h-12 group text-amber-800
-                bg-amber-200/36 hover:bg-amber-200/60 active:bg-amber-300/42"
+                bg-amber-200/36 hover:bg-amber-200/60 active:bg-amber-300/40"
               >
                 <span
                   className="inline-block text-base group-hover:translate-x-[-0.25ch]

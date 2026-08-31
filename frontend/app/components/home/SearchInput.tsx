@@ -69,7 +69,7 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
       </div>
       <form
         onSubmit={handleSearch}
-        className="flex max-sm:flex-wrap rounded-lg shadow-2xl shadow-slate-200/82 *:max-sm:w-[80%] *:min-h-16 *:pl-2 *:border-2 *:border-amber-500"
+        className="flex max-sm:flex-wrap rounded-lg shadow-2xl shadow-slate-200/84 *:max-sm:w-[80%] *:min-h-16 *:pl-2 *:border-2 *:border-amber-500"
       >
         <input
           type="text"

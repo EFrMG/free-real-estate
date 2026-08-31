@@ -39,7 +39,7 @@ export default function MiniPropertyCard({
         className={`grid grid-cols-[3fr_7fr] gap-4 h-full pl-3 pr-4 py-3
         rounded-lg shadow-md inset-shadow-sm
         hover:shadow-sm transition-shadow duration-250
-        ${clearBackground ? "bg-amber-50/68" : "bg-amber-100/28"}`}
+        ${clearBackground ? "bg-amber-50/64" : "bg-amber-100/28"}`}
       >
         <div className="relative w-full h-full">
           <div

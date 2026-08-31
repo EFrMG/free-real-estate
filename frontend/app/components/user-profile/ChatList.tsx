@@ -28,7 +28,7 @@ export default function ChatList({
               rounded-lg border transition-colors duration-150
               ${
                 isSelected
-                  ? "bg-amber-200/56 border-amber-300/72"
+                  ? "bg-amber-200/60 border-amber-300/74"
                   : "bg-amber-50/64 border-amber-200/40 hover:bg-amber-100/64"
               }`}
             >
@@ -43,10 +43,10 @@ export default function ChatList({
                 <p className="text-sm font-medium text-amber-950 line-clamp-1">
                   {chat.otherUser.name}
                 </p>
-                <p className="ml-1 text-sm text-amber-800/72 line-clamp-1">
+                <p className="ml-1 text-sm text-amber-800/74 line-clamp-1">
                   {chat.property.title}
                 </p>
-                <p className="ml-2 text-xs text-amber-900/68 italic line-clamp-2">
+                <p className="ml-2 text-xs text-amber-900/64 italic line-clamp-2">
                   {chat.lastMessage?.text ?? "No messages yet."}
                 </p>
               </div>

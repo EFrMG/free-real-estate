@@ -303,12 +303,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           {/* Profile header */}
           <section
             className="relative overflow-hidden rounded-xl shadow-lg
-            bg-linear-to-br from-amber-100/82 via-amber-50 to-amber-100/36
+            bg-linear-to-br from-amber-100/84 via-amber-50 to-amber-100/36
             border border-amber-200/48"
           >
             <div
               className="absolute top-0 inset-x-0 lg:h-24 md:h-42 sm:h-22 h-44
-              bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/26"
+              bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/28"
             />
 
             <div className="relative z-10 p-5 sm:p-6">
@@ -334,7 +334,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                         {user.email}
                         {user.role === "user" && (
                           <button
-                            className="text-amber-900/58 hover:text-amber-900
+                            className="text-amber-900/60 hover:text-amber-900
                             transition-colors duration-150"
                             onClick={() => setAgentPromotionOpen(true)}
                           >
@@ -344,7 +344,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       </p>
                       <p
                         className="w-fit mt-2 px-3 py-0.5 text-xs
-                    bg-amber-300/34 text-amber-900 font-medium
+                    bg-amber-300/36 text-amber-900 font-medium
                     rounded-full border border-amber-300/60 capitalize
                     mx-auto sm:mx-0"
                       >
@@ -369,7 +369,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
               {/* Password section */}
               <div
-                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/52
+                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/60
                 flex items-center justify-between flex-wrap"
               >
                 <div className="stack-1 mr-2">
@@ -394,8 +394,8 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       name="intent"
                       value="logout"
                       className="py-1.5 px-2 text-sm text-amber-700/84 rounded-sm bg-amber-200/36 shadow-sm
-                    outline outline-amber-300/18 hover:outline-rose-500/12
-                    hover:text-rose-700/84 hover:bg-rose-200/24 active:bg-rose-300/30
+                    outline outline-amber-300/12 hover:outline-rose-500/12
+                    hover:text-rose-700/84 hover:bg-rose-200/28 active:bg-rose-300/28
                     btn-hovaction transition-all duration-300"
                     >
                       Log Out
@@ -416,7 +416,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               {user.role === "agent" && (
                 <div
                   className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50/84
-                  border border-amber-200/52 space-y-3
+                  border border-amber-200/60 space-y-3
                   [&_div]:flex [&_div]:justify-between [&_div]:items-center
                   [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
                   [&_h2]:text-lg [&_h2]:text-amber-950
@@ -432,7 +432,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   </div>
                   <div>
                     <h2>Biography:</h2>
-                    <p className="text-slate-900/72!">{user.biography}</p>
+                    <p className="text-slate-900/74!">{user.biography}</p>
                   </div>
                 </div>
               )}

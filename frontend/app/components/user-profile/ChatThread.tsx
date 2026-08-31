@@ -44,7 +44,7 @@ function MessageBubble({
         ${isPending ? "opacity-less" : ""}
         ${
           isMine
-            ? "bg-amber-600/92 text-amber-50 rounded-br-xs"
+            ? "bg-amber-600/94 text-amber-50 rounded-br-xs"
             : "bg-amber-50 text-amber-950 border border-amber-200/64 rounded-bl-xs"
         }`}
       >
@@ -116,7 +116,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
           </p>
           <Link
             to={`/properties/${thread.property.id}`}
-            className="text-sm text-amber-800/76 underline decoration-amber-700/48 line-clamp-1"
+            className="text-sm text-amber-800/74 underline decoration-amber-700/48 line-clamp-1"
           >
             {thread.property.title}
           </Link>

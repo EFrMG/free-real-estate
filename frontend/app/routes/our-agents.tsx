@@ -244,7 +244,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
-                    className="py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/52"
+                    className="py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/60"
                   >
                     <span className="block mb-4 text-3xl opacity-42 select-none">
                       🏠

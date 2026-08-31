@@ -69,7 +69,7 @@ export default function AgentPromotionModal({
           >
             {/* Custom backdrop */}
             <div
-              className="absolute inset-0 bg-black/46 backdrop-blur-[1px]"
+              className="absolute inset-0 bg-black/48 backdrop-blur-[1px]"
               onClick={(e) => {
                 handleCloseDialog(e);
                 setFetcherKey(crypto.randomUUID());
@@ -148,7 +148,7 @@ export default function AgentPromotionModal({
                   </fieldset>
 
                   <div>
-                    <p className="text-sm text-slate-700/72">
+                    <p className="text-sm text-slate-700/74">
                       This is only meant for prospective agents. <br /> Please,
                       do not interact with this form if you are a normal user.
                       Thank you.

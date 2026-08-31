@@ -24,12 +24,12 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
           alt={`${agent.name}'s profile picture`}
           draggable={false}
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md
-          border-2 border-amber-50/82 outline-2 outline-amber-300/48
+          border-2 border-amber-50/84 outline-2 outline-amber-300/48
           group-hover:outline-amber-400/64 transition-all duration-300"
         />
         <div
           className="absolute inset-0 rounded-full
-          bg-transparent group-hover:bg-amber-400/8 transition-colors duration-450"
+          bg-transparent group-hover:bg-amber-400/12 transition-colors duration-450"
         />
       </div>
       <p

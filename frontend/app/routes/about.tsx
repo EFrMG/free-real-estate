@@ -41,7 +41,7 @@ export default function About() {
           come back to it later.
         </p>
 
-        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-400/26 shadow-md">
+        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-400/28 shadow-md">
           <h2 className="text-xl font-semibold text-amber-950">
             How to Log In Into Existing Accounts
           </h2>
@@ -57,7 +57,7 @@ export default function About() {
           </p>
           <p className="text-amber-900/84">
             The password for all of them is{" "}
-            <code className="px-1 py-0.5 rounded bg-amber-200/68 font-mono text-amber-950">
+            <code className="px-1 py-0.5 rounded bg-amber-200/64 font-mono text-amber-950">
               password123
             </code>
             .
@@ -71,14 +71,14 @@ export default function About() {
                 xs:px-3"
               >
                 <div>
-                  <code className="px-1 rounded bg-amber-200/54 font-mono text-amber-950/72">
+                  <code className="px-1 rounded bg-amber-200/60 font-mono text-amber-950/74">
                     {email}
                   </code>
                 </div>
                 <div className="flex gap-x-[1ch]">
-                  <span className="text-amber-900/72 text-sm">{name}:</span>
+                  <span className="text-amber-900/74 text-sm">{name}:</span>
                   <span
-                    className="px-1.5 py-0.5 rounded-full bg-amber-200/68
+                    className="px-1.5 py-0.5 rounded-full bg-amber-200/64
                   text-xs font-semibold uppercase tracking-wide text-amber-900"
                   >
                     {role}
