@@ -236,7 +236,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   return (
     <main className="gen-main">
       {/* Left side */}
-      <div className="p-2 md:p-4">
+      <div className="p-2 md:p-4 md:pb-12">
         {interiorGallery ? (
           <PropertyGallery interiorGallery={interiorGallery} />
         ) : (

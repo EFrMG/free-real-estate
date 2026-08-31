@@ -98,7 +98,7 @@ export default function About() {
           </p>
         </section>
 
-        <p className="mb-8 text-center text-gray-600/84">
+        <p className="text-center text-gray-600/84">
           This is a demo project for{" "}
           <a
             href="http://francisco.is-a.dev/"

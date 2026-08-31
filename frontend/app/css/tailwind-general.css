@@ -63,12 +63,15 @@
     @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 z-5 grow;
   }
 
+  /* The md:pb-12 on both column classes is what gives every route the same gap above the viewport edge
+   * It can't live on .gen-main as that is the grid container, and every route's right column is a full md:bg-amber-100 that would get an amber-50 strip underneath it
+   * Below md:, .gen-main's own max-md:p-6 already applies the bottom padding */
   .gen-left {
-    @apply my-auto md:mr-[18.5%] md:pl-6;
+    @apply my-auto md:mr-[18.5%] md:pl-6 md:pb-12;
   }
 
   .gen-left-column {
-    @apply p-2 sm:p-4 md:p-6 stack-12;
+    @apply p-2 sm:p-4 md:p-6 md:pb-12 stack-12;
   }
 
   /* Buttons and links */
