@@ -35,7 +35,7 @@
   }
 
   html {
-    color-scheme: light;
+    color-scheme: only light;
     tab-size: 4;
     interpolate-size: allow-keywords;
     overflow-wrap: break-word;

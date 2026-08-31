@@ -27,10 +27,9 @@ export async function loader({ request }: Route.LoaderArgs) {
       const user = await authRes.json();
 
       // The badge counts people waiting on a reply, not individual messages
-      const unreadRes = await fetch(
-        API_URL + "/api/chats/unread-count",
-        { headers: cookieHeader ? { Cookie: cookieHeader } : undefined },
-      );
+      const unreadRes = await fetch(API_URL + "/api/chats/unread-count", {
+        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
+      });
 
       const unreadSenders = unreadRes.ok ? (await unreadRes.json()).count : 0;
 
@@ -61,6 +60,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* The first paint is opted out of mobile auto-darkening instead of flashing */}
+        <meta name="color-scheme" content="only light" />
         <Meta />
         <Links />
       </head>
