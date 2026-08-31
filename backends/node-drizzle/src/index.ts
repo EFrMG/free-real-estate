@@ -807,9 +807,6 @@ api.post("/chats/:id/read", requireAuth, async (c) => {
 const port = Number(process.env.PORT) || 3000;
 
 async function main() {
-  // Ensure the data directory exists before connecting to the database (Railway)
-  await fs.mkdir("/data", { recursive: true });
-
   // Bring the schema up to date before anything touches the database
   await runMigrations();
 
