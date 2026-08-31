@@ -1,6 +1,15 @@
 import type { Route } from "./+types/about";
 
+import { Link } from "react-router";
+
 import HeroRightSide from "~/components/HeroRightSide";
+
+const demoAccounts = [
+  { email: "john@me.com", name: "Johnathan Doebanne", role: "Agent" },
+  { email: "marti@me.com", name: "Martina Rossi", role: "Agent" },
+  { email: "facu@me.com", name: "Facundo Gomez", role: "User" },
+  { email: "sofi@me.com", name: "Sofia Martinez", role: "User" },
+];
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,33 +35,70 @@ export default function About() {
           platform provides a seamless experience tailored to your needs.
         </p>
         <p>
-          {/* TODO: do not show for users */}
-          By creating an account, you unlock the full potential of our service.
-          You will be able to manage your personal profile and interact around
-          the site.
+          Search and filter our listings to narrow down exactly what you're
+          looking for, browse our agents' profiles to see what each of them has
+          on the market, and bookmark anything that catches your eye so you can
+          come back to it later.
         </p>
-        <p>
-          Explore our diverse range of properties with ease. Our intuitive
-          search and filtering tools allow you to narrow down your choices,
-          ensuring you find exactly what you're looking for.
-        </p>
-        <p>
-          Connect with our dedicated agents who are here to guide you every step
-          of the way. Browse their profiles, view their current listings, and
-          reach out to them directly for expert advice and personalized
-          assistance.
-        </p>
-        <p>
-          Never lose track of a property that catches your eye. With our
-          bookmarking feature, you can save your favorite listings and revisit
-          them whenever you like, making your search more organized and
-          efficient.
-        </p>
-        <p>
-          We are excited to always share how many properties people could afford
-          for free!
-        </p>
-        <p className="mb-8 text-gray-600/84">
+
+        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-700/26 shadow-md">
+          <h2 className="text-xl font-semibold text-amber-950">
+            How to Log In Into Existing Accounts
+          </h2>
+          <p className="text-amber-900/84">
+            One can{" "}
+            <Link
+              to="/log-in?mode=login"
+              className="text-amber-700 font-semibold hover:underline"
+            >
+              log in
+            </Link>{" "}
+            with any of the accounts below.
+            <p>
+              The password for all of them is{" "}
+              <code className="px-1 py-0.5 rounded bg-amber-200/68 font-mono text-amber-950">
+                password123
+              </code>
+              .
+            </p>
+          </p>
+
+          <ul className="stack-2">
+            {demoAccounts.map(({ email, name, role }) => (
+              <li
+                key={email}
+                className="flex flex-wrap justify-between items-baseline gap-x-[1ch] gap-y-1
+                xs:px-3"
+              >
+                <div>
+                  <code className="px-1 rounded bg-amber-200/54 font-mono text-amber-950/72">
+                    {email}
+                  </code>
+                </div>
+                <div className="flex gap-x-[1ch]">
+                  <span className="text-amber-900/72 text-sm">{name}:</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded-full bg-amber-200/68
+                  text-xs font-semibold uppercase tracking-wide text-amber-900"
+                  >
+                    {role}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-amber-900/74 text-sm">
+            Agent accounts can manage their own listings and profile; user
+            accounts can bookmark properties and chat with agents.
+          </p>
+          <p className="text-amber-900/74 text-sm">
+            Everything resets to the original data once a day, so feel free to
+            change whatever you like.
+          </p>
+        </section>
+
+        <p className="mb-8 text-center text-gray-600/84">
           This is a demo project for{" "}
           <a
             href="http://francisco.is-a.dev/"

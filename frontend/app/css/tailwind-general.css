@@ -85,9 +85,7 @@
   .outside-link {
     color: theme(--color-blue-600);
 
-    &:hover {
-      text-decoration: underline solid 1px theme(--color-blue-600);
-    }
+    @apply hover:underline;
   }
 
   .details-card {
