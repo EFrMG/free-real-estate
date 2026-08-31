@@ -212,7 +212,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   } = property;
 
   const mapFallback = (
-    <div className="md:sticky md:top-[7.5vh] h-[35vh] w-[85%] md:w-[95%] md:mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+    <div className="md:sticky md:top-[7.5vh] h-[35dvh] w-[85%] md:w-[95%] md:mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
       <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
         Loading Map...
       </p>
@@ -244,7 +244,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             src={exteriorImage}
             alt={title}
             draggable="false"
-            className="property-img-outline w-full h-[35vh] mt-8 shadow-lg rounded-lg object-cover"
+            className="property-img-outline w-full h-[35dvh] mt-8 shadow-lg rounded-lg object-cover"
           />
         )}
 

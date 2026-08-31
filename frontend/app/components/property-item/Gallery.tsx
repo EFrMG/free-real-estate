@@ -67,7 +67,7 @@ export default function PropertyGallery({
 
   return (
     <div
-      className="relative w-full h-[35vh] mt-8 shadow-lg rounded-lg overflow-hidden
+      className="relative w-full h-[35dvh] mt-8 shadow-lg rounded-lg overflow-hidden
       [&_button]:absolute [&_button]:bg-amber-300/36 [&_button]:rounded-full
       [&_button]:p-3 [&_button]:backdrop-blur-sm [&_button]:hover:bg-amber-200/36
       [&_button]:transition-colors [&_button]:duration-150 [&_button]:shadow-md"
@@ -134,7 +134,7 @@ export default function PropertyGallery({
                   alt="Full size view"
                   draggable={false}
                   onClick={() => openCloseDialog(false)}
-                  className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg cursor-zoom-out shadow-2xl"
+                  className="max-w-[90vw] max-h-[90dvh] object-contain rounded-lg cursor-zoom-out shadow-2xl"
                 />
                 <button
                   onClick={() => openCloseDialog(false)}

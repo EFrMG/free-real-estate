@@ -101,7 +101,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
   }
 
   return (
-    <div className="h-full max-md:max-h-[52vh] stack-3">
+    <div className="h-full max-md:max-h-[52dvh] stack-3">
       {/* Who and what the conversation is about */}
       <div className="shrink-0 flex items-center gap-3">
         <img

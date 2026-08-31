@@ -14,7 +14,7 @@ export default function ChatList({
   onSelect,
 }: ChatListProps) {
   return (
-    <ul className="max-h-[24vh] overflow-y-auto stack-2 pr-1 md:overscroll-contain custom-scrollbar">
+    <ul className="max-h-[24dvh] overflow-y-auto stack-2 pr-1 md:overscroll-contain custom-scrollbar">
       {chats.map((chat) => {
         const isSelected = chat.id === selectedChatId;
 

@@ -9,7 +9,7 @@ export default function HeroRightSide() {
         src="/app/assets/images/hero.webp"
         alt="Hero image"
         draggable={false}
-        className="absolute top-12 right-4 max-md:right-2 max-w-none w-[120%] max-h-[85vh] h-[95%] object-contain"
+        className="absolute top-12 right-4 max-md:right-2 max-w-none w-[120%] max-h-[85dvh] h-[95%] object-contain"
       />
     </div>
   );

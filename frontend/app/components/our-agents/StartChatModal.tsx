@@ -97,7 +97,7 @@ export default function StartChatModal({
                         you like to ask about?
                       </p>
 
-                      <ul className="max-h-[38vh] overflow-y-auto stack-2 pr-1">
+                      <ul className="max-h-[38dvh] overflow-y-auto stack-2 pr-1">
                         {agentProperties.map((property) => {
                           const isSelected =
                             property.id === startChatForm.propertyId;
