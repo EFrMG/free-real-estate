@@ -68,18 +68,12 @@ export default function StartChatModal({
               exit={{ scale: 0.99, transition: { duration: 0.15 } }}
               className="relative z-10"
             >
-              <div
-                className="profile-modal-card"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  onClick={handleCloseDialog}
-                  className="profile-modal-cross"
-                >
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleCloseDialog} className="modal-cross">
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="profile-modal-title">Message {agent.name}</h2>
+                <h2 className="modal-title">Message {agent.name}</h2>
 
                 <fetcher.Form method="POST" className="stack-4">
                   <input type="hidden" name="intent" value="start-chat" />
@@ -91,9 +85,9 @@ export default function StartChatModal({
                   />
 
                   {fetcher.data?.error ? (
-                    <p className="mt-4 gen-form-error">{fetcher.data.error}</p>
+                    <p className="mt-4 form-error">{fetcher.data.error}</p>
                   ) : (
-                    <div className="mt-4 gen-form-message-space" />
+                    <div className="mt-4 form-message-space" />
                   )}
 
                   {agentProperties.length ? (
@@ -156,7 +150,7 @@ export default function StartChatModal({
                     <button
                       type="button"
                       onClick={handleCloseDialog}
-                      className="profile-modal-cancel-btn"
+                      className="modal-cancel-btn"
                     >
                       Cancel
                     </button>
@@ -165,7 +159,7 @@ export default function StartChatModal({
                       disabled={
                         !startChatForm.propertyId || fetcher.state !== "idle"
                       }
-                      className="profile-modal-accept-btn
+                      className="modal-accept-btn
                       disabled:opacity-75 disabled:cursor-not-allowed"
                     >
                       {fetcher.state === "idle" ? "Start Chat" : "Opening..."}

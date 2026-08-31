@@ -102,33 +102,30 @@ export default function ChangePasswordModal({
               exit={{ scale: 0.99, transition: { duration: 0.15 } }}
               className="relative z-10"
             >
-              <div
-                className="profile-modal-card"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => {
                     handleCloseDialog(e);
                     setFetcherKey(crypto.randomUUID());
                   }}
-                  className="profile-modal-cross"
+                  className="modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="profile-modal-title">Change Password</h2>
+                <h2 className="modal-title">Change Password</h2>
 
-                <fetcher.Form method="PUT" className="stack-4 gen-form-labels">
+                <fetcher.Form method="PUT" className="stack-4 form-label">
                   <input type="hidden" name="intent" value="password-change" />
 
                   {fetcher.data?.error ? (
-                    <p className="mt-4 gen-form-error">{fetcher.data.error}</p>
+                    <p className="mt-4 form-error">{fetcher.data.error}</p>
                   ) : fetcher.data?.success ? (
-                    <p className="mt-4 gen-form-success">
+                    <p className="mt-4 form-success">
                       Password updated successfully.
                     </p>
                   ) : (
-                    <div className="mt-4 gen-form-message-space" />
+                    <div className="mt-4 form-message-space" />
                   )}
 
                   {/* Current Password */}
@@ -139,7 +136,7 @@ export default function ChangePasswordModal({
                         id="current-password"
                         name="currentPassword"
                         type={passwordForm.showCurrent ? "text" : "password"}
-                        className="gen-input-forms w-full pr-10"
+                        className="input-form w-full pr-10"
                         placeholder="••••••••"
                         value={passwordForm.currentPassword}
                         onChange={(e) =>
@@ -156,7 +153,7 @@ export default function ChangePasswordModal({
                             showCurrent: !passwordForm.showCurrent,
                           })
                         }
-                        className="profile-modal-password-eye"
+                        className="modal-password-eye"
                       >
                         {passwordForm.showCurrent ? (
                           <GoEyeClosed size={18} />
@@ -175,7 +172,7 @@ export default function ChangePasswordModal({
                         id="new-password"
                         name="newPassword"
                         type={passwordForm.showNew ? "text" : "password"}
-                        className="gen-input-forms w-full pr-10"
+                        className="input-form w-full pr-10"
                         placeholder="••••••••"
                         value={passwordForm.newPassword}
                         onChange={(e) =>
@@ -189,7 +186,7 @@ export default function ChangePasswordModal({
                         onClick={() =>
                           updatePasswordForm({ showNew: !passwordForm.showNew })
                         }
-                        className="profile-modal-password-eye"
+                        className="modal-password-eye"
                       >
                         {passwordForm.showNew ? (
                           <GoEyeClosed size={18} />
@@ -210,7 +207,7 @@ export default function ChangePasswordModal({
                         id="confirm-password"
                         name="confirmPassword"
                         type={passwordForm.showConfirm ? "text" : "password"}
-                        className="gen-input-forms w-full pr-10"
+                        className="input-form w-full pr-10"
                         placeholder="••••••••"
                         value={passwordForm.confirmPassword}
                         onChange={(e) =>
@@ -228,7 +225,7 @@ export default function ChangePasswordModal({
                             showConfirm: !passwordForm.showConfirm,
                           })
                         }
-                        className="profile-modal-password-eye"
+                        className="modal-password-eye"
                       >
                         {passwordForm.showConfirm ? (
                           <GoEyeClosed size={18} />
@@ -245,11 +242,11 @@ export default function ChangePasswordModal({
                         handleCloseDialog(e);
                         setFetcherKey(crypto.randomUUID());
                       }}
-                      className="profile-modal-cancel-btn"
+                      className="modal-cancel-btn"
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="profile-modal-accept-btn">
+                    <button type="submit" className="modal-accept-btn">
                       Update Password
                     </button>
                   </fieldset>

@@ -83,33 +83,30 @@ export default function AgentPromotionModal({
               exit={{ scale: 0.99, transition: { duration: 0.15 } }}
               className="relative z-10"
             >
-              <div
-                className="profile-modal-card"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => {
                     handleCloseDialog(e);
                     setFetcherKey(crypto.randomUUID());
                   }}
-                  className="profile-modal-cross"
+                  className="modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="profile-modal-title">Become an Agent User</h2>
+                <h2 className="modal-title">Become an Agent User</h2>
 
-                <fetcher.Form method="PUT" className="stack-4 gen-form-labels">
+                <fetcher.Form method="PUT" className="stack-4 form-label">
                   <input type="hidden" name="intent" value="agent-promotion" />
 
                   {fetcher.data?.error ? (
-                    <p className="mt-4 gen-form-error">{fetcher.data.error}</p>
+                    <p className="mt-4 form-error">{fetcher.data.error}</p>
                   ) : fetcher.data?.success ? (
-                    <p className="mt-4 gen-form-success">
+                    <p className="mt-4 form-success">
                       You have been promoted successfully.
                     </p>
                   ) : (
-                    <div className="mt-4 gen-form-message-space" />
+                    <div className="mt-4 form-message-space" />
                   )}
 
                   {/* Current Password */}
@@ -119,7 +116,7 @@ export default function AgentPromotionModal({
                       id="license-number"
                       name="licenseNumber"
                       type="text"
-                      className="gen-input-forms w-full"
+                      className="input-form w-full"
                       placeholder="Your license number"
                       min={20}
                       value={agentPromotionForm.licenseNumber}
@@ -137,7 +134,7 @@ export default function AgentPromotionModal({
                       id="agency-password"
                       name="agencyPassword"
                       type="text"
-                      className="gen-input-forms w-full"
+                      className="input-form w-full"
                       placeholder="••••••••••••••••"
                       min={20}
                       value={agentPromotionForm.agencyPassword}
@@ -165,11 +162,11 @@ export default function AgentPromotionModal({
                         handleCloseDialog(e);
                         setFetcherKey(crypto.randomUUID());
                       }}
-                      className="profile-modal-cancel-btn"
+                      className="modal-cancel-btn"
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="profile-modal-accept-btn">
+                    <button type="submit" className="modal-accept-btn">
                       Require Promotion
                     </button>
                   </fieldset>

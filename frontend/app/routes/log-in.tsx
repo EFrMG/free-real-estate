@@ -138,13 +138,13 @@ const LogInForm = ({
       <p className="text-amber-900/74 mb-8">{paragraphText}</p>
       <fetcher.Form
         method="post"
-        className="stack-6 p-6 rounded-lg bg-amber-100/74 shadow-lg gen-form-labels"
+        className="stack-6 p-6 rounded-lg bg-amber-100/74 shadow-lg form-label"
       >
         {children}
       </fetcher.Form>
 
       {fetcher.data?.error && (
-        <p className="gen-form-error">{fetcher.data.error}</p>
+        <p className="form-error">{fetcher.data.error}</p>
       )}
     </motion.div>
   );
@@ -176,7 +176,7 @@ export default function LogIn() {
                     name="email"
                     type="email"
                     required
-                    className="gen-input-forms"
+                    className="input-form"
                     placeholder="you@example.comma"
                   />
                 </fieldset>
@@ -188,7 +188,7 @@ export default function LogIn() {
                     name="password"
                     type="password"
                     required
-                    className="gen-input-forms"
+                    className="input-form"
                     placeholder="••••••••"
                   />
                 </fieldset>
@@ -226,7 +226,7 @@ export default function LogIn() {
                       name="name"
                       type="text"
                       required
-                      className="gen-input-forms"
+                      className="input-form"
                       placeholder="Given Name"
                     />
                   </fieldset>
@@ -238,7 +238,7 @@ export default function LogIn() {
                       name="email"
                       type="email"
                       required
-                      className="gen-input-forms"
+                      className="input-form"
                       placeholder="you@example.comma"
                     />
                   </fieldset>
@@ -251,7 +251,7 @@ export default function LogIn() {
                       type="password"
                       required
                       minLength={8}
-                      className="gen-input-forms"
+                      className="input-form"
                       placeholder="••••••••"
                     />
                   </fieldset>

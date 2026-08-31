@@ -16,7 +16,7 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
       className="group stack-2 items-center w-full h-full max-lg:px-4 max-lg:py-6 p-6 rounded-xl
       bg-amber-100/28 hover:bg-amber-100/48 border border-amber-200/36
       shadow-md inset-shadow-sm hover:shadow-lg active:shadow-md
-      gen-btn-hovaction-xs transition-all"
+      btn-hovaction-xs transition-all"
     >
       <div className="relative">
         <img

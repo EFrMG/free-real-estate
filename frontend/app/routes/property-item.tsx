@@ -59,9 +59,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   let userPosterRes: Response | null = null;
 
   if (property.userId) {
-    userPosterRes = await fetch(
-      `${API_URL}/api/users/${property.userId}`,
-    );
+    userPosterRes = await fetch(`${API_URL}/api/users/${property.userId}`);
     if (userPosterRes.ok) {
       userPoster = await userPosterRes.json();
     }
@@ -311,7 +309,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                   (currentUserId === null ? (
                     <Link
                       to="/log-in"
-                      className="bg-amber-100/24 rounded-sm shadow-md gen-btn-border gen-btn-hovaction"
+                      className="bg-amber-100/24 rounded-sm shadow-md gen-btn-border btn-hovaction"
                     >
                       <GoCommentDiscussion
                         size={28}
@@ -329,7 +327,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                       />
                       <button
                         type="submit"
-                        className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                        className="bg-amber-100/24 gen-btn-border btn-hovaction"
                       >
                         <GoCommentDiscussion
                           size={28}
@@ -349,7 +347,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     />
                     <button
                       type="submit"
-                      className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                      className="bg-amber-100/24 gen-btn-border btn-hovaction"
                     >
                       <GoBookmarkSlash
                         size={28}
@@ -363,7 +361,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     <input type="hidden" name="intent" value="bookmark" />
                     <button
                       type="submit"
-                      className="bg-amber-100/24 gen-btn-border gen-btn-hovaction"
+                      className="bg-amber-100/24 gen-btn-border btn-hovaction"
                     >
                       <GoBookmark
                         size={28}

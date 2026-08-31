@@ -1,0 +1,28 @@
+@layer components {
+  .modal-card {
+    @apply relative w-[92vw] max-w-md p-6 bg-amber-50 rounded-xl shadow-2xl;
+  }
+
+  .modal-cross {
+    @apply absolute top-3 right-3 p-2 rounded-lg bg-amber-200/64 hover:bg-amber-200/48 transition-colors;
+  }
+
+  .modal-title {
+    @apply ml-2 text-xl font-semibold text-amber-950;
+  }
+
+  .modal-cancel-btn {
+    @apply px-4 py-2 text-amber-800 rounded-md
+  hover:bg-amber-200/64 transition-colors duration-150;
+  }
+
+  .modal-accept-btn {
+    @apply px-5 py-2 bg-amber-600/94
+  text-white font-medium rounded-md shadow-md
+  hover:bg-amber-700/94 transition-colors duration-150;
+  }
+
+  .modal-password-eye {
+    @apply absolute right-2 top-1/2 -translate-y-1/2 p-1 text-amber-700/84 hover:text-amber-800 transition-colors;
+  }
+}

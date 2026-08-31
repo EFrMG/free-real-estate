@@ -27,7 +27,7 @@ export default function Contact() {
           action=""
           onSubmit={(e) => e.preventDefault()}
           className="stack-6 max-w-lg mx-auto mb-24 p-6 rounded-lg bg-amber-100/74 shadow-lg
-          gen-form-labels"
+          form-label"
         >
           <fieldset>
             <label htmlFor="email">Your Email:</label>
@@ -35,7 +35,7 @@ export default function Contact() {
               id="email"
               name="email"
               type="email"
-              className="mx-2 gen-input-forms"
+              className="mx-2 input-form"
             />
           </fieldset>
           <fieldset>
@@ -43,7 +43,7 @@ export default function Contact() {
             <textarea
               id="message"
               name="message"
-              className="mx-2 max-h-[10lh] gen-input-forms"
+              className="mx-2 max-h-[10lh] input-form"
             ></textarea>
           </fieldset>
 
@@ -75,7 +75,7 @@ export default function Contact() {
           <button
             type="submit"
             className="ml-auto px-4 py-2 bg-amber-200/36 gen-btn-border rounded-md
-            text-amber-900 font-medium shadow-md gen-btn-hovaction-sm"
+            text-amber-900 font-medium shadow-md btn-hovaction-sm"
           >
             Submit Form
           </button>

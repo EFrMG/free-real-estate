@@ -94,18 +94,15 @@ export default function EditProfileModal({
               exit={{ scale: 0.99, transition: { duration: 0.15 } }}
               className="relative z-10"
             >
-              <div
-                className="profile-modal-card"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => handleCloseDialog(e)}
-                  className="profile-modal-cross"
+                  className="modal-cross"
                 >
                   <GoX size={20} className="text-amber-800" />
                 </button>
 
-                <h2 className="profile-modal-title">Edit Profile</h2>
+                <h2 className="modal-title">Edit Profile</h2>
 
                 <fetcher.Form
                   method="PUT"
@@ -150,7 +147,7 @@ export default function EditProfileModal({
                   </fieldset>
 
                   {/* Name input */}
-                  <fieldset className="stack-0 gen-form-labels">
+                  <fieldset className="stack-0 form-label">
                     <label htmlFor="edit-name">Display Name</label>
                     <input
                       id="edit-name"
@@ -160,13 +157,13 @@ export default function EditProfileModal({
                       onChange={(e) =>
                         updateProfileState({ name: e.target.value })
                       }
-                      className="gen-input-forms"
+                      className="input-form"
                     />
                   </fieldset>
 
                   {user.role === "agent" && (
                     <>
-                      <fieldset className="stack-0 gen-form-labels">
+                      <fieldset className="stack-0 form-label">
                         <label htmlFor="edit-phone-number">Phone Number:</label>
                         <input
                           id="edit-phone-number"
@@ -176,11 +173,11 @@ export default function EditProfileModal({
                           onChange={(e) =>
                             updateProfileState({ phoneNumber: e.target.value })
                           }
-                          className="gen-input-forms"
+                          className="input-form"
                         />
                       </fieldset>
 
-                      <fieldset className="stack-0 gen-form-labels">
+                      <fieldset className="stack-0 form-label">
                         <label htmlFor="edit-biography">Biography</label>
                         <textarea
                           id="edit-biography"
@@ -189,7 +186,7 @@ export default function EditProfileModal({
                           onChange={(e) =>
                             updateProfileState({ biography: e.target.value })
                           }
-                          className="gen-input-forms max-h-[8lh]"
+                          className="input-form max-h-[8lh]"
                         />
                       </fieldset>
                     </>
@@ -199,11 +196,11 @@ export default function EditProfileModal({
                     <button
                       type="button"
                       onClick={(e) => handleCloseDialog(e)}
-                      className="profile-modal-cancel-btn"
+                      className="modal-cancel-btn"
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="profile-modal-accept-btn">
+                    <button type="submit" className="modal-accept-btn">
                       Save Changes
                     </button>
                   </fieldset>

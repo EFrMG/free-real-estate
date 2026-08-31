@@ -170,7 +170,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
             autoComplete="off"
             placeholder="Type a message..."
             aria-label={`Message ${thread.otherUser.name}`}
-            className="gen-input-forms grow min-w-0 py-2!"
+            className="input-form grow min-w-0 py-2!"
           />
           <button
             type="submit"
@@ -186,7 +186,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
       </sendFetcher.Form>
 
       {sendFetcher.data?.error && (
-        <p className="gen-form-error">{sendFetcher.data.error}</p>
+        <p className="form-error">{sendFetcher.data.error}</p>
       )}
     </div>
   );

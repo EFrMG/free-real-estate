@@ -41,7 +41,7 @@ export default function About() {
           come back to it later.
         </p>
 
-        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-700/26 shadow-md">
+        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-400/26 shadow-md">
           <h2 className="text-xl font-semibold text-amber-950">
             How to Log In Into Existing Accounts
           </h2>

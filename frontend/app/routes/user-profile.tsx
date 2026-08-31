@@ -76,7 +76,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   const userProperties = await userPropertiesRes.json();
 
   // Bookmarks degrade to an empty list rather than taking the whole profile down
-  const userBookmarks = userBookmarksRes.ok ? await userBookmarksRes.json() : [];
+  const userBookmarks = userBookmarksRes.ok
+    ? await userBookmarksRes.json()
+    : [];
 
   // Chats degrade to an empty panel rather than taking the whole profile down
   const userChats: ChatSummary[] = userChatsRes.ok
@@ -116,20 +118,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
     if (newPassword !== confirmPassword)
       return { error: "New passwords must match!" };
 
-    const response = await fetch(
-      `${API_URL}/api/users/${params.id}/password`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: request.headers.get("Cookie") ?? "",
-        },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
+    const response = await fetch(`${API_URL}/api/users/${params.id}/password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: request.headers.get("Cookie") ?? "",
       },
-    );
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+      }),
+    });
 
     const result = await response.json();
 
@@ -148,16 +147,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
       fetcherData.delete("profilePicture");
     }
 
-    const response = await fetch(
-      `${API_URL}/api/users/${params.id}`,
-      {
-        headers: {
-          Cookie: request.headers.get("Cookie") ?? "",
-        },
-        method: "PUT",
-        body: fetcherData,
+    const response = await fetch(`${API_URL}/api/users/${params.id}`, {
+      headers: {
+        Cookie: request.headers.get("Cookie") ?? "",
       },
-    );
+      method: "PUT",
+      body: fetcherData,
+    });
 
     const result = await response.json();
 
@@ -177,20 +173,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
     if (!licenseNumber.length)
       return { error: "You must include your full license number." };
 
-    const response = await fetch(
-      `${API_URL}/api/users/${params.id}/promote`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: request.headers.get("Cookie") ?? "",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          licenseNumber,
-          agencyPassword,
-        }),
+    const response = await fetch(`${API_URL}/api/users/${params.id}/promote`, {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: request.headers.get("Cookie") ?? "",
       },
-    );
+      method: "POST",
+      body: JSON.stringify({
+        licenseNumber,
+        agencyPassword,
+      }),
+    });
 
     const result = await response.json();
 
@@ -206,17 +199,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
     const chatId = fetcherData.get("chatId") as string;
     const text = fetcherData.get("text") as string;
 
-    const response = await fetch(
-      `${API_URL}/api/chats/${chatId}/messages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: request.headers.get("Cookie") ?? "",
-        },
-        body: JSON.stringify({ text }),
+    const response = await fetch(`${API_URL}/api/chats/${chatId}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: request.headers.get("Cookie") ?? "",
       },
-    );
+      body: JSON.stringify({ text }),
+    });
 
     if (!response.ok) {
       return { error: "Failed to send your message. Please, try again." };
@@ -228,13 +218,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (intent === "mark-read") {
     const chatId = fetcherData.get("chatId") as string;
 
-    const response = await fetch(
-      `${API_URL}/api/chats/${chatId}/read`,
-      {
-        method: "POST",
-        headers: { Cookie: request.headers.get("Cookie") ?? "" },
-      },
-    );
+    const response = await fetch(`${API_URL}/api/chats/${chatId}/read`, {
+      method: "POST",
+      headers: { Cookie: request.headers.get("Cookie") ?? "" },
+    });
 
     return data(
       { success: response.ok },
@@ -409,7 +396,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       className="py-1.5 px-2 text-sm text-amber-700/84 rounded-sm bg-amber-200/36 shadow-sm
                     outline outline-amber-300/18 hover:outline-rose-500/12
                     hover:text-rose-700/84 hover:bg-rose-200/24 active:bg-rose-300/30
-                    gen-btn-hovaction transition-all duration-300"
+                    btn-hovaction transition-all duration-300"
                     >
                       Log Out
                     </button>
@@ -418,7 +405,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   <button
                     onClick={() => setChangePasswordOpen(true)}
                     className="px-4 py-2 text-sm font-medium text-amber-800
-                  bg-amber-200/36 rounded-sm shadow-sm gen-btn-border gen-btn-hovaction-sm"
+                  bg-amber-200/36 rounded-sm shadow-sm gen-btn-border btn-hovaction-sm"
                   >
                     Change Password
                   </button>

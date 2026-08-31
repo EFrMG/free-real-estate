@@ -4,6 +4,10 @@
 @import "./css/tailwind-theme.css";
 @import "./css/tailwind-general.css";
 
+@import "./css/contact.css";
+@import "./css/modals.css";
+@import "./css/forms.css";
+
 @import "./css/typefaces.css";
 @import "./css/leaflet-overrides.css";
 @import "./css/scrollbars.css";

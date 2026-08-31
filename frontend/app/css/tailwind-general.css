@@ -1,5 +1,4 @@
 @layer base {
-  /* Elements */
   ::selection {
     background-color: hsl(from var(--color-lime-300) h s l / 0.38);
     color: var(--color-slate-500);
@@ -14,6 +13,7 @@
   }
 }
 
+/* Variants and utilities */
 @custom-variant hocus {
   &:hover,
   &:focus {
@@ -26,7 +26,7 @@
 }
 
 @utility opacity-lesser {
-  opacity: 0.62;
+  opacity: 0.6;
 }
 
 @utility stack {
@@ -45,19 +45,20 @@
   @apply border border-amber-200/48;
 }
 
-@utility gen-btn-hovaction {
+@utility btn-hovaction {
   @apply hover:scale-110 active:scale-100 transition-transform duration-150;
 }
 
-@utility gen-btn-hovaction-sm {
+@utility btn-hovaction-sm {
   @apply hover:scale-105 active:scale-100 transition-transform duration-150;
 }
 
-@utility gen-btn-hovaction-xs {
+@utility btn-hovaction-xs {
   @apply hover:scale-102 active:scale-100 transition-transform duration-150;
 }
 
 @layer components {
+  /* Layout primitives */
   .gen-main {
     @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 z-5 grow;
   }
@@ -66,12 +67,26 @@
     @apply my-auto md:mr-[18.5%] md:pl-6;
   }
 
-  .filter-input-group {
-    @apply stack-0 justify-around px-1 rounded-lg shadow-md shadow-slate-100 border-2 border-amber-500;
+  .gen-left-column {
+    @apply p-2 sm:p-4 md:p-6 stack-12;
   }
 
-  .property-img-outline {
-    @apply outline-2 outline-slate-500/12;
+  /* Buttons and links */
+  .sign-in-btn {
+    @apply w-full mt-4 px-2 py-3 bg-amber-600/94
+    hover:bg-amber-700/94 transition-colors duration-150
+    rounded-md text-slate-50 font-medium shadow-md
+    disabled:opacity-75 disabled:cursor-none;
+  }
+
+  .profile-pencil-btn {
+    @apply p-2 bg-amber-600/94 text-slate-50 rounded-full shadow-lg hover:bg-amber-700/94 transition-colors duration-300;
+  }
+
+  .panel-action {
+    @apply flex items-center justify-center gap-[1ch]
+    w-full px-3 py-2.5 text-sm font-medium rounded-lg shadow-sm
+    gen-btn-border btn-hovaction-xs transition-all;
   }
 
   .outside-link {
@@ -80,131 +95,35 @@
     @apply hover:underline;
   }
 
-  .details-card {
-    @apply border border-amber-700/26 rounded-lg bg-amber-100/28 shadow-md overflow-hidden transition-all duration-300;
-  }
+  /* Route-scoped one-offs */
 
-  .details-content {
-    @apply h-0 px-4 pt-0 pb-0 text-amber-950/80 leading-relaxed;
-  }
-
-  .details-card[open] .details-content {
-    @apply h-auto pt-2 pb-4;
-    animation: details-show 450ms ease-out;
-    transition: height 300ms ease-out;
-
-    @starting-style {
-      @apply h-0 pt-0 pb-0;
-    }
-  }
-
-  .details-summary {
-    @apply list-none cursor-pointer px-4 py-3 font-semibold text-amber-900 flex justify-between items-center select-none hover:bg-amber-200/22 transition-colors;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-  }
-
-  .details-icon {
-    @apply text-2xl transition-transform duration-300 group-open:rotate-90;
-  }
-
-  .gen-form-labels {
-    @apply [&_fieldset]:stack-0 [&_label]:text-lg [&_label]:font-medium [&_label]:text-amber-900;
-  }
-
-  .gen-input-forms {
-    @apply px-3 py-3 bg-white/42 border-b border-amber-950/36 rounded-md shadow-sm inset-shadow-xs;
-  }
-
+  /* log-in */
   .sign-in-wrapper {
     @apply stack-0 justify-center px-4 sm:px-8 md:px-12;
   }
 
-  .sign-in-btn {
-    @apply w-full mt-4 px-2 py-3 bg-amber-600/94
-    hover:bg-amber-700/94 transition-colors duration-150
-    rounded-md text-slate-50 font-medium shadow-md
-    disabled:opacity-75 disabled:cursor-none;
+  /* properties/FilterInput */
+  .filter-input-group {
+    @apply stack-0 justify-around px-1 rounded-lg shadow-md shadow-slate-100 border-2 border-amber-500;
   }
 
-  .profile-modal-cancel-btn {
-    @apply px-4 py-2 text-amber-800 rounded-md
-    hover:bg-amber-200/68 transition-colors duration-150;
+  /* property-item */
+  .property-img-outline {
+    @apply outline-2 outline-slate-500/12;
   }
 
-  .profile-modal-accept-btn {
-    @apply px-5 py-2 bg-amber-600/94
-    text-white font-medium rounded-md shadow-md
-    hover:bg-amber-700/94 transition-colors duration-150;
-  }
-
-  .profile-pencil-btn {
-    @apply p-2 bg-amber-600/94 text-slate-50 rounded-full shadow-lg hover:bg-amber-700/94 transition-colors duration-300;
-  }
-
+  /* user-profile */
   .profile-picture-big {
-    @apply w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-lg border-3 border-amber-50/82 outline-2 outline-amber-300/64;
+    @apply w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-lg border-3 border-amber-50/84 outline-2 outline-amber-300/64;
   }
 
-  .profile-modal-card {
-    @apply relative w-[92vw] max-w-md p-6 bg-amber-50 rounded-xl shadow-2xl;
-  }
-
-  .profile-modal-cross {
-    @apply absolute top-3 right-3 p-2 rounded-lg bg-amber-200/68 hover:bg-amber-200/44 transition-colors;
-  }
-
-  .profile-modal-title {
-    @apply ml-2 text-xl font-semibold text-amber-950;
-  }
-
-  .profile-modal-password-eye {
-    @apply absolute right-2 top-1/2 -translate-y-1/2 p-1 text-amber-700/88 hover:text-amber-800 transition-colors;
-  }
-
-  .profile-bookmarks--properties {
-    @apply max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4;
-  }
-
-  .gen-form-error {
-    @apply p-3 bg-rose-100 border border-rose-200/64 text-rose-600 text-sm rounded-md;
-  }
-
-  .gen-form-success {
-    @apply p-3 bg-emerald-100 border border-emerald-200/48 text-emerald-600 text-sm rounded-md;
-  }
-
-  .gen-form-message-space {
-    @apply text-sm h-[calc(var(--spacing)*6+1lh+2px)];
-  }
-
-  .gen-left-column {
-    @apply p-2 sm:p-4 md:p-6 stack-12;
-  }
-
-  .panel-action {
-    @apply flex items-center justify-center gap-[1ch]
-    w-full px-3 py-2.5 text-sm font-medium rounded-lg shadow-sm
-    gen-btn-border gen-btn-hovaction-xs transition-all;
-  }
-
+  /* user-profile/ChatPanel */
   .chat-card {
     @apply pl-5 pr-6 py-5 bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md border border-amber-200/40;
   }
 
-  @keyframes details-show {
-    0% {
-      opacity: 0;
-      transform: translateY(-1rem);
-    }
-    33% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* our-agents + user-profile bookmark grids */
+  .profile-bookmarks--properties {
+    @apply max-xl:stack-4 xl:grid xl:grid-cols-2 xl:gap-4;
   }
 }
