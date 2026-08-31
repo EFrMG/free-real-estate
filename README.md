@@ -139,7 +139,6 @@ Chats are kept fresh by re-running the active loaders on an interval (see [usePo
 
 </details>
 
-
 ### 1.2 Backends
 
 #### 1.2.1 Drizzle
@@ -196,10 +195,10 @@ A central package containing the database schema and TypeScript types, ensuring 
 
 ## 2. Running the Project
 
-As of now, one could clone the repository and add a `.env` file at `/backends/node-drizzle/` with the following:
+Begin by using the `.env.example` template:
 
-```
-DB_FILE_NAME=file:local.db
+```bash
+cp ./backends/node-drizzle/.env.example ./backends/node-drizzle/.env
 ```
 
 Then run:

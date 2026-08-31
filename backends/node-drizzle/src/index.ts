@@ -32,6 +32,9 @@ import {
   chatParticipants,
   messages,
 } from "./db/schema.ts";
+import { runMigrations } from "./db/migrate.ts";
+import { seedDatabase } from "./db/seed.ts";
+import { scheduleAutoReset } from "./db/reset.ts";
 
 import {
   type UserSession,
@@ -44,6 +47,7 @@ import {
 
 import selectUserChats from "./utils/selectUserChats.ts";
 import toChatSummary from "./utils/toChatSummary.ts";
+import { requireEnv } from "./utils/requireEnv.ts";
 
 import type {
   AgentProfileData,
@@ -66,13 +70,22 @@ app.get("/", (c) => {
 const api = app.basePath("/api");
 
 // Enable CORS for the frontend
+// Credentialed cross-origin requests can't use a wildcard origin
+// In production, this must be pinned to the deployed frontend's exact origin
+// Locally, with FRONTEND_URL unset, the request's own Origin header is reflected back
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
 api.use(
   "/*",
   cors({
+    origin: FRONTEND_URL ?? ((origin) => origin),
     credentials: true,
-    /* TODO: Add specific route if hosted.
-      When developing, ports might change so we let Hono decide it for the headers */
   }),
+);
+
+const AGENT_PROMOTION_CODE = requireEnv(
+  "AGENT_PROMOTION_CODE",
+  "agent-code--change-in-prod",
 );
 
 // Properties --.
@@ -468,10 +481,8 @@ api.post("/users/:id/promote", requireAuth, async (c) => {
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
   const { agencyPassword, licenseNumber } = await c.req.json();
-  const secret =
-    process.env.AGENT_PROMOTION_CODE ?? "agent-code--change-in-prod";
 
-  if (agencyPassword !== secret)
+  if (agencyPassword !== AGENT_PROMOTION_CODE)
     return c.json({ error: "Invalid promotion password!" }, 401);
 
   // Update role to agent
@@ -792,11 +803,32 @@ api.post("/chats/:id/read", requireAuth, async (c) => {
 //   return c.json(result);
 // });
 
-const port = 3000;
+// Most PaaS providers assign the port dynamically via $PORT
+const port = Number(process.env.PORT) || 3000;
 
-serve({
-  fetch: app.fetch,
-  port,
+async function main() {
+  // Bring the schema up to date before anything touches the database
+  await runMigrations();
+
+  // First boot against an empty database (fresh volume, fresh deploy) loading the default demo data once so the app isn't empty until the next scheduled reset
+  const existingUser = await db.select().from(users).limit(1).get();
+  if (!existingUser) {
+    console.log("No data found, running the initial seed...");
+    await seedDatabase();
+  }
+
+  // Wipe back to the default demo data once a day
+  scheduleAutoReset();
+
+  serve({
+    fetch: app.fetch,
+    port,
+  });
+
+  console.log(`Server is now running on: http://localhost:${port}`);
+}
+
+main().catch((error) => {
+  console.error("Failed to start server:", error);
+  process.exit(1);
 });
-
-console.log(`Server is now running on: http://localhost:${port}`);

@@ -8,8 +8,9 @@ import { eq } from "drizzle-orm";
 
 import { db } from "./db/index.ts";
 import { refreshTokens, users } from "./db/schema.ts";
+import { requireEnv } from "./utils/requireEnv.ts";
 
-const JWT_KEY = process.env.JWT_KEY ?? "dev-secret--change-in-prod";
+const JWT_KEY = requireEnv("JWT_KEY", "dev-secret--change-in-prod");
 const SESSION_COOKIE = "session";
 const REFRESH_COOKIE = "refresh";
 const JWT_EXPIRY_SECONDS = 60 * 60; // 1 hour
