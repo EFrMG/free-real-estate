@@ -114,8 +114,11 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
       [&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2
       [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
     >
-      <h1 className="mt-6 mb-8 text-center text-2xl text-amber-900">
-        Search Results for <b>{propertyFilters.location || "all locations"}</b>
+      <h1 className="page-title md:mt-12 text-center font-medium">
+        Search Results for{" "}
+        <span className="font-bold">
+          {propertyFilters.location || "all locations"}
+        </span>
       </h1>
 
       <form onSubmit={(e) => handleSearch(e)}>

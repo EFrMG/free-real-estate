@@ -415,19 +415,19 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   border border-amber-200/60 space-y-3
                   [&_div]:flex [&_div]:justify-between [&_div]:items-center
                   [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
-                  [&_h2]:font-semibold [&_h2]:text-amber-950
+                  [&_span]:font-semibold [&_span]:text-amber-950
                   [&_p]:ml-8 [&_p]:text-amber-950/94"
                 >
                   <div>
-                    <h2>License number:</h2>
+                    <span>License number:</span>
                     <p>{user.licenseNumber}</p>
                   </div>
                   <div>
-                    <h2>Telephone number:</h2>
+                    <span>Telephone number:</span>
                     <p>{user.phoneNumber}</p>
                   </div>
                   <div>
-                    <h2>Biography:</h2>
+                    <span>Biography:</span>
                     <p className="text-amber-950/74!">{user.biography}</p>
                   </div>
                 </div>

@@ -377,7 +377,9 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           </div>
 
           <div className="h-fit my-auto p-4 bg-amber-100/28 rounded-lg shadow-md inset-shadow-xs">
-            <h3 className="mb-2 text-center font-semibold text-lg">Details</h3>
+            <h3 className="mb-2 text-center font-bold text-lg text-amber-900/84">
+              Details
+            </h3>
             <div
               className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&_p]:items-center
               [&>p]:border-b [&>p]:border-amber-300/74"
@@ -436,7 +438,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           </div>
           {sizes && sizes.length > 0 && (
             <div className="mt-4 md:mt-8 mx-6 mb-4">
-              <h3 className="mb-2 text-lg font-bold">Room Sizes:</h3>
+              <h3 className="mb-2 text-lg font-medium">Room Sizes:</h3>
               <div className="flex gap-x-4 gap-y-2 flex-wrap pb-4">
                 {sizes.map((size, idx) => (
                   <span
@@ -451,7 +453,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           )}
           {nearbyPlaces && Object.keys(nearbyPlaces).length > 0 && (
             <div className="mt-4 md:mt-8 mx-6 mb-4">
-              <h3 className="mb-2 text-lg font-bold">Nearby Places:</h3>
+              <h3 className="mb-2 text-lg font-medium">Nearby Places:</h3>
               <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
                 {Object.entries(nearbyPlaces).map(([place, distance]) => (
                   <div
