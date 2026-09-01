@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useRouteLoaderData } from "react-router";
 
 import getAssetUrl from "~/utils/getAssetUrl";
@@ -45,19 +45,24 @@ function UserLink({
   isBurger,
   user,
   unreadSenders,
+  onNavigate,
 }: {
   isBurger: boolean;
   user: any;
   unreadSenders: number;
+  onNavigate?: () => void;
 }) {
   return (
     <Link
       to={`/user-profile/${user.id}`}
+      onClick={onNavigate}
       className={isBurger ? "sm:hidden" : "hidden sm:inline-block"}
     >
       <div className="flex items-center gap-2">
-        <span className="text-center line-clamp-1">{user.name}</span>
-        <div className="relative">
+        <span className="min-w-0 max-w-[16ch] text-center font-normal line-clamp-1">
+          {user.name}
+        </span>
+        <div className="relative shrink-0">
           <img
             src={getAssetUrl(user.profilePicture)}
             alt=""
@@ -90,6 +95,19 @@ export default function Header() {
   const isUser = !!user;
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+  const closeBurger = () => setIsBurgerOpen(false);
+
+  // Lock the page underneath while the burger panel is open, on top of its own scroll
+  useEffect(() => {
+    if (!isBurgerOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isBurgerOpen]);
 
   return (
     <header className="max-sm:bg-amber-100 relative z-50 grid grid-cols-[65%_35%] md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
@@ -147,7 +165,11 @@ export default function Header() {
         {/* Burger menu */}
         <button
           onClick={() => setIsBurgerOpen(!isBurgerOpen)}
-          className="hidden max-sm:block mr-2 z-50"
+          aria-expanded={isBurgerOpen}
+          aria-controls="burger-nav"
+          aria-label={isBurgerOpen ? "Close menu" : "Open menu"}
+          className={`hidden max-sm:block mr-2 z-50
+          ${isBurgerOpen && "fixed"}`}
         >
           <RiMenuUnfold4Fill
             size={38}
@@ -155,16 +177,30 @@ export default function Header() {
             className="transition-colors delay-250 duration-250"
           />
         </button>
+
+        {/* Backdrop */}
+        <div
+          onClick={closeBurger}
+          aria-hidden="true"
+          className={`fixed inset-0 bg-black/28 sm:hidden z-30
+          transition-opacity duration-500 ease-out-swift
+          ${isBurgerOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        />
+
         <nav
+          id="burger-nav"
+          inert={!isBurgerOpen}
           className={`fixed top-0 right-0 bottom-0
           bg-amber-500 text-white sm:hidden z-40
           transition-transform duration-500 ease-out-swift
           ${!isBurgerOpen ? "translate-x-full" : "translate-x-0"}`}
         >
-          <ul className="stack-6 pt-24 px-12 text-lg">
+          <ul className="stack-6 pt-24 px-12 text-lg font-medium">
             {headerLinks.map((link: NavLinks) => (
               <li key={`nav-link-${link.key}`}>
-                <Link to={`/${link.key}`}>{link.name}</Link>
+                <Link to={`/${link.key}`} onClick={closeBurger}>
+                  {link.name}
+                </Link>
               </li>
             ))}
 
@@ -173,10 +209,11 @@ export default function Header() {
                 isBurger={true}
                 user={user}
                 unreadSenders={unreadSenders}
+                onNavigate={closeBurger}
               />
             ) : (
               signingLinks.map((link: NavLinks) => (
-                <Link key={link.key} to={`/${link.key}`}>
+                <Link key={link.key} to={`/${link.key}`} onClick={closeBurger}>
                   {link.name}
                 </Link>
               ))

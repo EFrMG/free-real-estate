@@ -34,12 +34,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <h1 className="page-title text-3xl">
           Find the place of your dreams at unmatched discounts
         </h1>
-        <p className="text-lg text-gray-800/84">
+        <p className="max-md:p-1 max-md:rounded-md max-md:bg-amber-100/40 text-lg text-gray-800/84">
           Aquiring a place to live the joy of life should not be as expensive as
           life is in the end. We provide the best places at a price that might
           as well not be real.
         </p>
-        <h2 className="text-xl text-end text-amber-800">
+        <h2 className="w-fit ml-auto max-md:mr-4 max-md:p-1 max-md:rounded-md max-md:bg-amber-100/36 text-xl text-amber-800">
           Get your deal today!
         </h2>
 
