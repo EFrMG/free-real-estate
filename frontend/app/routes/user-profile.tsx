@@ -484,7 +484,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Right column */}
-        <div className="md:h-full md:bg-amber-100 max-md:mt-4 md:p-6">
+        <div className="md:h-full max-sm:mx-2 max-md:mx-4 max-md:mt-4 md:p-6 md:bg-amber-100">
           <ChatPanel
             chats={userChats}
             thread={chatThread}

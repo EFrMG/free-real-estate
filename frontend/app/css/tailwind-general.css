@@ -60,7 +60,7 @@
 @layer components {
   /* Layout primitives */
   .gen-main {
-    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 max-md:mt-6 z-5 grow;
+    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 max-md:my-6 z-5 grow;
   }
 
   /* The md:pb-12 on both column classes is what gives every route the same gap above the viewport edge
