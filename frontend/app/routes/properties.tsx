@@ -17,9 +17,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   // Fetch properties with search param filters and cities for datalist element
   const [propertiesRes, citiesRes] = await Promise.all([
-    fetch(
-      `${API_URL}/api/properties${searchParams && `?${searchParams}`}`,
-    ),
+    fetch(`${API_URL}/api/properties${searchParams && `?${searchParams}`}`),
     fetch(API_URL + "/api/cities"),
   ]);
 
@@ -47,7 +45,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
   const { properties, cities } = loaderData;
 
   const mapFallback = (
-    <div className="md:sticky md:top-[7.5vh] h-[35dvh] md:h-[85dvh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
+    <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
       <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
         Loading Map...
       </p>

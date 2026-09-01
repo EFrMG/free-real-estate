@@ -45,7 +45,7 @@ export default function Map({
 }: MapProps) {
   return (
     <div
-      className={`md:sticky md:top-[7.5vh] h-[35dvh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
+      className={`md:sticky md:top-[7.5vh] h-[35vh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
     >
       <MapContainer
         center={[
