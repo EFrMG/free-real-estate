@@ -141,7 +141,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (intent === "profile-change") {
     const profilePicture = fetcherData.get("profilePicture");
-    if (profilePicture instanceof File && profilePicture.size === 0) {
+    if (
+      (profilePicture instanceof File && profilePicture.size === 0) ||
+      profilePicture === ""
+    ) {
       fetcherData.delete("profilePicture");
     }
 
@@ -153,12 +156,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
       body: fetcherData,
     });
 
-    const result = await response.json();
+    const result = response.ok ? await response.json() : null;
 
     if (!response.ok)
       return {
         error:
-          result.error || "Failed to update your profile. Please, try again.",
+          result?.error || "Failed to update your profile. Please, try again.",
       };
 
     return data(result, { headers: forwardCookies(response) });

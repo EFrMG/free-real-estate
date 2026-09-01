@@ -387,12 +387,11 @@ api.put("/users/:id", requireAuth, async (c) => {
     const extension = file.type.split("/")[1];
     const fileName = `${id}-${Date.now()}.${extension}`;
 
-    const filePath = path.join(
-      "public",
-      "uploads",
-      "profile-pictures",
-      fileName,
-    );
+    const uploadDir = path.join("public", "uploads", "profile-pictures");
+    const filePath = path.join(uploadDir, fileName);
+
+    // The upload directory does not exist until the first upload ever happens
+    await fs.mkdir(uploadDir, { recursive: true });
 
     const arrayBuffer = await file.arrayBuffer();
 
@@ -400,10 +399,8 @@ api.put("/users/:id", requireAuth, async (c) => {
 
     userUpdates["profilePicture"] =
       `/public/uploads/profile-pictures/${fileName}`;
-  } else if (
-    typeof profilePicture === "string" &&
-    profilePicture !== undefined
-  ) {
+  } else if (typeof profilePicture === "string" && profilePicture !== "") {
+    // An empty string is never an intentional 'clear' request from this UI
     userUpdates["profilePicture"] = profilePicture;
   }
 
