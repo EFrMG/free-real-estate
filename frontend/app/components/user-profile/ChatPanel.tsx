@@ -45,7 +45,7 @@ export default function ChatPanel({
 
   if (!chats.length) {
     return (
-      <div className="md:sticky md:top-[7.5vh] md:h-full max-h-[30dvh] flex flex-col chat-card">
+      <div className="md:sticky md:top-[7.5vh] md:h-full md:max-h-[30dvh] flex flex-col chat-card">
         <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
           <span className="text-amber-700">
             <GoComment size={24} />
@@ -76,7 +76,7 @@ export default function ChatPanel({
   }
 
   return (
-    <div className="md:sticky md:top-[7.5vh] md:h-full max-h-[88dvh] flex flex-col gap-4">
+    <div className="md:sticky md:top-[7.5vh] md:h-full md:max-h-[88dvh] flex flex-col gap-4">
       <div className="shrink-0 chat-card">
         <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
           <span className="text-amber-700">

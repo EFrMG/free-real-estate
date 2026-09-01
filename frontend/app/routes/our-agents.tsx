@@ -260,7 +260,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Right column */}
-        <div className="max-md:order-0 max-md:mt-4 md:p-6 md:bg-amber-100">
+        <div className="max-md:order-0 md:p-6 md:bg-amber-100">
           <AgentDetailPanel
             isLoading={isLoading}
             agent={agent}
