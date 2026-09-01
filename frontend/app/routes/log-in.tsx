@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import HeroRightSide from "~/components/HeroRightSide";
 import forwardCookies from "~/utils/forwardCookies";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 interface ActionData {
   error?: string;
@@ -19,15 +20,12 @@ interface LogInFormProps {
   paragraphText: string;
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Log In / Sign Up | Free Real Estate" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "Log In / Sign Up | Free Real Estate",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export async function action({ request }: Route.ActionArgs) {

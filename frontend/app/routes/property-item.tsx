@@ -14,6 +14,7 @@ import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
 import forwardCookies from "~/utils/forwardCookies";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 import {
   GoBookmark,
@@ -27,15 +28,17 @@ import type { PropertyData, UserBasic, UserProfile } from "~/data/generalData";
 
 const Map = lazy(() => import("~/components/Map"));
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Property | Free Real State" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches, data }: Route.MetaArgs) {
+  const property = data?.property;
+
+  return mergeMeta(matches, {
+    title: property
+      ? `${property.title} | Free Real State`
+      : "Property | Free Real State",
+    description:
+      property?.description ??
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {

@@ -3,6 +3,7 @@ import type { Route } from "./+types/home";
 import SearchInput from "~/components/home/SearchInput";
 import HeroRightSide from "~/components/HeroRightSide";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 export async function loader() {
   const citiesRes = await fetch(API_URL + "/api/cities");
@@ -15,15 +16,12 @@ export async function loader() {
   return cities;
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Free Real State" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "Free Real State",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

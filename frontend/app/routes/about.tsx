@@ -3,6 +3,7 @@ import type { Route } from "./+types/about";
 import { Link } from "react-router";
 
 import HeroRightSide from "~/components/HeroRightSide";
+import { mergeMeta } from "~/utils/meta";
 
 const demoAccounts = [
   { email: "john@me.com", name: "Johnathan Doebanne", role: "Agent" },
@@ -11,15 +12,12 @@ const demoAccounts = [
   { email: "sofi@me.com", name: "Sofia Martinez", role: "User" },
 ];
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "About | Free Real State" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "About | Free Real State",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export default function About() {

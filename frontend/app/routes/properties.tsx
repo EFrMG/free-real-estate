@@ -7,6 +7,7 @@ import ClientOnly from "~/components/ClientOnly";
 import FilterInput from "~/components/properties/FilterInput";
 import PropertyCard from "~/components/properties/PropertyCard";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -34,15 +35,12 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { properties, cities };
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Properties | Free Real State" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "Properties | Free Real State",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export default function Properties({ loaderData }: Route.ComponentProps) {

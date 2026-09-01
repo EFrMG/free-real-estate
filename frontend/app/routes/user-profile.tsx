@@ -11,6 +11,7 @@ import useObjectState from "~/hooks/useObjectState";
 import getAssetUrl from "~/utils/getAssetUrl";
 import forwardCookies from "~/utils/forwardCookies";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
@@ -25,15 +26,12 @@ export interface ProfileState extends Omit<
   "id" | "email" | "role" | "licenseNumber"
 > {}
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "My Profile | Free Real Estate" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "My Profile | Free Real Estate",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export async function loader({ request }: Route.LoaderArgs) {

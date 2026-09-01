@@ -2,16 +2,14 @@ import type { Route } from "./+types/contact";
 
 import { RiArrowDownSLine } from "react-icons/ri";
 import HeroRightSide from "~/components/HeroRightSide";
+import { mergeMeta } from "~/utils/meta";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Contact | Free Real State" },
-    {
-      name: "description",
-      content:
-        "Real estate company: The place where your future place is found.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "Contact | Free Real State",
+    description:
+      "Real estate company: The place where your future place is found.",
+  });
 }
 
 export default function Contact() {

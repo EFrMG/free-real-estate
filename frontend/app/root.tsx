@@ -46,6 +46,40 @@ export async function loader({ request }: Route.LoaderArgs) {
   return null;
 }
 
+export const meta: Route.MetaFunction = ({ location }) => {
+  const siteTitle = "Free Real Estate";
+  const description =
+    "Real estate company: The place where your future place is found.";
+
+  const ogImageUrl = "/og-image.png";
+
+  return [
+    { charSet: "utf-8" },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
+    // The first paint is opted out of mobile auto-darkening instead of flashing
+    { name: "color-scheme", content: "only light" },
+
+    { title: siteTitle },
+
+    // Open Graph
+    { property: "og:title", content: siteTitle },
+    { property: "og:description", content: description },
+    { property: "og:image", content: ogImageUrl },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    {
+      property: "og:url",
+      content: `https://free-real-estate.macias-francisco-355237995.workers.dev${location.pathname}`,
+    },
+
+    // Twitter
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: siteTitle },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: ogImageUrl },
+  ];
+};
+
 export const links: Route.LinksFunction = () => [
   {
     rel: "icon",
@@ -58,10 +92,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" style={{ scrollbarGutter: "stable" }}>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* The first paint is opted out of mobile auto-darkening instead of flashing */}
-        <meta name="color-scheme" content="only light" />
         <Meta />
         <Links />
       </head>

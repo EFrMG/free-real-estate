@@ -8,6 +8,7 @@ import { useFetcher, useRouteLoaderData, redirect } from "react-router";
 import useDialog from "~/hooks/useDialog";
 import forwardCookies from "~/utils/forwardCookies";
 import { API_URL } from "~/utils/apiUrl";
+import { mergeMeta } from "~/utils/meta";
 
 import AgentCard from "~/components/our-agents/AgentCard";
 import AgentDetailPanel from "~/components/our-agents/AgentDetailPanel";
@@ -30,15 +31,12 @@ export interface Agent extends AgentBasic {
   };
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Our Agents | Free Real Estate" },
-    {
-      name: "description",
-      content:
-        "Meet the expert agents at Free Real Estate. Browse profiles, view listings, and contact the right professional.",
-    },
-  ];
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeMeta(matches, {
+    title: "Our Agents | Free Real Estate",
+    description:
+      "Meet the expert agents at Free Real Estate. Browse profiles, view listings, and contact the right professional.",
+  });
 }
 
 export async function loader() {
