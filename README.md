@@ -85,7 +85,7 @@ Component-layer classes must be declared inside `@layer components`. Leaving a r
 
 ##### The opacity ladder
 
-Slash opacities (`bg-amber-100/74`, `text-amber-800/94`, `border-amber-200/48`, …) are restricted to ten rungs. This keeps transparency deliberate instead of drifting into a smear of near-identical values:
+Slash opacities are restricted to ten rungs.
 
 |  Rung | Mostly used for      | Typical use                                                  |
 | ----: | -------------------- | ------------------------------------------------------------ |
@@ -100,13 +100,9 @@ Slash opacities (`bg-amber-100/74`, `text-amber-800/94`, `border-amber-200/48`, 
 | `/84` | **Text**             | Body text on tinted cards, lead paragraphs                   |
 | `/94` | Backgrounds          | Near-solid action buttons                                    |
 
-> The rough shape is that the low rungs carry backgrounds and borders, `/74` and `/84` carry text, and `/94` is reserved for backgrounds that are _almost_ solid. `/64` is the one rung that genuinely does both.
+> The general idea is that the low rungs carry backgrounds and borders, `/74` and `/84` carry text, and `/94` is reserved for backgrounds that are _almost_ solid. `/64` is the one rung that genuinely does both.
 
-The two named helpers in `tailwind-general.css` sit on the same ladder on purpose: `opacity-less` is `0.84` and `opacity-lesser` is `0.6`.
-
-**When adding a new value, snap to the nearest existing rung rather than introducing a new one.** If a genuinely new rung is ever needed, the rule that produced this ladder is that the most repeated value in a cluster of near-identical ones becomes that cluster's rung.
-
-The bare `opacity-*` utilities follow the same rungs, so `opacity-28`, `opacity-40` and `opacity-74` are the values in use. The one exception is `opacity-100`, which is not a rung but the fully-opaque reset used by `hover:opacity-100` on the property card **links**.
+`opacity-less` is `0.84` and `opacity-lesser` is `0.6`, sitting on the same ladder rungs. Bare `opacity-*` utilities do it as well.
 
 #### 1.1.3 Maps
 
