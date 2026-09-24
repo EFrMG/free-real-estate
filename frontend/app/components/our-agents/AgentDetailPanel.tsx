@@ -2,7 +2,7 @@ import type { Agent } from "~/routes/our-agents";
 
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 
 import { GoShieldCheck, GoQuote, GoComment } from "react-icons/go";
 import { LuPhone } from "react-icons/lu";
@@ -93,6 +93,7 @@ export default function AgentDetailPanel({
                 <motion.img
                   src={getAssetUrl(agent.profilePicture)}
                   alt={`${agent.name} profile`}
+                  onError={handleProfilePictureError}
                   draggable={false}
                   initial={{ scale: 0.92 }}
                   animate={{ scale: 1 }}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 import useDialog from "~/hooks/useDialog";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 import { GoChevronLeft, GoChevronRight, GoX } from "react-icons/go";
 
@@ -88,7 +89,7 @@ export default function PropertyGallery({
         {displaySlides.map((image, i) => (
           <img
             key={`carousel-item-${image}-${i}`}
-            src={image}
+            src={getAssetUrl(image)}
             alt="Property image of the interior"
             draggable={false}
             onClick={() => openCloseDialog(true)}
@@ -130,7 +131,7 @@ export default function PropertyGallery({
                 className="relative z-10"
               >
                 <img
-                  src={displaySlides[currentIdx]}
+                  src={getAssetUrl(displaySlides[currentIdx])}
                   alt="Full size view"
                   draggable={false}
                   onClick={() => openCloseDialog(false)}

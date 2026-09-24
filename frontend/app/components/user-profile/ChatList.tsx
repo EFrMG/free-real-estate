@@ -1,6 +1,6 @@
 import type { ChatSummary } from "@free-real-estate/shared";
 
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 
 interface ChatListProps {
   chats: ChatSummary[];
@@ -34,6 +34,7 @@ export default function ChatList({
             >
               <img
                 src={getAssetUrl(chat.otherUser.profilePicture)}
+                onError={handleProfilePictureError}
                 alt=""
                 draggable={false}
                 className="w-10 h-10 shrink-0 rounded-full object-cover shadow-sm"

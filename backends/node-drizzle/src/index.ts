@@ -17,8 +17,6 @@ import {
 } from "drizzle-orm";
 import argon2 from "argon2";
 import { z } from "zod";
-import fs from "node:fs/promises";
-import path from "node:path";
 
 import { db } from "./db/index.ts";
 import {
@@ -39,6 +37,7 @@ import { scheduleAutoReset } from "./db/reset.ts";
 import {
   type UserSession,
   requireAuth,
+  requireAgent,
   setSessionCookie,
   createRefreshToken,
   revokeAllUserSessions,
@@ -48,6 +47,12 @@ import {
 import selectUserChats from "./utils/selectUserChats.ts";
 import toChatSummary from "./utils/toChatSummary.ts";
 import { requireEnv } from "./utils/requireEnv.ts";
+import { ClientError } from "./utils/clientError.ts";
+import uploadImage, {
+  isFilledFile,
+  UPLOAD_DIRECTORY,
+} from "./utils/uploadImage.ts";
+import readPropertyForm from "./utils/readPropertyForm.ts";
 
 import type {
   AgentProfileData,
@@ -60,7 +65,17 @@ import type {
 
 const app = new Hono();
 
-// Serve static files
+// Uploaded files live on Railway's persistent volume in production. Preserve their public URLs while mapping them to that separate on-disk directory.
+app.use(
+  "/public/uploads/*",
+  serveStatic({
+    root: UPLOAD_DIRECTORY,
+    rewriteRequestPath: (requestPath) =>
+      requestPath.replace(/^\/public\/uploads\/?/, "/"),
+  }),
+);
+
+// Serve any other backend-owned static files from the local public directory.
 app.use("/public/*", serveStatic({ root: "./" }));
 
 app.get("/", (c) => {
@@ -151,6 +166,156 @@ api.get("/properties/:id", async (c) => {
   if (!result) return c.json({ error: "Property not found" }, 404);
 
   return c.json(result);
+});
+
+// Every listing field an agent is allowed to set
+// `id` and `userId` are absent on purpose: zod strips unknown keys, so neither can be reassigned through the form
+const propertySchema = z.object({
+  transactionType: z.enum(["buy", "rent"]),
+  // Left without a zod default on purpose: `.partial()` would keep applying it and silently reset the status of every edit that didn't mean to touch it. An omitted status falls back to the column's own default on insert instead
+  status: z.enum(["free", "unavailable", "inactive"]).optional(),
+  propertyType: z.enum(["apartment", "house", "condominium"]),
+  title: z.string().trim().min(1, "A title is required.").max(120),
+  description: z
+    .string()
+    .trim()
+    .min(1, "A short description is required.")
+    .max(600),
+  longDescription: z.string().trim().max(4000).nullish(),
+  exteriorImage: z
+    .string()
+    .trim()
+    .min(1, "An exterior image is required.")
+    .max(2048),
+  interiorGallery: z
+    .array(z.string().trim().min(1).max(2048))
+    .max(12)
+    .nullish(),
+  sizes: z.array(z.coerce.number().positive().max(100_000)).max(20).nullish(),
+  bedrooms: z.coerce.number().int().min(0).max(50),
+  bathrooms: z.coerce.number().int().min(0).max(50),
+  price: z.coerce.number().int().min(0).max(1_000_000_000),
+  province: z.string().trim().min(1, "A province is required.").max(80),
+  city: z.string().trim().min(1, "A city is required.").max(80),
+  address: z.string().trim().min(1, "An address is required.").max(160),
+  // The frontend renders the distance verbatim, so the "500m" shape is enforced here; the transform is what narrows the parsed string to the column's own `${number}m` template type
+  nearbyPlaces: z
+    .record(
+      z.string().trim().min(1).max(48),
+      z
+        .string()
+        .trim()
+        .regex(/^\d+m$/, 'Distances look like "500m".')
+        .transform((distance) => distance as `${number}m`),
+    )
+    .nullish(),
+  latitude: z.coerce.number().min(-90).max(90),
+  longitude: z.coerce.number().min(-180).max(180),
+});
+
+// An edit only carries the fields it actually changes
+const propertyUpdateSchema = propertySchema.partial();
+
+/** Load a listing and make sure the session owns it, or return the response to send back. */
+async function findOwnedProperty(id: number, ownerId: number) {
+  const property = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.id, id))
+    .get();
+
+  if (!property) return { error: "Property not found", status: 404 } as const;
+
+  if (property.userId !== ownerId) {
+    return { error: "Forbidden", status: 403 } as const;
+  }
+
+  return { property } as const;
+}
+
+// Create a listing
+api.post("/properties", requireAuth, requireAgent, async (c) => {
+  const session = c.get("user") as UserSession;
+
+  let payload: Record<string, unknown>;
+
+  try {
+    payload = await readPropertyForm(c, session.id);
+  } catch (error) {
+    if (error instanceof ClientError)
+      return c.json({ error: error.message }, 400);
+    throw error;
+  }
+
+  const bodyRes = propertySchema.safeParse(payload);
+
+  if (!bodyRes.success) {
+    return c.json({ error: z.flattenError(bodyRes.error) }, 400);
+  }
+
+  const property = await db
+    .insert(properties)
+    .values({ ...bodyRes.data, userId: session.id })
+    .returning()
+    .get();
+
+  return c.json(property satisfies PropertyData, 201);
+});
+
+// Update a listing the agent owns
+api.put("/properties/:id", requireAuth, requireAgent, async (c) => {
+  const session = c.get("user") as UserSession;
+  const id = Number(c.req.param("id"));
+
+  const owned = await findOwnedProperty(id, session.id);
+
+  if ("error" in owned) return c.json({ error: owned.error }, owned.status);
+
+  let payload: Record<string, unknown>;
+
+  try {
+    payload = await readPropertyForm(c, session.id);
+  } catch (error) {
+    if (error instanceof ClientError)
+      return c.json({ error: error.message }, 400);
+    throw error;
+  }
+
+  const bodyRes = propertyUpdateSchema.safeParse(payload);
+
+  if (!bodyRes.success) {
+    return c.json({ error: z.flattenError(bodyRes.error) }, 400);
+  }
+
+  if (!Object.keys(bodyRes.data).length) {
+    return c.json({ error: "Nothing to update." }, 400);
+  }
+
+  const property = await db
+    .update(properties)
+    .set(bodyRes.data)
+    .where(eq(properties.id, id))
+    .returning()
+    .get();
+
+  return c.json(property satisfies PropertyData);
+});
+
+// Delete a listing the agent owns
+api.delete("/properties/:id", requireAuth, requireAgent, async (c) => {
+  const session = c.get("user") as UserSession;
+  const id = Number(c.req.param("id"));
+
+  const owned = await findOwnedProperty(id, session.id);
+
+  if ("error" in owned) return c.json({ error: owned.error }, owned.status);
+
+  // chats -> properties is the one reference that doesn't cascade, so every conversation about the listing goes first; its participants and messages then cascade from the chat itself. Bookmarks cascade from the property
+  await db.delete(chats).where(eq(chats.propertyId, id));
+
+  await db.delete(properties).where(eq(properties.id, id));
+
+  return c.json({ ok: true });
 });
 
 // GET all unique cities
@@ -338,10 +503,6 @@ api.get("/users/:id", async (c) => {
 
 // Update user profile (both regular and agent fields)
 api.put("/users/:id", requireAuth, async (c) => {
-  // Constants for file upload security
-  const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
@@ -365,40 +526,18 @@ api.put("/users/:id", requireAuth, async (c) => {
   if (name !== undefined) userUpdates["name"] = name;
 
   // Handle profile picture file upload
-  if (profilePicture instanceof File) {
-    const file = profilePicture;
-
-    // Check MIME type
-    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      return c.json(
-        {
-          error: "Invalid file type. Only JPEG, PNG and WEBP are allowed",
-        },
-        400,
+  if (isFilledFile(profilePicture)) {
+    try {
+      userUpdates["profilePicture"] = await uploadImage(
+        profilePicture,
+        "profile-pictures",
+        id,
       );
+    } catch (error) {
+      if (error instanceof ClientError)
+        return c.json({ error: error.message }, 400);
+      throw error;
     }
-
-    // Check file size
-    if (file.size > MAX_FILE_SIZE) {
-      return c.json({ error: "File size exceeds the 5MB limit" }, 400);
-    }
-
-    // Sanitize filename and prepare path
-    const extension = file.type.split("/")[1];
-    const fileName = `${id}-${Date.now()}.${extension}`;
-
-    const uploadDir = path.join("public", "uploads", "profile-pictures");
-    const filePath = path.join(uploadDir, fileName);
-
-    // The upload directory does not exist until the first upload ever happens
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    const arrayBuffer = await file.arrayBuffer();
-
-    await fs.writeFile(filePath, Buffer.from(arrayBuffer));
-
-    userUpdates["profilePicture"] =
-      `/public/uploads/profile-pictures/${fileName}`;
   } else if (typeof profilePicture === "string" && profilePicture !== "") {
     // An empty string is never an intentional 'clear' request from this UI
     userUpdates["profilePicture"] = profilePicture;

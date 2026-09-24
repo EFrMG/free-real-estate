@@ -4,7 +4,7 @@
   }
 
   .input-form {
-    @apply px-3 py-3 bg-white/40 border-b border-amber-950/36 rounded-md shadow-sm inset-shadow-xs;
+    @apply px-3 py-3 bg-white/40 border-b border-amber-950/36 rounded-md shadow-sm inset-shadow-xs max-h-[10lh];
   }
 
   .form-error {

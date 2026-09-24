@@ -1,6 +1,8 @@
 import type { PropertyData } from "@free-real-estate/shared";
 
 import { Link } from "react-router";
+import getAssetUrl from "~/utils/getAssetUrl";
+
 import { GoLocation } from "react-icons/go";
 
 type MiniPropertyCardProps = {
@@ -17,6 +19,7 @@ type MiniPropertyCardProps = {
     | "price"
   >;
   clearBackground: boolean;
+  actions?: React.ReactNode;
 };
 
 export default function MiniPropertyCard({
@@ -32,9 +35,13 @@ export default function MiniPropertyCard({
     price,
   },
   clearBackground,
+  actions,
 }: MiniPropertyCardProps) {
-  return (
-    <Link to={`/properties/${id}`} className="block hover:opacity-100 group">
+  const card = (
+    <Link
+      to={`/properties/${id}`}
+      className="block h-full hover:opacity-100 group"
+    >
       <div
         className={`grid grid-cols-[3fr_7fr] gap-4 h-full pl-3 pr-4 py-3
         rounded-lg shadow-md inset-shadow-sm
@@ -57,7 +64,7 @@ export default function MiniPropertyCard({
           </div>
 
           <img
-            src={exteriorImage}
+            src={getAssetUrl(exteriorImage)}
             alt={title}
             draggable="false"
             className="w-full h-36 object-cover rounded-md"
@@ -108,5 +115,16 @@ export default function MiniPropertyCard({
         </div>
       </div>
     </Link>
+  );
+
+  if (!actions) return card;
+
+  return (
+    <div className="relative h-full">
+      {card}
+      <div className="absolute bottom-2 left-2 flex items-center gap-1">
+        {actions}
+      </div>
+    </div>
   );
 }

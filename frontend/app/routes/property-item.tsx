@@ -9,7 +9,7 @@ import {
   redirect,
 } from "react-router";
 
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
 import forwardCookies from "~/utils/forwardCookies";
@@ -240,11 +240,11 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
     <main className="gen-main">
       {/* Left side */}
       <div className="p-2 md:p-4 md:pb-12">
-        {interiorGallery ? (
+        {interiorGallery?.length ? (
           <PropertyGallery interiorGallery={interiorGallery} />
         ) : (
           <img
-            src={exteriorImage}
+            src={getAssetUrl(exteriorImage)}
             alt={title}
             draggable="false"
             className="property-img-outline w-full h-[35dvh] mt-8 shadow-lg rounded-lg object-cover"
@@ -283,6 +283,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                 >
                   <img
                     src={getAssetUrl(userPoster.profilePicture)}
+                    onError={handleProfilePictureError}
                     alt={userPoster.name}
                     className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                   />

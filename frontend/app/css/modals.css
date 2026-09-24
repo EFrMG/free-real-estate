@@ -3,6 +3,10 @@
     @apply relative w-[92vw] max-w-md p-6 bg-amber-50 rounded-xl shadow-2xl;
   }
 
+  .modal-card-wide {
+    @apply relative w-[92vw] max-w-2xl max-h-[88vh] overflow-y-auto p-6 bg-amber-50 rounded-xl shadow-2xl;
+  }
+
   .modal-cross {
     @apply absolute top-3 right-3 p-2 rounded-lg bg-amber-200/64 hover:bg-amber-200/48 transition-colors;
   }

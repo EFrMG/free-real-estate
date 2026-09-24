@@ -27,3 +27,13 @@ export default function getAssetUrl(path: string | null | undefined) {
 
   return path;
 }
+
+export function handleProfilePictureError(event: {
+  currentTarget: HTMLImageElement;
+}) {
+  const image = event.currentTarget;
+
+  // Avoid retrying forever if the bundled placeholder itself cannot be loaded
+  image.onerror = null;
+  image.src = getAssetUrl(null);
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useRouteLoaderData } from "react-router";
 
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
@@ -65,6 +65,7 @@ function UserLink({
         <div className="relative shrink-0">
           <img
             src={getAssetUrl(user.profilePicture)}
+            onError={handleProfilePictureError}
             alt=""
             draggable={false}
             className="w-12 h-12 rounded-full object-cover"
@@ -73,7 +74,7 @@ function UserLink({
             <span
               title={`${unreadSenders} ${unreadSenders === 1 ? "person is" : "people are"} waiting on a reply`}
               className="absolute top-[-0.75ch] left-[-0.5ch]
-                    px-1.5 py-1 bg-rose-700 rounded-full
+                    px-1.5 py-1 bg-rose-600 rounded-full
                     text-sm text-yellow-50 leading-none font-bold"
             >
               <span className="translate-y-px inline-block">

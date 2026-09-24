@@ -8,6 +8,8 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { LuBed, LuBath } from "react-icons/lu";
 import { Link } from "react-router";
 
+import getAssetUrl from "~/utils/getAssetUrl";
+
 // Import the icons directly so Vite bundles and hashes them, then point the default icon at the real URLs
 delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -89,7 +91,7 @@ export default function Map({
                   </Link>
                   <div className="md:grid md:grid-cols-2 gap-4">
                     <img
-                      src={exteriorImage}
+                      src={getAssetUrl(exteriorImage)}
                       alt="Property popover image"
                       draggable={false}
                       className="max-md:hidden place-self-center w-full h-[calc(max(var(--spacing)*32,100%)-10%)] object-cover rounded-lg"

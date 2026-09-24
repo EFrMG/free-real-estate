@@ -3,7 +3,7 @@ import type { ChatThreadData, MessageData } from "@free-real-estate/shared";
 import { useEffect, useRef, useState } from "react";
 import { Link, useFetcher } from "react-router";
 
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 
 import { GoPaperAirplane } from "react-icons/go";
 
@@ -106,6 +106,7 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
       <div className="shrink-0 flex items-center gap-3">
         <img
           src={getAssetUrl(thread.otherUser.profilePicture)}
+          onError={handleProfilePictureError}
           alt=""
           draggable={false}
           className="w-12 h-12 shrink-0 rounded-full object-cover shadow-sm"

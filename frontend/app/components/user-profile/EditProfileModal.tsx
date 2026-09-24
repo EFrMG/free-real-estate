@@ -5,7 +5,7 @@ import type { ModalProps } from "./modalTypes";
 import { useRef, useEffect } from "react";
 import { useFetcher } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 import createDialogCloseHandler from "~/utils/createDialogCloseHandler";
 
 import { GoPencil, GoX } from "react-icons/go";
@@ -118,6 +118,7 @@ export default function EditProfileModal({
                         <img
                           src={getAssetUrl(profileState.profilePicture)}
                           alt="Profile picture preview"
+                          onError={handleProfilePictureError}
                           onClick={() => fileRef.current?.click()}
                           className="profile-picture-big cursor-pointer
                         group-hover:scale-105 transition-transform duration-300"

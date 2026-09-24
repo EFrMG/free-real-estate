@@ -1,6 +1,7 @@
 import type { PropertyData } from "~/data/generalData";
 
 import { Link } from "react-router";
+import getAssetUrl from "~/utils/getAssetUrl";
 
 import { GoLocation } from "react-icons/go";
 import { LuBed, LuBath } from "react-icons/lu";
@@ -63,7 +64,7 @@ export default function PropertyCard({
         </div>
 
         <img
-          src={exteriorImage}
+          src={getAssetUrl(exteriorImage)}
           alt={title}
           draggable="false"
           className="w-full h-full max-h-58 my-auto object-cover rounded-md"

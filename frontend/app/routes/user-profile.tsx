@@ -6,20 +6,32 @@ import type {
 } from "~/data/generalData";
 import type { ChatSummary, ChatThreadData } from "@free-real-estate/shared";
 
+import { useState } from "react";
+
 import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 import forwardCookies from "~/utils/forwardCookies";
+import apiErrorMessage from "~/utils/apiErrorMessage";
 import { API_URL } from "~/utils/apiUrl";
 import { mergeMeta } from "~/utils/meta";
 
 import EditProfileModal from "~/components/user-profile/EditProfileModal";
 import ChangePasswordModal from "~/components/user-profile/ChangePasswordModal";
 import AgentPromotionModal from "~/components/user-profile/AgentPromotionModal";
+import PropertyFormModal from "~/components/user-profile/PropertyFormModal";
+import DeletePropertyModal from "~/components/user-profile/DeletePropertyModal";
 import MiniPropertyCard from "~/components/user-profile/MiniPropertyCard";
 import ChatPanel from "~/components/user-profile/ChatPanel";
 
-import { GoBookmark, GoPencil, GoShieldLock, GoPackage } from "react-icons/go";
+import {
+  GoBookmark,
+  GoPencil,
+  GoPlus,
+  GoShieldLock,
+  GoPackage,
+  GoTrash,
+} from "react-icons/go";
 
 export interface ProfileState extends Omit<
   UserProfileData,
@@ -196,6 +208,71 @@ export async function action({ request, params }: ActionFunctionArgs) {
     return data({ success: true }, { headers: forwardCookies(response) });
   }
 
+  // Listing management
+  // The API is the one that checks the session is an agent and owns the listing, so these only have to forward the form and its cookies
+  if (intent === "property-create" || intent === "property-update") {
+    const isUpdate = intent === "property-update";
+    const propertyId = fetcherData.get("propertyId");
+
+    // Neither belongs to the listing itself; they only routed the submission here
+    fetcherData.delete("intent");
+    fetcherData.delete("propertyId");
+
+    const response = await fetch(
+      isUpdate
+        ? `${API_URL}/api/properties/${propertyId}`
+        : API_URL + "/api/properties",
+      {
+        method: isUpdate ? "PUT" : "POST",
+        headers: {
+          Cookie: request.headers.get("Cookie") ?? "",
+        },
+        body: fetcherData,
+      },
+    );
+
+    // A backend that fell over answers with something that is not JSON
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return {
+        error: apiErrorMessage(
+          result?.error,
+          isUpdate
+            ? "Failed to update the listing. Please, try again."
+            : "Failed to create the listing. Please, try again.",
+        ),
+      };
+    }
+
+    return data({ success: true }, { headers: forwardCookies(response) });
+  }
+
+  if (intent === "property-delete") {
+    const propertyId = fetcherData.get("propertyId");
+
+    const response = await fetch(`${API_URL}/api/properties/${propertyId}`, {
+      method: "DELETE",
+      headers: {
+        Cookie: request.headers.get("Cookie") ?? "",
+      },
+    });
+
+    // A backend that fell over answers with something that is not JSON at all
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return {
+        error: apiErrorMessage(
+          result?.error,
+          "Failed to delete the listing. Please, try again.",
+        ),
+      };
+    }
+
+    return data({ success: true }, { headers: forwardCookies(response) });
+  }
+
   if (intent === "send-message") {
     const chatId = fetcherData.get("chatId") as string;
     const text = fetcherData.get("text") as string;
@@ -249,10 +326,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
 function ProfileSection({
   title,
   icon,
+  action,
   children,
 }: {
   title: string;
   icon: React.ReactNode;
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -260,6 +339,7 @@ function ProfileSection({
       <div className="flex items-center gap-2 mb-4">
         <span className="text-amber-700">{icon}</span>
         <h2 className="text-lg font-semibold text-amber-950">{title}</h2>
+        {action && <div className="ml-auto">{action}</div>}
       </div>
       {children}
     </section>
@@ -296,6 +376,37 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
     openCloseDialog: setAgentPromotionOpen,
   } = useDialog();
 
+  const {
+    isDialogOpen: isPropertyFormOpen,
+    dialogRef: propertyFormRef,
+    openCloseDialog: setPropertyFormOpen,
+  } = useDialog();
+
+  const {
+    isDialogOpen: isDeletePropertyOpen,
+    dialogRef: deletePropertyRef,
+    openCloseDialog: setDeletePropertyOpen,
+  } = useDialog();
+
+  // Only the id is held, so the listing the modals show always comes from the freshest loader data rather than from a snapshot taken when they opened
+  const [editedPropertyId, setEditedPropertyId] = useState<number | null>(null);
+  const [deletedPropertyId, setDeletedPropertyId] = useState<number | null>(
+    null,
+  );
+
+  const findProperty = (id: number | null) =>
+    userProperties.find((property: PropertyData) => property.id === id) ?? null;
+
+  const openPropertyForm = (id: number | null) => {
+    setEditedPropertyId(id);
+    setPropertyFormOpen(true);
+  };
+
+  const openDeleteProperty = (id: number) => {
+    setDeletedPropertyId(id);
+    setDeletePropertyOpen(true);
+  };
+
   return (
     <>
       <main className="gen-main">
@@ -317,15 +428,18 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-6">
                 <div className="shrink-0">
                   <img
-                    src={getAssetUrl(user.profilePicture)}
-                    alt={`${user.name}'s profile picture`}
+                    src={getAssetUrl(profileState.profilePicture)}
+                    alt={`${profileState.name}'s profile picture`}
+                    onError={handleProfilePictureError}
                     draggable={false}
                     className="profile-picture-big"
                   />
                 </div>
 
                 <div className="text-center sm:text-left mt-2 sm:mt-4 stack-2 grow">
-                  <h1 className="page-title tracking-tight">{user.name}</h1>
+                  <h1 className="page-title tracking-tight">
+                    {profileState.name}
+                  </h1>
 
                   <div className="flex justify-between items-center">
                     <div>
@@ -464,6 +578,16 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
             <ProfileSection
               title="My Properties"
               icon={<GoPackage size={24} />}
+              action={
+                <button
+                  onClick={() => openPropertyForm(null)}
+                  className="flex items-center gap-[1ch] mr-2 px-3 py-1.5 text-sm font-medium
+                  text-amber-800 bg-amber-200/36 rounded-sm shadow-sm
+                  gen-btn-border btn-hovaction-sm"
+                >
+                  <GoPlus size={16} /> New Listing
+                </button>
+              }
             >
               {userProperties?.length ? (
                 <div className="profile-bookmarks--properties">
@@ -472,6 +596,24 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                       key={`property-${property.id}`}
                       property={property}
                       clearBackground={true}
+                      actions={
+                        <>
+                          <button
+                            onClick={() => openPropertyForm(property.id)}
+                            className="property-action-btn"
+                            title={`Edit ${property.title}`}
+                          >
+                            <GoPencil size={14} />
+                          </button>
+                          <button
+                            onClick={() => openDeleteProperty(property.id)}
+                            className="property-action-btn hover:bg-rose-600/84"
+                            title={`Delete ${property.title}`}
+                          >
+                            <GoTrash size={14} />
+                          </button>
+                        </>
+                      }
                     />
                   ))}
                 </div>
@@ -523,6 +665,28 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
           openCloseDialog: setAgentPromotionOpen,
         }}
       />
+
+      {user.role === "agent" && (
+        <>
+          <PropertyFormModal
+            propertyFormProps={{
+              isDialogOpen: isPropertyFormOpen,
+              dialogRef: propertyFormRef,
+              openCloseDialog: setPropertyFormOpen,
+            }}
+            property={findProperty(editedPropertyId)}
+          />
+
+          <DeletePropertyModal
+            deletePropertyProps={{
+              isDialogOpen: isDeletePropertyOpen,
+              dialogRef: deletePropertyRef,
+              openCloseDialog: setDeletePropertyOpen,
+            }}
+            property={findProperty(deletedPropertyId)}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import getAssetUrl from "~/utils/getAssetUrl";
+import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 
 interface AgentCardProps {
   agent: {
@@ -22,6 +22,7 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
         <img
           src={getAssetUrl(agent.profilePicture)}
           alt={`${agent.name}'s profile picture`}
+          onError={handleProfilePictureError}
           draggable={false}
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md
           border-2 border-amber-50/84 outline-2 outline-amber-300/48

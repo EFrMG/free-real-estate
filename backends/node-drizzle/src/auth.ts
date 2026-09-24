@@ -234,4 +234,21 @@ export const requireAuth = createMiddleware<{
   return await next();
 });
 
+/**
+ * Restrict a route to agent accounts.
+ *
+ * Chained after `requireAuth`, which is what puts the session on the context; on its own, this middleware has nothing to read.
+ */
+export const requireAgent = createMiddleware<{
+  Variables: { user: UserSession };
+}>(async (c, next) => {
+  const session = c.get("user");
+
+  if (session?.role !== "agent") {
+    return c.json({ error: "Only agent accounts can manage listings." }, 403);
+  }
+
+  return await next();
+});
+
 export { deleteCookie, SESSION_COOKIE as COOKIE_NAME, REFRESH_COOKIE };

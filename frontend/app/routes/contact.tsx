@@ -41,7 +41,7 @@ export default function Contact() {
             <textarea
               id="message"
               name="message"
-              className="mx-2 max-h-[10lh] input-form"
+              className="mx-2 input-form"
             ></textarea>
           </fieldset>
 
