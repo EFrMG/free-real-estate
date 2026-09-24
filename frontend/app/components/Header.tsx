@@ -74,7 +74,7 @@ function UserLink({
             <span
               title={`${unreadSenders} ${unreadSenders === 1 ? "person is" : "people are"} waiting on a reply`}
               className="absolute top-[-0.75ch] left-[-0.5ch]
-                    px-1.5 py-1 bg-rose-600 rounded-full
+                    px-1.5 py-1 bg-rose-700 rounded-full
                     text-sm text-yellow-50 leading-none font-bold"
             >
               <span className="translate-y-px inline-block">

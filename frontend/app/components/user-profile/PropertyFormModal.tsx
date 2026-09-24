@@ -537,12 +537,12 @@ export default function PropertyFormModal({
 
                   {/* Figures */}
                   <div className="grid sm:grid-cols-3 gap-4">
-                    <fieldset className="stack-0">
-                      <label htmlFor="property-price">Price ($)</label>
+                    <fieldset className="stack-0 min-w-0">
+                      <label htmlFor="property-price">Price (USD)</label>
                       <input
                         id="property-price"
                         type="number"
-                        className="input-form"
+                        className="input-form w-full min-w-0"
                         min={0}
                         step={1}
                         value={form.price}
