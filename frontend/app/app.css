@@ -4,9 +4,9 @@
 @import "./css/tailwind-theme.css";
 @import "./css/tailwind-general.css";
 
-@import "./css/contact.css";
-@import "./css/modals.css";
-@import "./css/forms.css";
+@import "./css/contact.css" layer(components);
+@import "./css/modals.css" layer(components);
+@import "./css/forms.css" layer(components);
 
 @import "./css/typefaces.css";
 @import "./css/leaflet-overrides.css";
