@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 
+import type { AppEnv } from "../env.ts";
 import { ClientError } from "./clientError.ts";
 import uploadImage, { isFilledFile } from "./uploadImage.ts";
 
@@ -13,7 +14,7 @@ const CLEARABLE_FIELDS = ["longDescription"];
  * Normalizes a property create/update request into a plain object ready for zod.
  *
  * A JSON body passes through untouched. A multipart body additionally:
- *   - writes the `exteriorFile` and `galleryFiles` uploads to disk, folding the paths they were stored at into `exteriorImage` and `interiorGallery`
+ *   - writes the `exteriorFile` and `galleryFiles` uploads to R2, folding their public paths into `exteriorImage` and `interiorGallery`
  *   - decodes the JSON-encoded `interiorGallery`, `sizes` and `nearbyPlaces` fields
  *   - drops empty text fields other than `CLEARABLE_FIELDS`, so a partial update leaves them at their stored value instead of blanking them
  *
@@ -21,7 +22,7 @@ const CLEARABLE_FIELDS = ["longDescription"];
  * @throws {ClientError} on a malformed JSON field or a rejected upload.
  */
 export default async function readPropertyForm(
-  c: Context,
+  c: Context<AppEnv>,
   ownerId: number,
 ): Promise<Record<string, unknown>> {
   const contentType = c.req.header("Content-Type") ?? "";
@@ -70,6 +71,7 @@ export default async function readPropertyForm(
 
   if (exteriorFile) {
     payload["exteriorImage"] = await uploadImage(
+      c.env.UPLOADS,
       exteriorFile,
       "properties",
       ownerId,
@@ -83,7 +85,9 @@ export default async function readPropertyForm(
     const uploaded: string[] = [];
 
     for (const file of galleryFiles) {
-      uploaded.push(await uploadImage(file, "properties", ownerId));
+      uploaded.push(
+        await uploadImage(c.env.UPLOADS, file, "properties", ownerId),
+      );
     }
 
     const kept = payload["interiorGallery"];

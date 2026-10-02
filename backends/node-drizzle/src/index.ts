@@ -1,7 +1,5 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { serve } from "@hono/node-server";
-import { serveStatic } from "@hono/node-server/serve-static";
 import {
   type SQL,
   eq,
@@ -15,10 +13,9 @@ import {
   desc,
   inArray,
 } from "drizzle-orm";
-import argon2 from "argon2";
 import { z } from "zod";
 
-import { db } from "./db/index.ts";
+import { createDb, type Database } from "./db/index.ts";
 import {
   type PropertyData,
   users,
@@ -30,9 +27,8 @@ import {
   chatParticipants,
   messages,
 } from "./db/schema.ts";
-import { runMigrations } from "./db/migrate.ts";
-import { seedDatabase } from "./db/seed.ts";
-import { scheduleAutoReset } from "./db/reset.ts";
+import { resetDatabase } from "./db/reset.ts";
+import type { AppEnv, Bindings } from "./env.ts";
 
 import {
   type UserSession,
@@ -46,13 +42,10 @@ import {
 
 import selectUserChats from "./utils/selectUserChats.ts";
 import toChatSummary from "./utils/toChatSummary.ts";
-import { requireEnv } from "./utils/requireEnv.ts";
 import { ClientError } from "./utils/clientError.ts";
-import uploadImage, {
-  isFilledFile,
-  UPLOAD_DIRECTORY,
-} from "./utils/uploadImage.ts";
+import uploadImage, { isFilledFile } from "./utils/uploadImage.ts";
 import readPropertyForm from "./utils/readPropertyForm.ts";
+import { hashPassword, verifyPassword } from "./password.ts";
 
 import type {
   AgentProfileData,
@@ -63,20 +56,27 @@ import type {
   MessageData,
 } from "@free-real-estate/shared";
 
-const app = new Hono();
+const app = new Hono<AppEnv>();
 
-// Uploaded files live on Railway's persistent volume in production. Preserve their public URLs while mapping them to that separate on-disk directory.
-app.use(
-  "/public/uploads/*",
-  serveStatic({
-    root: UPLOAD_DIRECTORY,
-    rewriteRequestPath: (requestPath) =>
-      requestPath.replace(/^\/public\/uploads\/?/, "/"),
-  }),
-);
+app.use("*", async (c, next) => {
+  c.set("db", createDb(c.env.DB));
+  await next();
+});
 
-// Serve any other backend-owned static files from the local public directory.
-app.use("/public/*", serveStatic({ root: "./" }));
+// Keep the existing public upload URLs while serving their contents from R2.
+app.get("/public/uploads/*", async (c) => {
+  const key = new URL(c.req.url).pathname.replace(/^\/public\//, "");
+  const object = await c.env.UPLOADS.get(key);
+
+  if (!object) return c.notFound();
+
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set("etag", object.httpEtag);
+  headers.set("cache-control", "public, max-age=31536000, immutable");
+
+  return new Response(object.body, { headers });
+});
 
 app.get("/", (c) => {
   return c.text("Free Real Estate API.");
@@ -87,26 +87,20 @@ const api = app.basePath("/api");
 // Enable CORS for the frontend
 // Credentialed cross-origin requests can't use a wildcard origin
 // In production, this must be pinned to the deployed frontend's exact origin
-// Locally, with FRONTEND_URL unset, the request's own Origin header is reflected back
-const FRONTEND_URL = process.env.FRONTEND_URL;
-
+// Local development reads FRONTEND_URL from .env
 api.use(
   "/*",
   cors({
-    origin: FRONTEND_URL ?? ((origin) => origin),
+    origin: (_origin, c) => c.env.FRONTEND_URL,
     credentials: true,
   }),
-);
-
-const AGENT_PROMOTION_CODE = requireEnv(
-  "AGENT_PROMOTION_CODE",
-  "agent-code--change-in-prod",
 );
 
 // Properties --.
 
 // GET all properties while filtering
 api.get("/properties", async (c) => {
+  const db = c.var.db;
   // Query parameter values
   const { type, property, city, minPrice, maxPrice, bedrooms, bathrooms } =
     c.req.query();
@@ -155,6 +149,7 @@ api.get("/properties", async (c) => {
 
 // GET single property
 api.get("/properties/:id", async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   const result = await db
@@ -217,7 +212,11 @@ const propertySchema = z.object({
 const propertyUpdateSchema = propertySchema.partial();
 
 /** Load a listing and make sure the session owns it, or return the response to send back. */
-async function findOwnedProperty(id: number, ownerId: number) {
+async function findOwnedProperty(
+  db: Database,
+  id: number,
+  ownerId: number,
+) {
   const property = await db
     .select()
     .from(properties)
@@ -235,6 +234,7 @@ async function findOwnedProperty(id: number, ownerId: number) {
 
 // Create a listing
 api.post("/properties", requireAuth, requireAgent, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
   let payload: Record<string, unknown>;
@@ -264,10 +264,11 @@ api.post("/properties", requireAuth, requireAgent, async (c) => {
 
 // Update a listing the agent owns
 api.put("/properties/:id", requireAuth, requireAgent, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
   const id = Number(c.req.param("id"));
 
-  const owned = await findOwnedProperty(id, session.id);
+  const owned = await findOwnedProperty(db, id, session.id);
 
   if ("error" in owned) return c.json({ error: owned.error }, owned.status);
 
@@ -303,10 +304,11 @@ api.put("/properties/:id", requireAuth, requireAgent, async (c) => {
 
 // Delete a listing the agent owns
 api.delete("/properties/:id", requireAuth, requireAgent, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
   const id = Number(c.req.param("id"));
 
-  const owned = await findOwnedProperty(id, session.id);
+  const owned = await findOwnedProperty(db, id, session.id);
 
   if ("error" in owned) return c.json({ error: owned.error }, owned.status);
 
@@ -320,6 +322,7 @@ api.delete("/properties/:id", requireAuth, requireAgent, async (c) => {
 
 // GET all unique cities
 api.get("/cities", async (c) => {
+  const db = c.var.db;
   const result = await db
     .selectDistinct({ city: properties.city })
     .from(properties)
@@ -342,6 +345,7 @@ const registerSchema = z.object({
 
 // Register a user
 api.post("/auth/register", async (c) => {
+  const db = c.var.db;
   const bodyRes = registerSchema.safeParse(await c.req.json());
 
   if (!bodyRes.success) {
@@ -358,7 +362,7 @@ api.post("/auth/register", async (c) => {
 
   if (emailExists) return c.json({ error: "Email is already in use." }, 409);
 
-  const passwordHash = await argon2.hash(password);
+  const passwordHash = await hashPassword(password);
 
   const user = await db
     .insert(users)
@@ -392,6 +396,7 @@ const loginSchema = z.object({
 
 // Log in as a user
 api.post("/auth/login", async (c) => {
+  const db = c.var.db;
   const bodyRes = loginSchema.safeParse(await c.req.json());
 
   if (!bodyRes.success) {
@@ -408,7 +413,7 @@ api.post("/auth/login", async (c) => {
 
   if (!user) return c.json({ error: "Invalid email." }, 401);
 
-  const passwordVerified = await argon2.verify(user.passwordHash, password);
+  const passwordVerified = await verifyPassword(user.passwordHash, password);
 
   if (!passwordVerified) return c.json({ error: "Invalid password!" }, 401);
 
@@ -423,7 +428,7 @@ api.post("/auth/login", async (c) => {
 api.post("/auth/logout", requireAuth, async (c) => {
   const session = c.get("user") as UserSession;
 
-  await revokeAllUserSessions(session.id);
+  await revokeAllUserSessions(c, session.id);
   clearAuthCookies(c);
 
   return c.json({ ok: true });
@@ -431,6 +436,7 @@ api.post("/auth/logout", requireAuth, async (c) => {
 
 // Authenticate user
 api.get("/auth/me", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
   const user = await db
@@ -458,6 +464,7 @@ api.get("/auth/me", requireAuth, async (c) => {
 
 // GET all user agents
 api.get("/users", async (c) => {
+  const db = c.var.db;
   const result = await db
     .select({
       id: users.id,
@@ -473,6 +480,7 @@ api.get("/users", async (c) => {
 
 // GET single user agent
 api.get("/users/:id", async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   const result = await db
@@ -503,6 +511,7 @@ api.get("/users/:id", async (c) => {
 
 // Update user profile (both regular and agent fields)
 api.put("/users/:id", requireAuth, async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
@@ -529,6 +538,7 @@ api.put("/users/:id", requireAuth, async (c) => {
   if (isFilledFile(profilePicture)) {
     try {
       userUpdates["profilePicture"] = await uploadImage(
+        c.env.UPLOADS,
         profilePicture,
         "profile-pictures",
         id,
@@ -576,6 +586,7 @@ api.put("/users/:id", requireAuth, async (c) => {
 
 // Change user password
 api.put("/users/:id/password", requireAuth, async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
@@ -590,7 +601,7 @@ api.put("/users/:id/password", requireAuth, async (c) => {
 
   if (!user) return c.json({ error: "User not found" }, 404);
 
-  const passwordVerify = await argon2.verify(
+  const passwordVerify = await verifyPassword(
     user.passwordHash,
     currentPassword,
   );
@@ -598,12 +609,12 @@ api.put("/users/:id/password", requireAuth, async (c) => {
   if (!passwordVerify)
     return c.json({ error: "Invalid current password!" }, 401);
 
-  const passwordHash = await argon2.hash(newPassword);
+  const passwordHash = await hashPassword(newPassword);
 
   await db.update(users).set({ passwordHash }).where(eq(users.id, id));
 
   // Revoke all existing sessions, then re-issue for the current device
-  await revokeAllUserSessions(id);
+  await revokeAllUserSessions(c, id);
   await setSessionCookie(c, { id, role: user.role } as UserSession);
   await createRefreshToken(c, id);
 
@@ -612,13 +623,14 @@ api.put("/users/:id/password", requireAuth, async (c) => {
 
 // Promote a normal user to agent user
 api.post("/users/:id/promote", requireAuth, async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   if (c.get("user").id !== id) return c.json({ error: "Forbidden" }, 403);
 
   const { agencyPassword, licenseNumber } = await c.req.json();
 
-  if (agencyPassword !== AGENT_PROMOTION_CODE)
+  if (agencyPassword !== c.env.AGENT_PROMOTION_CODE)
     return c.json({ error: "Invalid promotion password!" }, 401);
 
   // Update role to agent
@@ -630,7 +642,7 @@ api.post("/users/:id/promote", requireAuth, async (c) => {
     .onConflictDoNothing();
 
   // Re-issue tokens with the new role
-  await revokeAllUserSessions(id);
+  await revokeAllUserSessions(c, id);
   await setSessionCookie(c, { id, role: "agent" });
   await createRefreshToken(c, id);
 
@@ -639,6 +651,7 @@ api.post("/users/:id/promote", requireAuth, async (c) => {
 
 // GET properties owned by an agent
 api.get("/users/:id/properties", async (c) => {
+  const db = c.var.db;
   const id = Number(c.req.param("id"));
 
   const results = await db
@@ -653,6 +666,7 @@ api.get("/users/:id/properties", async (c) => {
 
 // Create bookmark
 api.post("/users/:id/bookmarks", requireAuth, async (c) => {
+  const db = c.var.db;
   const userId = Number(c.req.param("id"));
 
   if (c.get("user").id !== userId) return c.json({ error: "Forbidden" }, 403);
@@ -669,6 +683,7 @@ api.post("/users/:id/bookmarks", requireAuth, async (c) => {
 
 // Retrieve bookmarks
 api.get("/users/:id/bookmarks", requireAuth, async (c) => {
+  const db = c.var.db;
   const userId = Number(c.req.param("id"));
 
   if (c.get("user").id !== userId) return c.json({ error: "Forbidden" }, 403);
@@ -684,6 +699,7 @@ api.get("/users/:id/bookmarks", requireAuth, async (c) => {
 
 // Delete bookmark
 api.delete("/users/:id/bookmarks/:propertyId", requireAuth, async (c) => {
+  const db = c.var.db;
   const userId = Number(c.req.param("id"));
 
   if (c.get("user").id !== userId) return c.json({ error: "Forbidden" }, 403);
@@ -703,6 +719,7 @@ api.delete("/users/:id/bookmarks/:propertyId", requireAuth, async (c) => {
 
 // GET the number of people with unread messages
 api.get("/chats/unread-count", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
   const senders = await db
@@ -728,9 +745,12 @@ api.get("/chats/unread-count", requireAuth, async (c) => {
 
 // GET every conversation of the authenticated user, most recent first
 api.get("/chats", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
-  const rows = await selectUserChats(session.id).orderBy(desc(chats.updatedAt));
+  const rows = await selectUserChats(db, session.id).orderBy(
+    desc(chats.updatedAt),
+  );
 
   if (!rows.length) return c.json([] satisfies ChatSummary[]);
 
@@ -759,11 +779,12 @@ api.get("/chats", requireAuth, async (c) => {
 
 // GET a single conversation along with its full message history
 api.get("/chats/:id/messages", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
   const chatId = Number(c.req.param("id"));
 
   // Non-participants get a 404 rather than a 403 for chats to stay unenumerable
-  const row = await selectUserChats(session.id)
+  const row = await selectUserChats(db, session.id)
     .where(eq(chats.id, chatId))
     .get();
 
@@ -790,6 +811,7 @@ const startChatSchema = z.object({
 
 // Open the conversation with an agent about one of their properties, reusing it if it exists
 api.post("/chats", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
   const bodyRes = startChatSchema.safeParse(await c.req.json());
@@ -828,7 +850,7 @@ api.post("/chats", requireAuth, async (c) => {
   }
 
   // Narrowing by users.id restricts the counterpart to the agent in question
-  const existing = await selectUserChats(session.id)
+  const existing = await selectUserChats(db, session.id)
     .where(and(eq(chats.propertyId, propertyId), eq(users.id, agentId)))
     .get();
 
@@ -860,6 +882,7 @@ const sendMessageSchema = z.object({
 
 // Post a message into a conversation
 api.post("/chats/:id/messages", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
   const chatId = Number(c.req.param("id"));
 
@@ -913,6 +936,7 @@ api.post("/chats/:id/messages", requireAuth, async (c) => {
 
 // Move the reader's watermark up to now, clearing the conversation's unread count
 api.post("/chats/:id/read", requireAuth, async (c) => {
+  const db = c.var.db;
   const session = c.get("user") as UserSession;
   const chatId = Number(c.req.param("id"));
 
@@ -939,32 +963,16 @@ api.post("/chats/:id/read", requireAuth, async (c) => {
 //   return c.json(result);
 // });
 
-// Most PaaS providers assign the port dynamically via $PORT
-const port = Number(process.env.PORT) || 3000;
+export default {
+  fetch(request, env, ctx) {
+    return app.fetch(request, env, ctx);
+  },
+  async scheduled(_controller, env) {
+    if (env.DISABLE_AUTO_RESET === "true") {
+      console.log("Automatic database reset disabled.");
+      return;
+    }
 
-async function main() {
-  // Bring the schema up to date before anything touches the database
-  await runMigrations();
-
-  // First boot against an empty database (fresh volume, fresh deploy) loading the default demo data once so the app isn't empty until the next scheduled reset
-  const existingUser = await db.select().from(users).limit(1).get();
-  if (!existingUser) {
-    console.log("No data found, running the initial seed...");
-    await seedDatabase();
-  }
-
-  // Wipe back to the default demo data once a day
-  scheduleAutoReset();
-
-  serve({
-    fetch: app.fetch,
-    port,
-  });
-
-  console.log(`Server is now running on: http://localhost:${port}`);
-}
-
-main().catch((error) => {
-  console.error("Failed to start server:", error);
-  process.exit(1);
-});
+    await resetDatabase(createDb(env.DB));
+  },
+} satisfies ExportedHandler<Bindings>;

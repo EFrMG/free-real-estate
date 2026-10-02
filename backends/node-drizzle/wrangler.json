@@ -1,0 +1,29 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "free-real-estate-backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-30",
+  "observability": {
+    "enabled": true
+  },
+  "secrets": {
+    "required": ["JWT_KEY", "AGENT_PROMOTION_CODE", "FRONTEND_URL"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "free-real-estate",
+      "database_id": "de4a034d-f560-43b4-a09f-3d3e4c311260",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "free-real-estate-uploads"
+    }
+  ],
+  "triggers": {
+    "crons": ["0 0 * * *"]
+  }
+}

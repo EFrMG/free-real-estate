@@ -1,7 +1,7 @@
 import { eq, ne, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
 
-import { db } from "../db/index.ts";
+import type { Database } from "../db/index.ts";
 import { users, properties, chats, chatParticipants } from "../db/schema.ts";
 
 // Two references to the same join table: the reader's row and the counterpart's
@@ -16,7 +16,7 @@ const otherPart = alias(chatParticipants, "other_participation");
  * @param userId The reader, whose own participation row carries `lastReadAt`.
  * @returns A Drizzle query builder yielding one row per conversation.
  */
-export default function selectUserChats(userId: number) {
+export default function selectUserChats(db: Database, userId: number) {
   return db
     .select({
       id: chats.id,

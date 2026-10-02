@@ -18,9 +18,9 @@
     "dev:be": "pnpm --filter @free-real-estate/node-drizzle run dev",
     "build:be": "pnpm --filter @free-real-estate/node-drizzle run build",
     "start:be": "pnpm --filter @free-real-estate/node-drizzle run start",
+    "deploy:be": "pnpm --filter @free-real-estate/node-drizzle run deploy",
     "generate:be": "pnpm --filter @free-real-estate/node-drizzle run generate",
-    "push:be": "pnpm --filter @free-real-estate/node-drizzle run push",
-    "seed:be": "pnpm --filter @free-real-estate/node-drizzle run seed",
-    "studio:be": "pnpm --filter @free-real-estate/node-drizzle run studio"
+    "migrate:be:local": "pnpm --filter @free-real-estate/node-drizzle run migrate:local",
+    "migrate:be:remote": "pnpm --filter @free-real-estate/node-drizzle run migrate:remote"
   }
 }

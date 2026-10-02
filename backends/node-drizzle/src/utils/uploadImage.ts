@@ -1,16 +1,7 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import { randomUUID } from "node:crypto";
-
 import { ClientError } from "./clientError.ts";
 
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-
-// Railway mounts the app's persistent volume at /data. Keeping uploads there prevents the database from retaining URLs whose files disappear on deploy.
-// Local development continues to use the repository's public directory.
-export const UPLOAD_DIRECTORY =
-  process.env.NODE_ENV === "production" ? "/data/uploads" : "public/uploads";
 
 /** True only for a file input the user actually filled; an empty one still submits a 0-byte File. */
 export function isFilledFile(value: unknown): value is File {
@@ -18,7 +9,7 @@ export function isFilledFile(value: unknown): value is File {
 }
 
 /**
- * Validates an uploaded image and writes it under `public/uploads/<subdirectory>/`.
+ * Validates an uploaded image and writes it to the Worker's R2 bucket.
  *
  * The name is derived from the owner plus a timestamp and a random suffix rather than from the client-supplied filename, which keeps path traversal and collisions out of the picture entirely.
  *
@@ -26,6 +17,7 @@ export function isFilledFile(value: unknown): value is File {
  * @throws {ClientError} when the type or the size is not allowed.
  */
 export default async function uploadImage(
+  bucket: R2Bucket,
   file: File,
   subdirectory: string,
   ownerId: number | string,
@@ -41,17 +33,12 @@ export default async function uploadImage(
   }
 
   const extension = file.type.split("/")[1];
-  const fileName = `${ownerId}-${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
+  const fileName = `${ownerId}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${extension}`;
+  const objectKey = `uploads/${subdirectory}/${fileName}`;
 
-  const uploadDir = path.join(UPLOAD_DIRECTORY, subdirectory);
+  await bucket.put(objectKey, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type },
+  });
 
-  // The upload directory does not exist until the first upload ever happens
-  await fs.mkdir(uploadDir, { recursive: true });
-
-  await fs.writeFile(
-    path.join(uploadDir, fileName),
-    Buffer.from(await file.arrayBuffer()),
-  );
-
-  return `/public/uploads/${subdirectory}/${fileName}`;
+  return `/public/${objectKey}`;
 }

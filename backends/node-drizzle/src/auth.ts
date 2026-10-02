@@ -3,44 +3,49 @@ import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { sign, verify } from "hono/jwt";
 import { setCookie, getCookie, deleteCookie } from "hono/cookie";
-import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 
-import { db } from "./db/index.ts";
 import { refreshTokens, users } from "./db/schema.ts";
-import { requireEnv } from "./utils/requireEnv.ts";
+import type { AppEnv, UserSession } from "./env.ts";
 
-const JWT_KEY = requireEnv("JWT_KEY", "dev-secret--change-in-prod");
 const SESSION_COOKIE = "session";
 const REFRESH_COOKIE = "refresh";
 const JWT_EXPIRY_SECONDS = 60 * 60; // 1 hour
 const REFRESH_EXPIRY_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
-// Minimal session payload
-export interface UserSession {
-  id: number;
-  role: "agent" | "user";
-}
+export type { UserSession } from "./env.ts";
 
 // Token utilities --.
 
 /** Cryptographically random opaque token (64 hex characters). */
 function createOpaqueToken(): string {
-  return randomBytes(32).toString("hex");
+  return Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
 }
 
 /** SHA-256 hash of an opaque token (64 hex characters out). */
-function hashToken(token: string): string {
-  return createHash("sha256").update(token).digest("hex");
+async function hashToken(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(token),
+  );
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
 }
 
 // Cookie utilities --.
 
 /** Issue a short-lived JWT and set it as the `session` httpOnly cookie. */
-export async function setSessionCookie(c: Context, user: UserSession) {
+export async function setSessionCookie(
+  c: Context<AppEnv>,
+  user: UserSession,
+) {
   const token = await sign(
     { ...user, exp: Math.floor(Date.now() / 1000) + JWT_EXPIRY_SECONDS },
-    JWT_KEY,
+    c.env.JWT_KEY,
   );
 
   setCookie(c, SESSION_COOKIE, token, {
@@ -48,7 +53,7 @@ export async function setSessionCookie(c: Context, user: UserSession) {
     sameSite: "Lax",
     path: "/",
     maxAge: JWT_EXPIRY_SECONDS,
-    secure: process.env.NODE_ENV === "production",
+    secure: new URL(c.req.url).protocol === "https:",
   });
 }
 
@@ -57,12 +62,13 @@ export async function setSessionCookie(c: Context, user: UserSession) {
  * the `refresh` httpOnly cookie. A new rotation family is created too.
  */
 export async function createRefreshToken(
-  c: Context,
+  c: Context<AppEnv>,
   userId: number,
 ): Promise<void> {
+  const db = c.var.db;
   const token = createOpaqueToken();
-  const tokenHash = hashToken(token);
-  const family = randomUUID();
+  const tokenHash = await hashToken(token);
+  const family = crypto.randomUUID();
   const now = new Date();
   const expiresAt = new Date(now.getTime() + REFRESH_EXPIRY_SECONDS * 1000);
 
@@ -79,7 +85,7 @@ export async function createRefreshToken(
     sameSite: "Lax",
     path: "/api",
     maxAge: REFRESH_EXPIRY_SECONDS,
-    secure: process.env.NODE_ENV === "production",
+    secure: new URL(c.req.url).protocol === "https:",
   });
 }
 
@@ -88,11 +94,12 @@ export async function createRefreshToken(
  * same family. Returns the new opaque token (already set as a cookie).
  */
 async function rotateRefreshToken(
-  c: Context,
+  c: Context<AppEnv>,
   oldTokenHash: string,
   family: string,
   userId: number,
 ): Promise<void> {
+  const db = c.var.db;
   // Remove the consumed token
   await db
     .delete(refreshTokens)
@@ -100,7 +107,7 @@ async function rotateRefreshToken(
 
   // Issue a replacement
   const token = createOpaqueToken();
-  const tokenHash = hashToken(token);
+  const tokenHash = await hashToken(token);
   const now = new Date();
   const expiresAt = new Date(now.getTime() + REFRESH_EXPIRY_SECONDS * 1000);
 
@@ -117,19 +124,22 @@ async function rotateRefreshToken(
     sameSite: "Lax",
     path: "/api",
     maxAge: REFRESH_EXPIRY_SECONDS,
-    secure: process.env.NODE_ENV === "production",
+    secure: new URL(c.req.url).protocol === "https:",
   });
 }
 
 // Session management --.
 
 /** Revoke every refresh token for a user (logout everywhere / password change). */
-export async function revokeAllUserSessions(userId: number): Promise<void> {
-  await db.delete(refreshTokens).where(eq(refreshTokens.userId, userId));
+export async function revokeAllUserSessions(
+  c: Context<AppEnv>,
+  userId: number,
+): Promise<void> {
+  await c.var.db.delete(refreshTokens).where(eq(refreshTokens.userId, userId));
 }
 
 /** Clear both auth cookies from the response. */
-export function clearAuthCookies(c: Context): void {
+export function clearAuthCookies(c: Context<AppEnv>): void {
   deleteCookie(c, SESSION_COOKIE, { path: "/" });
   deleteCookie(c, REFRESH_COOKIE, { path: "/api" });
 }
@@ -143,15 +153,14 @@ export function clearAuthCookies(c: Context): void {
  * transparently rotates the refresh token, issues a new JWT, and continues
  * the request.
  */
-export const requireAuth = createMiddleware<{
-  Variables: { user: UserSession };
-}>(async (c, next) => {
+export const requireAuth = createMiddleware<AppEnv>(async (c, next) => {
+  const db = c.var.db;
   const sessionToken = getCookie(c, SESSION_COOKIE);
 
   // Try the JWT first
   if (sessionToken) {
     try {
-      const payload = await verify(sessionToken, JWT_KEY, "HS256");
+      const payload = await verify(sessionToken, c.env.JWT_KEY, "HS256");
       const user: UserSession = {
         id: payload["id"] as number,
         role: payload["role"] as "agent" | "user",
@@ -172,7 +181,7 @@ export const requireAuth = createMiddleware<{
     return c.json({ error: "Unauthorized" }, 401);
   }
 
-  const refreshTokenHash = hashToken(refreshCookie);
+  const refreshTokenHash = await hashToken(refreshCookie);
 
   const storedRefreshToken = await db
     .select()
@@ -239,9 +248,7 @@ export const requireAuth = createMiddleware<{
  *
  * Chained after `requireAuth`, which is what puts the session on the context; on its own, this middleware has nothing to read.
  */
-export const requireAgent = createMiddleware<{
-  Variables: { user: UserSession };
-}>(async (c, next) => {
+export const requireAgent = createMiddleware<AppEnv>(async (c, next) => {
   const session = c.get("user");
 
   if (session?.role !== "agent") {

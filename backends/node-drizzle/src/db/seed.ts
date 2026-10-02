@@ -1,4 +1,4 @@
-import { db } from "./index.ts";
+import type { Database } from "./index.ts";
 import {
   users,
   properties,
@@ -18,15 +18,15 @@ import {
   messageData,
   /*, postData */
 } from "./generalDataSeed.ts";
-import argon2 from "argon2";
+import { hashPassword } from "../password.ts";
 
 const clearAllColumns = true;
 
 /**
  * Wipes every table back to empty and reloads the default demo data.
- * Exported so it can be run both as a one-off CLI script (`pnpm seed`) and called from within the running server for the daily automatic reset.
+ * Called by the Worker's daily Cron Trigger.
  */
-export async function seedDatabase(): Promise<void> {
+export async function seedDatabase(db: Database): Promise<void> {
   console.log("Seed started...");
 
   if (clearAllColumns) {
@@ -46,7 +46,7 @@ export async function seedDatabase(): Promise<void> {
   }
 
   console.log("Seeding users with placeholder passwords...");
-  const defaultPasswordHash = await argon2.hash("password123");
+  const defaultPasswordHash = await hashPassword("password123");
   const usersToInsert = userData.map((u) => ({
     ...u,
     passwordHash: u.passwordHash || defaultPasswordHash,
@@ -54,7 +54,14 @@ export async function seedDatabase(): Promise<void> {
   await db.insert(users).values(usersToInsert).onConflictDoNothing();
 
   console.log("Seeding properties...");
-  await db.insert(properties).values(propertyData).onConflictDoNothing();
+  // D1 accepts at most 100 bound parameters per query. Each property has 20 columns, so batches of four leave room for future columns without approaching the limit.
+  const propertyBatchSize = 4;
+  for (let index = 0; index < propertyData.length; index += propertyBatchSize) {
+    await db
+      .insert(properties)
+      .values(propertyData.slice(index, index + propertyBatchSize))
+      .onConflictDoNothing();
+  }
 
   console.log("Seeding agent profiles...");
   await db.insert(agentProfiles).values(agentProfileData).onConflictDoNothing();
@@ -76,12 +83,4 @@ export async function seedDatabase(): Promise<void> {
   // await db.insert(posts).values(postData).onConflictDoNothing();
 
   console.log("Seed finished successfully!");
-}
-
-// CLI entry point, only running when this file is executed directly (`pnpm seed` / `tsx src/db/seed.ts`), not when imported by the server.
-if (import.meta.url === `file://${process.argv[1]}`) {
-  seedDatabase().catch((error) => {
-    console.error("Seed failed:", error);
-    process.exit(1);
-  });
 }

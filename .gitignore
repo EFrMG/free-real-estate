@@ -5,6 +5,7 @@ node_modules
 dist
 build
 .react-router
+.wrangler
 **/DOCS
 *.log
 /backends/node-drizzle/local.db

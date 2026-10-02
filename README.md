@@ -170,7 +170,7 @@ Chats are kept fresh by re-running the active loaders on an interval (see [usePo
 
 RESTful API built with `Hono`, using `Drizzle` ORM.
 
-The runtime is `Node.js` via `@hono/node-server`.
+It runs as a `Cloudflare Worker`; the schema and query layer use Cloudflare D1's SQLite-compatible driver.
 
 - **Endpoints**:
   - _Properties_:
@@ -186,7 +186,7 @@ The runtime is `Node.js` via `@hono/node-server`.
     - `GET /api/users`: Gets list of user agents (not normal users, as this is for Our Agents page).
     - `GET /api/users/:id`: Gets profile details of a specific user.
     - `PUT /api/users/:id`: Updates a user's profile (name, profile picture, biography, etc).
-    - `PUT /api/users/:id/password`: Updates a user's password, including verification with Argon2.
+    - `PUT /api/users/:id/password`: Updates a user's scrypt password hash.
     - `POST /api/users/:id/promote`: Promotes a normal user to Agent status using a secret code.
     - `GET /api/users/:id/properties`: Gets properties owned by a user.
     - `GET /api/users/:id/bookmarks`: Gets a user's bookmarked properties.
@@ -220,7 +220,7 @@ A central package containing the database schema and TypeScript types, ensuring 
 
 ## 2. Running the Project
 
-Begin by using the `.env.example` template:
+Begin by using the environment template:
 
 ```bash
 cp ./backends/node-drizzle/.env.example ./backends/node-drizzle/.env
@@ -231,14 +231,20 @@ Then run:
 ```bash
 pnpm install
 
-pnpm push:be && pnpm seed:be && pnpm run dev
+pnpm migrate:be:local
+pnpm run dev
 ```
 
 **⌃** This:
 
 1. Creates database tables according to the [schema](/shared/src/schema.ts).
-2. Seeds the tables, for which you want to be using a Linux (or Unix) filesystem or check the **linked** [general data file](/backends/node-drizzle/src/db/generalDataSeed.ts) for compatibility with a different type of which.
-3. To then start both the backend and frontend servers in parallel. Consult the [main package file](/package.json) for more commands to run from the root of the project.
+2. Starts the Cloudflare backend Worker and frontend in parallel. The backend's daily demo reset is handled by its Cron Trigger; its data fixture remains linked from [the shared general data file](/backends/node-drizzle/src/db/generalDataSeed.ts).
+
+To load the demo data locally, invoke the scheduled handler after `pnpm run dev` is running:
+
+```bash
+curl http://localhost:8787/cdn-cgi/local/scheduled
+```
 
 ## 3. Future Considerations
 
