@@ -251,7 +251,6 @@ curl http://localhost:8787/cdn-cgi/local/scheduled
 In order of relevant importance:
 
 - **Session Refresh Concurrency**: Refresh token rotation currently misbehaves when a single route loader fires several authenticated requests in parallel. The problem, the mitigation in place and the candidate fixes are documented in [the refresh token rotation document](/docs/REFRESH_TOKEN_ROTATION_CONCURRENCY.md).
-- **Agents Adding new Property Listings**: Agents should be able to create, edit and remove new properties from their profile.
+- **Backend Diversification**: Implementing the same API specifications in Go to compare performance and developer experience could be very interesting from a certain perspective.
 - **Messaging System**: What remains could be making delivery real-time instead of polled, plus niceties such as an emoji picker, attachments, ability to edit and delete messages, and typing indicators.
 - **Blogs**: A blog feature with rich text support. I am delaying this for a good while.
-- **Backend Diversification**: Implementing the same API specifications in Go to compare performance and developer experience could be very interesting from a certain perspective.
