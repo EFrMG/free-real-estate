@@ -168,7 +168,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       body: fetcherData,
     });
 
-    const result = response.ok ? await response.json() : null;
+    const result = await response.json().catch(() => null);
 
     if (!response.ok)
       return {

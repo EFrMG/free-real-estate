@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 import useObjectState from "~/hooks/useObjectState";
 import getAssetUrl from "~/utils/getAssetUrl";
+import compressImage from "~/utils/compressImage";
 
 import { GoImage, GoPlus, GoTrash, GoX } from "react-icons/go";
 
@@ -110,6 +111,7 @@ export default function PropertyFormModal({
   const [galleryImages, setGalleryImages] = useState<PendingImage[]>([]);
 
   const [formError, setFormError] = useState<string | null>(null);
+  const [processingImages, setProcessingImages] = useState(0);
 
   // Which listing the fields currently hold, or null while the dialog is closed
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
@@ -147,28 +149,59 @@ export default function PropertyFormModal({
     openCloseDialog(false);
   };
 
-  const handleExteriorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExteriorChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
+    setProcessingImages((count) => count + 1);
+    let compressed: File;
+    try {
+      compressed = await compressImage(file);
+    } catch {
+      setFormError("Could not process this image. Please choose another file.");
+      return;
+    } finally {
+      setProcessingImages((count) => count - 1);
+    }
+
     if (exteriorImage) URL.revokeObjectURL(exteriorImage.preview);
 
-    setExteriorImage({ file, preview: URL.createObjectURL(file) });
+    setExteriorImage({
+      file: compressed,
+      preview: URL.createObjectURL(compressed),
+    });
   };
 
-  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = Array.from(e.target.files ?? []);
 
     if (!files.length) return;
 
+    // Let the same file be picked again, including after compression failure
+    e.target.value = "";
+    setProcessingImages((count) => count + 1);
+    let compressed: File[];
+    try {
+      compressed = await Promise.all(files.map(compressImage));
+    } catch {
+      setFormError("Could not process an image. Please choose another file.");
+      return;
+    } finally {
+      setProcessingImages((count) => count - 1);
+    }
+
     setGalleryImages((current) => [
       ...current,
-      ...files.map((file) => ({ file, preview: URL.createObjectURL(file) })),
+      ...compressed.map((file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+      })),
     ]);
-
-    // Let the same file be picked again after it has been removed from the list
-    e.target.value = "";
   };
 
   const removeStoredGalleryImage = (path: string) => {
@@ -198,6 +231,11 @@ export default function PropertyFormModal({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (processingImages) {
+      setFormError("Please wait for the images to finish processing.");
+      return;
+    }
 
     if (!exteriorImage && !form.exteriorImage) {
       setFormError("Please, upload an exterior image for the listing.");

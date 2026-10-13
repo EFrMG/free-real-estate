@@ -1,4 +1,5 @@
 import { ClientError } from "./clientError.ts";
+import { releaseImage, reserveImage } from "./uploadQuota.ts";
 
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -17,6 +18,7 @@ export function isFilledFile(value: unknown): value is File {
  * @throws {ClientError} when the type or the size is not allowed.
  */
 export default async function uploadImage(
+  db: D1Database,
   bucket: R2Bucket,
   file: File,
   subdirectory: string,
@@ -36,9 +38,17 @@ export default async function uploadImage(
   const fileName = `${ownerId}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${extension}`;
   const objectKey = `uploads/${subdirectory}/${fileName}`;
 
-  await bucket.put(objectKey, await file.arrayBuffer(), {
-    httpMetadata: { contentType: file.type },
-  });
+  await reserveImage(db, bucket, file.size);
+
+  try {
+    await bucket.put(objectKey, await file.arrayBuffer(), {
+      httpMetadata: { contentType: file.type },
+    });
+  } catch (error) {
+    await releaseImage(db, file.size);
+
+    throw error;
+  }
 
   return `/public/${objectKey}`;
 }

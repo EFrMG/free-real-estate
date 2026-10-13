@@ -32,6 +32,15 @@ export const users = sqliteTable("users", {
   profilePicture: text().notNull().default(""),
 });
 
+export const uploadQuota = sqliteTable("upload_quota", {
+  id: integer().primaryKey(),
+  imageCount: integer("image_count").notNull().default(0),
+  totalBytes: integer("total_bytes").notNull().default(0),
+  initialized: integer().notNull().default(0),
+  leaseUntil: integer("lease_until").notNull().default(0),
+  leaseToken: text("lease_token"),
+});
+
 export const agentProfiles = sqliteTable("agent_profiles", {
   userId: integer()
     .primaryKey()

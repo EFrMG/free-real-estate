@@ -45,6 +45,7 @@ import toChatSummary from "./utils/toChatSummary.ts";
 import { ClientError } from "./utils/clientError.ts";
 import uploadImage, { isFilledFile } from "./utils/uploadImage.ts";
 import readPropertyForm from "./utils/readPropertyForm.ts";
+import { clearUploads, deleteImage } from "./utils/uploadQuota.ts";
 import { hashPassword, verifyPassword } from "./password.ts";
 
 import type {
@@ -212,11 +213,7 @@ const propertySchema = z.object({
 const propertyUpdateSchema = propertySchema.partial();
 
 /** Load a listing and make sure the session owns it, or return the response to send back. */
-async function findOwnedProperty(
-  db: Database,
-  id: number,
-  ownerId: number,
-) {
+async function findOwnedProperty(db: Database, id: number, ownerId: number) {
   const property = await db
     .select()
     .from(properties)
@@ -237,27 +234,37 @@ api.post("/properties", requireAuth, requireAgent, async (c) => {
   const db = c.var.db;
   const session = c.get("user") as UserSession;
 
-  let payload: Record<string, unknown>;
+  let form: Awaited<ReturnType<typeof readPropertyForm>>;
 
   try {
-    payload = await readPropertyForm(c, session.id);
+    form = await readPropertyForm(c, session.id);
   } catch (error) {
     if (error instanceof ClientError)
       return c.json({ error: error.message }, 400);
     throw error;
   }
 
-  const bodyRes = propertySchema.safeParse(payload);
+  const bodyRes = propertySchema.safeParse(form.payload);
 
   if (!bodyRes.success) {
+    for (const path of form.uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
+
     return c.json({ error: z.flattenError(bodyRes.error) }, 400);
   }
 
-  const property = await db
-    .insert(properties)
-    .values({ ...bodyRes.data, userId: session.id })
-    .returning()
-    .get();
+  let property: PropertyData;
+  try {
+    property = await db
+      .insert(properties)
+      .values({ ...bodyRes.data, userId: session.id })
+      .returning()
+      .get();
+  } catch (error) {
+    for (const path of form.uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
+    throw error;
+  }
 
   return c.json(property satisfies PropertyData, 201);
 });
@@ -272,32 +279,58 @@ api.put("/properties/:id", requireAuth, requireAgent, async (c) => {
 
   if ("error" in owned) return c.json({ error: owned.error }, owned.status);
 
-  let payload: Record<string, unknown>;
+  let form: Awaited<ReturnType<typeof readPropertyForm>>;
 
   try {
-    payload = await readPropertyForm(c, session.id);
+    form = await readPropertyForm(c, session.id);
   } catch (error) {
     if (error instanceof ClientError)
       return c.json({ error: error.message }, 400);
     throw error;
   }
 
-  const bodyRes = propertyUpdateSchema.safeParse(payload);
+  const bodyRes = propertyUpdateSchema.safeParse(form.payload);
 
   if (!bodyRes.success) {
+    for (const path of form.uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
     return c.json({ error: z.flattenError(bodyRes.error) }, 400);
   }
 
   if (!Object.keys(bodyRes.data).length) {
+    for (const path of form.uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
     return c.json({ error: "Nothing to update." }, 400);
   }
 
-  const property = await db
-    .update(properties)
-    .set(bodyRes.data)
-    .where(eq(properties.id, id))
-    .returning()
-    .get();
+  let property: PropertyData;
+  try {
+    property = await db
+      .update(properties)
+      .set(bodyRes.data)
+      .where(eq(properties.id, id))
+      .returning()
+      .get();
+  } catch (error) {
+    for (const path of form.uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
+    throw error;
+  }
+
+  const kept = new Set([
+    property.exteriorImage,
+    ...(property.interiorGallery ?? []),
+  ]);
+  for (const path of [
+    owned.property.exteriorImage,
+    ...(owned.property.interiorGallery ?? []),
+  ]) {
+    if (!kept.has(path))
+      await deleteImage(c.env.DB, c.env.UPLOADS, path, {
+        directory: "properties",
+        id: session.id,
+      });
+  }
 
   return c.json(property satisfies PropertyData);
 });
@@ -316,6 +349,16 @@ api.delete("/properties/:id", requireAuth, requireAgent, async (c) => {
   await db.delete(chats).where(eq(chats.propertyId, id));
 
   await db.delete(properties).where(eq(properties.id, id));
+
+  for (const path of new Set([
+    owned.property.exteriorImage,
+    ...(owned.property.interiorGallery ?? []),
+  ])) {
+    await deleteImage(c.env.DB, c.env.UPLOADS, path, {
+      directory: "properties",
+      id: session.id,
+    });
+  }
 
   return c.json({ ok: true });
 });
@@ -535,9 +578,19 @@ api.put("/users/:id", requireAuth, async (c) => {
   if (name !== undefined) userUpdates["name"] = name;
 
   // Handle profile picture file upload
+  const previousPicture = isFilledFile(profilePicture)
+    ? (
+        await db
+          .select({ profilePicture: users.profilePicture })
+          .from(users)
+          .where(eq(users.id, id))
+          .get()
+      )?.profilePicture
+    : undefined;
   if (isFilledFile(profilePicture)) {
     try {
       userUpdates["profilePicture"] = await uploadImage(
+        c.env.DB,
         c.env.UPLOADS,
         profilePicture,
         "profile-pictures",
@@ -554,7 +607,20 @@ api.put("/users/:id", requireAuth, async (c) => {
   }
 
   if (Object.keys(userUpdates).length) {
-    await db.update(users).set(userUpdates).where(eq(users.id, id));
+    try {
+      await db.update(users).set(userUpdates).where(eq(users.id, id));
+    } catch (error) {
+      if (isFilledFile(profilePicture) && userUpdates.profilePicture)
+        await deleteImage(c.env.DB, c.env.UPLOADS, userUpdates.profilePicture);
+
+      throw error;
+    }
+
+    if (previousPicture && previousPicture !== userUpdates.profilePicture)
+      await deleteImage(c.env.DB, c.env.UPLOADS, previousPicture, {
+        directory: "profile-pictures",
+        id,
+      });
   }
 
   // Agent profile updates
@@ -974,5 +1040,6 @@ export default {
     }
 
     await resetDatabase(createDb(env.DB));
+    await clearUploads(env.DB, env.UPLOADS);
   },
 } satisfies ExportedHandler<Bindings>;

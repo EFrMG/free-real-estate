@@ -2,10 +2,11 @@ import type { UserProfile } from "~/data/generalData";
 import type { ProfileState } from "~/routes/user-profile";
 import type { ModalProps } from "./modalTypes";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
+import compressImage from "~/utils/compressImage";
 import createDialogCloseHandler from "~/utils/createDialogCloseHandler";
 
 import { GoPencil, GoX } from "react-icons/go";
@@ -25,6 +26,8 @@ export default function EditProfileModal({
 
   const fetcher = useFetcher();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionError, setCompressionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data && !fetcher.data.error) {
@@ -36,10 +39,26 @@ export default function EditProfileModal({
     }
   }, [fetcher.state, fetcher.data]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
+      setCompressionError(null);
+      setIsCompressing(true);
+      let compressed: File;
+      try {
+        compressed = await compressImage(file);
+      } catch {
+        e.target.value = "";
+        setCompressionError("Could not process this image. Please choose another file.");
+        return;
+      } finally {
+        setIsCompressing(false);
+      }
+
+      const files = new DataTransfer();
+      files.items.add(compressed);
+      if (fileRef.current) fileRef.current.files = files.files;
       const reader = new FileReader();
 
       reader.onload = (e) =>
@@ -47,7 +66,7 @@ export default function EditProfileModal({
       reader.onerror = (err) =>
         console.error(`Error while handling profile picture update: ${err}`);
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
     }
   };
 
@@ -137,15 +156,19 @@ export default function EditProfileModal({
                       ref={fileRef}
                       type="file"
                       name="profilePicture"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
                       onChange={handleFileChange}
                       className="sr-only"
                     />
 
                     <p className="text-xs text-amber-700/94">
-                      Click the pencil to upload a new photo
+                      Click the pencil to upload a new photo. Images are compressed before upload; the site allows 50 images and 50 MB total.
                     </p>
                   </fieldset>
+
+                  {(compressionError || fetcher.data?.error) && (
+                    <p role="alert" className="text-sm text-red-700">{compressionError ?? fetcher.data.error}</p>
+                  )}
 
                   {/* Name input */}
                   <fieldset className="stack-0 form-label">
@@ -201,8 +224,8 @@ export default function EditProfileModal({
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="modal-accept-btn">
-                      Save Changes
+                    <button type="submit" disabled={isCompressing} className="modal-accept-btn">
+                      {isCompressing ? "Preparing photo..." : "Save Changes"}
                     </button>
                   </fieldset>
                 </fetcher.Form>

@@ -3,6 +3,7 @@ import type { Context } from "hono";
 import type { AppEnv } from "../env.ts";
 import { ClientError } from "./clientError.ts";
 import uploadImage, { isFilledFile } from "./uploadImage.ts";
+import { deleteImage } from "./uploadQuota.ts";
 
 const JSON_FIELDS = ["interiorGallery", "sizes", "nearbyPlaces"];
 const FILE_FIELDS = ["exteriorFile", "galleryFiles"];
@@ -24,10 +25,11 @@ const CLEARABLE_FIELDS = ["longDescription"];
 export default async function readPropertyForm(
   c: Context<AppEnv>,
   ownerId: number,
-): Promise<Record<string, unknown>> {
+): Promise<{ payload: Record<string, unknown>; uploadedPaths: string[] }> {
   const contentType = c.req.header("Content-Type") ?? "";
 
-  if (!contentType.includes("multipart/form-data")) return await c.req.json();
+  if (!contentType.includes("multipart/form-data"))
+    return { payload: await c.req.json(), uploadedPaths: [] };
 
   // `all` keeps every entry of a repeated field (the gallery uploads) rather than only the last one
   const body = await c.req.parseBody({ all: true });
@@ -66,37 +68,54 @@ export default async function readPropertyForm(
     }
   }
 
-  // A new exterior image replaces whatever path the form came in with
-  const exteriorFile = valuesOf("exteriorFile").find(isFilledFile);
+  const uploadedPaths: string[] = [];
+  try {
+    // A new exterior image replaces whatever path the form came in with
+    const exteriorFile = valuesOf("exteriorFile").find(isFilledFile);
 
-  if (exteriorFile) {
-    payload["exteriorImage"] = await uploadImage(
-      c.env.UPLOADS,
-      exteriorFile,
-      "properties",
-      ownerId,
-    );
-  }
-
-  // Gallery uploads are appended to whichever existing images the form kept
-  const galleryFiles = valuesOf("galleryFiles").filter(isFilledFile);
-
-  if (galleryFiles.length) {
-    const uploaded: string[] = [];
-
-    for (const file of galleryFiles) {
-      uploaded.push(
-        await uploadImage(c.env.UPLOADS, file, "properties", ownerId),
+    if (exteriorFile) {
+      const path = await uploadImage(
+        c.env.DB,
+        c.env.UPLOADS,
+        exteriorFile,
+        "properties",
+        ownerId,
       );
+      uploadedPaths.push(path);
+      payload["exteriorImage"] = path;
     }
 
-    const kept = payload["interiorGallery"];
+    // Gallery uploads are appended to whichever existing images the form kept
+    const galleryFiles = valuesOf("galleryFiles").filter(isFilledFile);
 
-    payload["interiorGallery"] = [
-      ...(Array.isArray(kept) ? kept : []),
-      ...uploaded,
-    ];
+    if (galleryFiles.length) {
+      const uploaded: string[] = [];
+
+      for (const file of galleryFiles) {
+        const path = await uploadImage(
+          c.env.DB,
+          c.env.UPLOADS,
+          file,
+          "properties",
+          ownerId,
+        );
+        uploaded.push(path);
+        uploadedPaths.push(path);
+      }
+
+      const kept = payload["interiorGallery"];
+
+      payload["interiorGallery"] = [
+        ...(Array.isArray(kept) ? kept : []),
+        ...uploaded,
+      ];
+    }
+
+    return { payload, uploadedPaths };
+  } catch (error) {
+    for (const path of uploadedPaths)
+      await deleteImage(c.env.DB, c.env.UPLOADS, path);
+
+    throw error;
   }
-
-  return payload;
 }
