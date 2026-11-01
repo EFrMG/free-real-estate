@@ -54,9 +54,7 @@ export default function AgentPromotionModal({
         handleCloseDialog(e);
         setFetcherKey(crypto.randomUUID());
       }}
-      className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent
-      overflow-hidden border-none outline-none"
+      className="inset-0 h-full max-h-none w-full max-w-none overflow-hidden border-none bg-transparent outline-none backdrop:bg-transparent"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
         {isDialogOpen && (
@@ -65,7 +63,7 @@ export default function AgentPromotionModal({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="flex items-center justify-center w-full h-full relative"
+            className="relative flex h-full w-full items-center justify-center"
           >
             {/* Custom backdrop */}
             <div
@@ -96,17 +94,17 @@ export default function AgentPromotionModal({
 
                 <h2 className="modal-title">Become an Agent User</h2>
 
-                <fetcher.Form method="PUT" className="stack-4 form-label">
+                <fetcher.Form method="PUT" className="form-label stack-4">
                   <input type="hidden" name="intent" value="agent-promotion" />
 
                   {fetcher.data?.error ? (
-                    <p className="mt-4 form-error">{fetcher.data.error}</p>
+                    <p className="form-error mt-4">{fetcher.data.error}</p>
                   ) : fetcher.data?.success ? (
-                    <p className="mt-4 form-success">
+                    <p className="form-success mt-4">
                       You have been promoted successfully.
                     </p>
                   ) : (
-                    <div className="mt-4 form-message-space" />
+                    <div className="form-message-space mt-4" />
                   )}
 
                   {/* Current Password */}
@@ -155,7 +153,7 @@ export default function AgentPromotionModal({
                     </p>
                   </div>
 
-                  <fieldset className="flex flex-row justify-end gap-4 mt-8">
+                  <fieldset className="mt-8 flex flex-row justify-end gap-4">
                     <button
                       type="button"
                       onClick={(e) => {

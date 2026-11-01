@@ -9,6 +9,8 @@
     "dev": "react-router dev",
     "start": "wrangler dev",
     "preview": "pnpm run build && vite preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "check": "tsc -b && pnpm run build && wrangler deploy --dry-run",
     "deploy": "pnpm run build && wrangler deploy"
   },
@@ -32,6 +34,8 @@
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.3",

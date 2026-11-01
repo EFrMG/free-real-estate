@@ -29,11 +29,7 @@ export default function AgentDetailPanel({
       : "placeholder";
 
   return (
-    <div
-      className="md:sticky md:top-[7.5vh] px-4 pb-3 xs:px-6 xs:pt-4 xs:pb-5
-      bg-amber-100/64 md:bg-amber-50/64 rounded-xl shadow-md
-      border border-amber-200/40 grid"
-    >
+    <div className="grid rounded-xl border border-amber-200/40 bg-amber-100/64 px-4 pb-3 shadow-md xs:px-6 xs:pt-4 xs:pb-5 md:sticky md:top-[7.5vh] md:bg-amber-50/64">
       <AnimatePresence>
         <motion.div
           key={panelKey}
@@ -44,51 +40,47 @@ export default function AgentDetailPanel({
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           {isLoading ? (
-            <div className="pt-4 stack-4">
+            <div className="stack-4 pt-4">
               <div className="flex flex-col items-center gap-4">
-                <div className="w-28 h-28 sm:w-32 sm:h-32 bg-amber-200/60 rounded-full animate-pulse shadow-sm" />
-                <div className="w-48 h-6 bg-amber-200/60 rounded-full animate-pulse mt-1" />
-                <div className="w-16 h-5 bg-amber-200/40 rounded-full animate-pulse" />
+                <div className="h-28 w-28 animate-pulse rounded-full bg-amber-200/60 shadow-sm sm:h-32 sm:w-32" />
+                <div className="mt-1 h-6 w-48 animate-pulse rounded-full bg-amber-200/60" />
+                <div className="h-5 w-16 animate-pulse rounded-full bg-amber-200/40" />
               </div>
 
-              <div
-                className="space-y-4 mt-6
-                [&>div]:flex [&>div]:items-start [&>div]:gap-[1ch]
-                [&>div]:pb-4 [&>div:not(:last-of-type)]:border-b [&>div]:border-amber-200/64"
-              >
+              <div className="mt-6 space-y-4 [&>div]:flex [&>div]:items-start [&>div]:gap-[1ch] [&>div]:border-amber-200/64 [&>div]:pb-4 [&>div:not(:last-of-type)]:border-b">
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
+                  <div className="mt-0.5 h-4 w-4 shrink-0 animate-pulse rounded-sm bg-amber-200/84" />
                   <div className="stack-2 w-full">
-                    <div className="w-20 h-3 bg-amber-200/60 rounded-full animate-pulse" />
-                    <div className="w-32 h-4 bg-amber-200/40 rounded-full animate-pulse" />
+                    <div className="h-3 w-20 animate-pulse rounded-full bg-amber-200/60" />
+                    <div className="h-4 w-32 animate-pulse rounded-full bg-amber-200/40" />
                   </div>
                 </div>
 
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
+                  <div className="mt-0.5 h-4 w-4 shrink-0 animate-pulse rounded-sm bg-amber-200/84" />
                   <div className="stack-2 w-full">
-                    <div className="w-12 h-3 bg-amber-200/60 rounded-full animate-pulse" />
-                    <div className="stack-2 w-full mt-1">
-                      <div className="w-full h-3.5 bg-amber-200/40 rounded-full animate-pulse" />
-                      <div className="w-[90%] h-3.5 bg-amber-200/40 rounded-full animate-pulse" />
-                      <div className="w-[60%] h-3.5 bg-amber-200/40 rounded-full animate-pulse" />
+                    <div className="h-3 w-12 animate-pulse rounded-full bg-amber-200/60" />
+                    <div className="mt-1 stack-2 w-full">
+                      <div className="h-3.5 w-full animate-pulse rounded-full bg-amber-200/40" />
+                      <div className="h-3.5 w-[90%] animate-pulse rounded-full bg-amber-200/40" />
+                      <div className="h-3.5 w-[60%] animate-pulse rounded-full bg-amber-200/40" />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <div className="w-4 h-4 rounded-sm bg-amber-200/84 animate-pulse shrink-0 mt-0.5" />
+                  <div className="mt-0.5 h-4 w-4 shrink-0 animate-pulse rounded-sm bg-amber-200/84" />
                   <div className="stack-2 w-full">
-                    <div className="w-16 h-3 bg-amber-200/60 rounded-full animate-pulse" />
-                    <div className="w-28 h-4 bg-amber-200/40 rounded-full animate-pulse" />
+                    <div className="h-3 w-16 animate-pulse rounded-full bg-amber-200/60" />
+                    <div className="h-4 w-28 animate-pulse rounded-full bg-amber-200/40" />
                   </div>
                 </div>
               </div>
 
-              <div className="w-full mt-2 py-5 bg-amber-200/40 rounded-lg animate-pulse" />
+              <div className="mt-2 w-full animate-pulse rounded-lg bg-amber-200/40 py-5" />
             </div>
           ) : agent ? (
-            <div className="pt-5 xs:pt-4 stack-6">
+            <div className="stack-6 pt-5 xs:pt-4">
               <div className="stack-2 items-center">
                 <motion.img
                   src={getAssetUrl(agent.profilePicture)}
@@ -103,26 +95,18 @@ export default function AgentDetailPanel({
                     damping: 21,
                     delay: 0.3,
                   }}
-                  className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg
-                  border-3 border-amber-50/84 outline-2 outline-amber-300/60"
+                  className="h-28 w-28 rounded-full border-3 border-amber-50/84 object-cover shadow-lg outline-2 outline-amber-300/60 sm:h-32 sm:w-32"
                 />
-                <h2 className="text-xl font-medium text-amber-950 tracking-tight">
+                <h2 className="text-xl font-medium tracking-tight text-amber-950">
                   {agent.name}
                 </h2>
-                <span
-                  className="px-3 py-0.5 text-xs bg-amber-300/36 text-amber-900 font-medium
-                rounded-full border border-amber-300/60 capitalize"
-                >
+                <span className="rounded-full border border-amber-300/60 bg-amber-300/36 px-3 py-0.5 text-xs font-medium text-amber-900 capitalize">
                   Agent
                 </span>
               </div>
 
               {agent.profile && (
-                <div
-                  className="space-y-4
-                  [&>div]:flex [&>div]:items-start [&>div]:gap-[1ch]
-                  [&>div]:pb-4 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64"
-                >
+                <div className="space-y-4 [&_div]:border-amber-200/64 [&_div:not(:last-of-type)]:border-b [&>div]:flex [&>div]:items-start [&>div]:gap-[1ch] [&>div]:pb-4">
                   <div>
                     <GoShieldCheck
                       size={18}
@@ -130,7 +114,7 @@ export default function AgentDetailPanel({
                       className="shrink-0"
                     />
                     <div>
-                      <p className="text-sm text-amber-800/64 font-medium uppercase tracking-wide">
+                      <p className="text-sm font-medium tracking-wide text-amber-800/64 uppercase">
                         License
                       </p>
                       <p className="text-sm text-amber-950">
@@ -147,10 +131,10 @@ export default function AgentDetailPanel({
                         className="shrink-0"
                       />
                       <div>
-                        <p className="text-sm text-amber-800/64 font-medium uppercase tracking-wide">
+                        <p className="text-sm font-medium tracking-wide text-amber-800/64 uppercase">
                           Biography
                         </p>
-                        <p className="text-sm text-amber-950/84 leading-relaxed">
+                        <p className="text-sm leading-relaxed text-amber-950/84">
                           {agent.profile.biography}
                         </p>
                       </div>
@@ -165,7 +149,7 @@ export default function AgentDetailPanel({
                         className="shrink-0 opacity-74"
                       />
                       <div>
-                        <p className="text-sm text-amber-800/64 font-medium uppercase tracking-wide">
+                        <p className="text-sm font-medium tracking-wide text-amber-800/64 uppercase">
                           Phone
                         </p>
                         <p className="text-sm text-amber-950">
@@ -180,8 +164,7 @@ export default function AgentDetailPanel({
               {currentUserId === null ? (
                 <Link
                   to="/log-in"
-                  className="panel-action min-h-12 group text-amber-50
-                  bg-amber-600/94 hover:bg-amber-700/94"
+                  className="panel-action group min-h-12 bg-amber-600/94 text-amber-50 hover:bg-amber-700/94"
                 >
                   <GoComment size={18} />
                   <span>Log in to message</span>
@@ -190,8 +173,7 @@ export default function AgentDetailPanel({
                 currentUserId !== agent.id && (
                   <button
                     onClick={onStartChat}
-                    className="panel-action min-h-12 group text-amber-50
-                    bg-amber-600/94 hover:bg-amber-700/94 active:bg-amber-800/94"
+                    className="panel-action group min-h-12 bg-amber-600/94 text-amber-50 hover:bg-amber-700/94 active:bg-amber-800/94"
                   >
                     <GoComment size={18} />
                     <span>Message our agent</span>
@@ -201,13 +183,9 @@ export default function AgentDetailPanel({
 
               <button
                 onClick={onDeselect}
-                className="panel-action min-h-12 group text-amber-800
-                bg-amber-200/36 hover:bg-amber-200/60 active:bg-amber-300/40"
+                className="panel-action group min-h-12 bg-amber-200/36 text-amber-800 hover:bg-amber-200/60 active:bg-amber-300/40"
               >
-                <span
-                  className="inline-block text-base group-hover:translate-x-[-0.25ch]
-                  group-active:translate-x-0 transition-transform duration-300"
-                >
+                <span className="inline-block text-base transition-transform duration-300 group-hover:translate-x-[-0.25ch] group-active:translate-x-0">
                   ←
                 </span>{" "}
                 <span>Back to all agents</span>
@@ -215,14 +193,14 @@ export default function AgentDetailPanel({
             </div>
           ) : (
             <div className="stack-4 pt-4 text-center">
-              <div className="mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-amber-200/48 border-2 border-dashed border-amber-400/48 flex items-center justify-center">
+              <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border-2 border-dashed border-amber-400/48 bg-amber-200/48 sm:h-32 sm:w-32">
                 <span className="text-4xl opacity-40">👤</span>
               </div>
               <div className="stack-2">
-                <div className="mx-auto w-32 h-4 bg-amber-200/48 rounded-full" />
-                <div className="mx-auto w-48 h-3 bg-amber-200/28 rounded-full" />
+                <div className="mx-auto h-4 w-32 rounded-full bg-amber-200/48" />
+                <div className="mx-auto h-3 w-48 rounded-full bg-amber-200/28" />
               </div>
-              <p className="text-amber-800/74 italic px-2">
+              <p className="px-2 text-amber-800/74 italic">
                 Select an agent to view their profile and details.
               </p>
             </div>

@@ -335,8 +335,8 @@ function ProfileSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="p-4 bg-amber-100/48 rounded-xl shadow-md border border-amber-200/36">
-      <div className="flex items-center gap-2 mb-4">
+    <section className="rounded-xl border border-amber-200/36 bg-amber-100/48 p-4 shadow-md">
+      <div className="mb-4 flex items-center gap-2">
         <span className="text-amber-700">{icon}</span>
         <h2 className="text-lg font-semibold text-amber-950">{title}</h2>
         {action && <div className="ml-auto">{action}</div>}
@@ -413,19 +413,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
         {/* Left column */}
         <div className="gen-left-column">
           {/* Profile header */}
-          <section
-            className="relative overflow-hidden rounded-xl shadow-lg
-            bg-linear-to-br from-amber-100/84 via-amber-50 to-amber-100/36
-            border border-amber-200/48"
-          >
-            <div
-              className="absolute top-0 inset-x-0 lg:h-24 md:h-42 sm:h-22 h-44
-              bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/28"
-            />
+          <section className="relative overflow-hidden rounded-xl border border-amber-200/48 bg-linear-to-br from-amber-100/84 via-amber-50 to-amber-100/36 shadow-lg">
+            <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-r from-amber-400/36 via-amber-300/28 to-amber-500/28 sm:h-22 md:h-42 lg:h-24" />
 
             <div className="relative z-10 p-5 sm:p-6">
               {/* Avatar + Info row */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-6">
+              <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-start sm:gap-6">
                 <div className="shrink-0">
                   <img
                     src={getAssetUrl(profileState.profilePicture)}
@@ -436,31 +429,25 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   />
                 </div>
 
-                <div className="text-center sm:text-left mt-2 sm:mt-4 stack-2 grow">
+                <div className="mt-2 stack-2 grow text-center sm:mt-4 sm:text-left">
                   <h1 className="page-title tracking-tight">
                     {profileState.name}
                   </h1>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div>
                       <p className="flex items-center gap-4 text-sm text-amber-800/84">
                         {user.email}
                         {user.role === "user" && (
                           <button
-                            className="text-amber-900/60 hover:text-amber-900
-                            transition-colors duration-150"
+                            className="text-amber-900/60 transition-colors duration-150 hover:text-amber-900"
                             onClick={() => setAgentPromotionOpen(true)}
                           >
                             become an agent
                           </button>
                         )}
                       </p>
-                      <p
-                        className="w-fit mt-2 px-3 py-0.5 text-xs
-                    bg-amber-300/36 text-amber-900 font-medium
-                    rounded-full border border-amber-300/60 capitalize
-                    mx-auto sm:mx-0"
-                      >
+                      <p className="mx-auto mt-2 w-fit rounded-full border border-amber-300/60 bg-amber-300/36 px-3 py-0.5 text-xs font-medium text-amber-900 capitalize sm:mx-0">
                         {user.role}
                       </p>
                     </div>
@@ -481,15 +468,12 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               </div>
 
               {/* Password section */}
-              <div
-                className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50 border border-amber-200/60
-                flex items-center justify-between flex-wrap"
-              >
-                <div className="stack-1 mr-2">
-                  <p className="flex items-center gap-2 text-sm font-semibold text-amber-900 leading-none">
+              <div className="mt-6 flex flex-wrap items-center justify-between rounded-md border border-amber-200/60 bg-amber-50 py-4 pr-6 pl-4">
+                <div className="mr-2 stack-1">
+                  <p className="flex items-center gap-2 text-sm leading-none font-semibold text-amber-900">
                     <GoShieldLock
                       size={20}
-                      className="text-amber-600 shrink-0"
+                      className="shrink-0 text-amber-600"
                     />
                     Password
                   </p>
@@ -500,16 +484,13 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                     •••••••••
                   </p>
                 </div>
-                <div className="flex items-center gap-4 ml-auto max-xs:mt-1">
+                <div className="ml-auto flex items-center gap-4 max-xs:mt-1">
                   <Form method="POST">
                     <button
                       type="submit"
                       name="intent"
                       value="logout"
-                      className="py-1.5 px-2 text-sm text-amber-700/84 rounded-sm bg-amber-200/36 shadow-sm
-                    outline outline-amber-300/12 hover:outline-rose-500/12
-                    hover:text-rose-700/84 hover:bg-rose-200/28 active:bg-rose-300/28
-                    btn-hovaction transition-all duration-300"
+                      className="btn-hovaction rounded-sm bg-amber-200/36 px-2 py-1.5 text-sm text-amber-700/84 shadow-sm outline outline-amber-300/12 transition-all duration-300 hover:bg-rose-200/28 hover:text-rose-700/84 hover:outline-rose-500/12 active:bg-rose-300/28"
                     >
                       Log Out
                     </button>
@@ -517,8 +498,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
                   <button
                     onClick={() => setChangePasswordOpen(true)}
-                    className="px-4 py-2 text-sm font-medium text-amber-800
-                  bg-amber-200/36 rounded-sm shadow-sm gen-btn-border btn-hovaction-sm"
+                    className="btn-hovaction-sm rounded-sm gen-btn-border bg-amber-200/36 px-4 py-2 text-sm font-medium text-amber-800 shadow-sm"
                   >
                     Change Password
                   </button>
@@ -527,14 +507,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
 
               {/* Agent details */}
               {user.role === "agent" && (
-                <div
-                  className="mt-6 py-4 pl-4 pr-6 rounded-md bg-amber-50/84
-                  border border-amber-200/60 space-y-3
-                  [&_div]:flex [&_div]:justify-between [&_div]:items-center
-                  [&_div:not(:last-of-type)]:pb-3 [&_div:not(:last-of-type)]:border-b [&_div]:border-amber-200/64
-                  [&_span]:font-semibold [&_span]:text-amber-950
-                  [&_p]:ml-8 [&_p]:text-amber-950/94"
-                >
+                <div className="mt-6 space-y-3 rounded-md border border-amber-200/60 bg-amber-50/84 py-4 pr-6 pl-4 [&_div]:flex [&_div]:items-center [&_div]:justify-between [&_div]:border-amber-200/64 [&_div:not(:last-of-type)]:border-b [&_div:not(:last-of-type)]:pb-3 [&_p]:ml-8 [&_p]:text-amber-950/94 [&_span]:font-semibold [&_span]:text-amber-950">
                   <div>
                     <span>License number:</span>
                     <p>{user.licenseNumber}</p>
@@ -567,7 +540,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                 ))}
               </div>
             ) : (
-              <p className="max-w-none py-4 text-amber-800/74 italic text-center">
+              <p className="max-w-none py-4 text-center text-amber-800/74 italic">
                 Your bookmarked properties will appear here.
               </p>
             )}
@@ -581,9 +554,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
               action={
                 <button
                   onClick={() => openPropertyForm(null)}
-                  className="flex items-center gap-[1ch] mr-2 px-3 py-1.5 text-sm font-medium
-                  text-amber-800 bg-amber-200/36 rounded-sm shadow-sm
-                  gen-btn-border btn-hovaction-sm"
+                  className="mr-2 flex btn-hovaction-sm items-center gap-[1ch] rounded-sm gen-btn-border bg-amber-200/36 px-3 py-1.5 text-sm font-medium text-amber-800 shadow-sm"
                 >
                   <GoPlus size={16} /> New Listing
                 </button>
@@ -618,7 +589,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
                   ))}
                 </div>
               ) : (
-                <p className="py-4 text-amber-800/74 italic text-center">
+                <p className="py-4 text-center text-amber-800/74 italic">
                   You currently have no listed properties.
                 </p>
               )}
@@ -629,7 +600,7 @@ export default function UserProfile({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Right column */}
-        <div className="md:h-full max-sm:mx-2 max-md:mx-4 max-md:mt-4 md:p-6 md:bg-amber-100">
+        <div className="max-md:mx-4 max-md:mt-4 max-sm:mx-2 md:h-full md:bg-amber-100 md:p-6">
           <ChatPanel
             chats={userChats}
             thread={chatThread}

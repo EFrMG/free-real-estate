@@ -16,16 +16,15 @@ export default function Contact() {
   return (
     <main className="gen-main">
       <div className="gen-left">
-        <h1 className="page-title md:mt-12 mb-2">Contact Us Here!</h1>
-        <p className="text-amber-800/84 mb-12 tracking-wide">
+        <h1 className="page-title mb-2 md:mt-12">Contact Us Here!</h1>
+        <p className="mb-12 tracking-wide text-amber-800/84">
           Any questions or suggestions?
         </p>
         {/* TODO: Form handling */}
         <form
           action=""
           onSubmit={(e) => e.preventDefault()}
-          className="stack-6 max-w-lg mx-auto mb-24 p-6 rounded-lg bg-amber-100/74 shadow-lg
-          form-label"
+          className="form-label mx-auto mb-24 stack-6 max-w-lg rounded-lg bg-amber-100/74 p-6 shadow-lg"
         >
           <fieldset>
             <label htmlFor="email">Your Email:</label>
@@ -33,7 +32,7 @@ export default function Contact() {
               id="email"
               name="email"
               type="email"
-              className="mx-2 input-form"
+              className="input-form mx-2"
             />
           </fieldset>
           <fieldset>
@@ -41,7 +40,7 @@ export default function Contact() {
             <textarea
               id="message"
               name="message"
-              className="mx-2 input-form"
+              className="input-form mx-2"
             ></textarea>
           </fieldset>
 
@@ -72,15 +71,14 @@ export default function Contact() {
           </fieldset>
           <button
             type="submit"
-            className="ml-auto px-4 py-2 bg-amber-200/36 gen-btn-border rounded-md
-            text-amber-900 font-medium shadow-md btn-hovaction-sm"
+            className="ml-auto btn-hovaction-sm rounded-md gen-btn-border bg-amber-200/36 px-4 py-2 font-medium text-amber-900 shadow-md"
           >
             Submit Form
           </button>
         </form>
 
-        <div className="stack-4 mt-8 min-h-112">
-          <h2 className="text-xl mb-4 text-amber-800">
+        <div className="mt-8 stack-4 min-h-112">
+          <h2 className="mb-4 text-xl text-amber-800">
             Directly Given Assertions
           </h2>
           <details name="assertion" className="details-card group">

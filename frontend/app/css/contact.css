@@ -1,9 +1,9 @@
 .details-card {
-  @apply border border-amber-700/28 rounded-lg bg-amber-100/28 shadow-md overflow-hidden transition-all duration-300;
+  @apply overflow-hidden rounded-lg border border-amber-700/28 bg-amber-100/28 shadow-md transition-all duration-300;
 }
 
 .details-content {
-  @apply h-0 px-4 pt-0 pb-0 text-amber-950/84 leading-relaxed;
+  @apply h-0 px-4 pt-0 pb-0 leading-relaxed text-amber-950/84;
 }
 
 .details-card[open] .details-content {
@@ -17,7 +17,7 @@
 }
 
 .details-summary {
-  @apply list-none cursor-pointer px-4 py-3 font-semibold text-amber-900 flex justify-between items-center select-none hover:bg-amber-200/28 transition-colors;
+  @apply flex cursor-pointer list-none items-center justify-between px-4 py-3 font-semibold text-amber-900 transition-colors select-none hover:bg-amber-200/28;
 
   &::-webkit-details-marker {
     display: none;

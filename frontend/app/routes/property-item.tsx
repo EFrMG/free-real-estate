@@ -215,8 +215,8 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
   } = property;
 
   const mapFallback = (
-    <div className="md:sticky md:top-[7.5vh] h-[35dvh] w-[85%] md:w-[95%] md:mt-12 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-      <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
+    <div className="mx-auto h-[35dvh] w-[85%] animate-pulse rounded-lg bg-slate-400/36 md:sticky md:top-[7.5vh] md:mt-12 md:w-[95%]">
+      <p className="mx-auto block w-fit pt-12 text-lg text-gray-100">
         Loading Map...
       </p>
     </div>
@@ -247,16 +247,16 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             src={getAssetUrl(exteriorImage)}
             alt={title}
             draggable="false"
-            className="property-img-outline w-full h-[35dvh] mt-8 shadow-lg rounded-lg object-cover"
+            className="property-img-outline mt-8 h-[35dvh] w-full rounded-lg object-cover shadow-lg"
           />
         )}
 
         <h1 className="page-title my-6 text-center text-xl">{title}</h1>
 
-        <div className="grid md:grid-cols-[2fr_1fr] gap-12 md:gap-8">
-          <div className="stack-8 md:stack-12 justify-between">
+        <div className="grid gap-12 md:grid-cols-[2fr_1fr] md:gap-8">
+          <div className="stack-8 justify-between md:stack-12">
             <div>
-              <p className="flex items-center gap-[1ex] translate-x-px mb-4">
+              <p className="mb-4 flex translate-x-px items-center gap-[1ex]">
                 <GoLocation size={24} color="var(--color-amber-700)" />
                 <span className="text-gray-600">
                   Address: <span className="font-medium">{address}</span>
@@ -271,47 +271,44 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
               </p>
             </div>
 
-            <p className="max-xs:text-sm text-gray-700">
+            <p className="text-gray-700 max-xs:text-sm">
               {longDescription || description}
             </p>
 
-            <div className="flex justify-between items-center flex-wrap">
+            <div className="flex flex-wrap items-center justify-between">
               {userPoster ? (
-                <div
-                  className="flex items-center gap-4 mb-4 mr-4 pl-2 py-2 pr-3
-                  bg-amber-100/28 shadow-md rounded-lg border border-amber-200"
-                >
+                <div className="mr-4 mb-4 flex items-center gap-4 rounded-lg border border-amber-200 bg-amber-100/28 py-2 pr-3 pl-2 shadow-md">
                   <img
                     src={getAssetUrl(userPoster.profilePicture)}
                     onError={handleProfilePictureError}
                     alt={userPoster.name}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
+                    className="h-12 w-12 rounded-full object-cover sm:h-14 sm:w-14"
                   />
                   <div>
                     <div className="stack-2 justify-between">
-                      <p className="max-sm:text-sm font-semibold text-amber-900">
+                      <p className="font-semibold text-amber-900 max-sm:text-sm">
                         {userPoster.name}
                       </p>
-                      <p className="text-xs text-end italic text-amber-700">
+                      <p className="text-end text-xs text-amber-700 italic">
                         Property Owner
                       </p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="mb-4 mr-4 pt-4 px-4 pr-6 text-amber-800/74 italic">
+                <div className="mr-4 mb-4 px-4 pt-4 pr-6 text-amber-800/74 italic">
                   Please, contact our agents for more information.
                 </div>
               )}
 
-              <div className="flex gap-4 w-fit ml-auto [&_button]:rounded-sm [&_button]:shadow-md [&_button]:px-1.5 [&_button]:py-1 [&_a]:px-1.5 [&_a]:py-1">
+              <div className="ml-auto flex w-fit gap-4 [&_a]:px-1.5 [&_a]:py-1 [&_button]:rounded-sm [&_button]:px-1.5 [&_button]:py-1 [&_button]:shadow-md">
                 {/* Chats are always about a listing, so this one needs no property picker */}
                 {userPoster &&
                   currentUserId !== userPoster.id &&
                   (currentUserId === null ? (
                     <Link
                       to="/log-in"
-                      className="bg-amber-100/28 rounded-sm shadow-md gen-btn-border btn-hovaction"
+                      className="btn-hovaction rounded-sm gen-btn-border bg-amber-100/28 shadow-md"
                     >
                       <GoCommentDiscussion
                         size={28}
@@ -329,7 +326,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                       />
                       <button
                         type="submit"
-                        className="bg-amber-100/28 gen-btn-border btn-hovaction"
+                        className="btn-hovaction gen-btn-border bg-amber-100/28"
                       >
                         <GoCommentDiscussion
                           size={28}
@@ -349,7 +346,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     />
                     <button
                       type="submit"
-                      className="bg-amber-100/28 gen-btn-border btn-hovaction"
+                      className="btn-hovaction gen-btn-border bg-amber-100/28"
                     >
                       <GoBookmarkSlash
                         size={28}
@@ -363,7 +360,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
                     <input type="hidden" name="intent" value="bookmark" />
                     <button
                       type="submit"
-                      className="bg-amber-100/28 gen-btn-border btn-hovaction"
+                      className="btn-hovaction gen-btn-border bg-amber-100/28"
                     >
                       <GoBookmark
                         size={28}
@@ -377,21 +374,18 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             </div>
           </div>
 
-          <div className="h-fit my-auto p-4 bg-amber-100/28 rounded-lg shadow-md inset-shadow-xs">
-            <h3 className="mb-2 text-center font-bold text-lg text-amber-900/84">
+          <div className="my-auto h-fit rounded-lg bg-amber-100/28 p-4 shadow-md inset-shadow-xs">
+            <h3 className="mb-2 text-center text-lg font-bold text-amber-900/84">
               Details
             </h3>
-            <div
-              className="[&_p]:py-2 [&_p]:flex [&_p]:justify-between [&_p]:items-center
-              [&>p]:border-b [&>p]:border-amber-300/74"
-            >
+            <div className="[&_p]:flex [&_p]:items-center [&_p]:justify-between [&_p]:py-2 [&>p]:border-b [&>p]:border-amber-300/74">
               <p>
                 <span>Property Type:</span>{" "}
-                <span className="capitalize font-medium">{propertyType}</span>
+                <span className="font-medium capitalize">{propertyType}</span>
               </p>
               <p>
                 <span>Price:</span>{" "}
-                <span className="text-emerald-700 font-medium">${price}</span>
+                <span className="font-medium text-emerald-700">${price}</span>
               </p>
               <p>
                 <span>Bedrooms:</span>{" "}
@@ -412,7 +406,7 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
       </div>
 
       {/* Right side */}
-      <div className="md:bg-amber-100 max-md:mt-8 md:pb-8">
+      <div className="max-md:mt-8 md:bg-amber-100 md:pb-8">
         <ClientOnly>
           {() => (
             <Suspense fallback={mapFallback}>
@@ -427,24 +421,24 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
           )}
         </ClientOnly>
 
-        <div className="relative max-md:rounded-lg z-10 bg-amber-100 shadow-over-map">
-          <div className="mt-10 mx-6 mb-4 pt-4">
+        <div className="relative z-10 bg-amber-100 shadow-over-map max-md:rounded-lg">
+          <div className="mx-6 mt-10 mb-4 pt-4">
             <h3 className="text-lg font-bold">Location:</h3>
           </div>
           <div className="block pb-4">
-            <div className="flex justify-between items-center mx-4 md:mx-6 p-3 bg-amber-50/64 rounded-lg border border-amber-200">
+            <div className="mx-4 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50/64 p-3 md:mx-6">
               <span className="text-amber-800">{city}</span>
-              <span className="text-amber-600 text-lg">{province}</span>
+              <span className="text-lg text-amber-600">{province}</span>
             </div>
           </div>
           {sizes && sizes.length > 0 && (
-            <div className="mt-4 md:mt-8 mx-6 mb-4">
+            <div className="mx-6 mt-4 mb-4 md:mt-8">
               <h3 className="mb-2 text-lg font-medium">Room Sizes:</h3>
-              <div className="flex gap-x-4 gap-y-2 flex-wrap pb-4">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
                 {sizes.map((size, idx) => (
                   <span
                     key={idx}
-                    className="px-4 py-2 bg-amber-50/64 rounded-md border border-amber-200 text-amber-900"
+                    className="rounded-md border border-amber-200 bg-amber-50/64 px-4 py-2 text-amber-900"
                   >
                     Room {idx + 1}: {size} sqft
                   </span>
@@ -453,15 +447,15 @@ export default function PropertyItem({ loaderData }: Route.ComponentProps) {
             </div>
           )}
           {nearbyPlaces && Object.keys(nearbyPlaces).length > 0 && (
-            <div className="mt-4 md:mt-8 mx-6 mb-4">
+            <div className="mx-6 mt-4 mb-4 md:mt-8">
               <h3 className="mb-2 text-lg font-medium">Nearby Places:</h3>
               <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
                 {Object.entries(nearbyPlaces).map(([place, distance]) => (
                   <div
                     key={place}
-                    className="p-3 bg-amber-50/64 rounded-lg border border-amber-200 flex justify-between items-center gap-2"
+                    className="flex items-center justify-between gap-2 rounded-lg border border-amber-200 bg-amber-50/64 p-3"
                   >
-                    <span className="capitalize text-amber-800">{place}</span>
+                    <span className="text-amber-800 capitalize">{place}</span>
                     <span className="font-mono text-amber-600">{distance}</span>
                   </div>
                 ))}

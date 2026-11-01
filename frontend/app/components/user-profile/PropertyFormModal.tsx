@@ -334,9 +334,7 @@ export default function PropertyFormModal({
     <dialog
       ref={dialogRef}
       onCancel={handleCloseDialog}
-      className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent
-      overflow-hidden border-none outline-none"
+      className="inset-0 h-full max-h-none w-full max-w-none overflow-hidden border-none bg-transparent outline-none backdrop:bg-transparent"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
         {isDialogOpen && (
@@ -345,7 +343,7 @@ export default function PropertyFormModal({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="flex items-center justify-center w-full h-full relative"
+            className="relative flex h-full w-full items-center justify-center"
           >
             {/* Custom backdrop */}
             <div
@@ -374,7 +372,7 @@ export default function PropertyFormModal({
 
                 <form
                   onSubmit={handleSubmit}
-                  className="stack-4 mt-4 form-label"
+                  className="form-label mt-4 stack-4"
                 >
                   {formError || fetcher.data?.error ? (
                     <p className="form-error">
@@ -392,19 +390,17 @@ export default function PropertyFormModal({
                       type="button"
                       id="property-exterior"
                       onClick={() => exteriorInputRef.current?.click()}
-                      className="relative block w-full h-40 p-1 rounded-lg overflow-hidden
-                      border-2 border-dashed border-amber-300/74 bg-amber-100/28
-                      hover:border-amber-500/74 transition-colors duration-150"
+                      className="relative block h-40 w-full overflow-hidden rounded-lg border-2 border-dashed border-amber-300/74 bg-amber-100/28 p-1 transition-colors duration-150 hover:border-amber-500/74"
                     >
                       {exteriorPreview ? (
                         <img
                           src={getAssetUrl(exteriorPreview)}
                           alt="Exterior preview"
                           draggable={false}
-                          className="w-full h-full rounded-md object-cover"
+                          className="h-full w-full rounded-md object-cover"
                         />
                       ) : (
-                        <span className="flex flex-col items-center justify-center gap-2 h-full text-amber-700/84">
+                        <span className="flex h-full flex-col items-center justify-center gap-2 text-amber-700/84">
                           <GoImage size={28} />
                           <span className="text-sm">
                             Click to upload the main photo
@@ -449,9 +445,7 @@ export default function PropertyFormModal({
                         type="button"
                         id="property-gallery"
                         onClick={() => galleryInputRef.current?.click()}
-                        className="flex items-center justify-center w-20 h-20 rounded-md
-                        border-2 border-dashed border-amber-300/74 text-amber-700/84
-                        hover:border-amber-500/74 hover:text-amber-800 transition-colors duration-150"
+                        className="flex h-20 w-20 items-center justify-center rounded-md border-2 border-dashed border-amber-300/74 text-amber-700/84 transition-colors duration-150 hover:border-amber-500/74 hover:text-amber-800"
                         title="Add interior photos"
                       >
                         <GoPlus size={22} />
@@ -516,7 +510,7 @@ export default function PropertyFormModal({
                   </fieldset>
 
                   {/* Classification */}
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid gap-4 sm:grid-cols-3">
                     <fieldset className="stack-0">
                       <label htmlFor="property-transaction">Transaction</label>
                       <select
@@ -574,7 +568,7 @@ export default function PropertyFormModal({
                   </div>
 
                   {/* Figures */}
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid gap-4 sm:grid-cols-3">
                     <fieldset className="stack-0 min-w-0">
                       <label htmlFor="property-price">Price (USD)</label>
                       <input
@@ -625,7 +619,7 @@ export default function PropertyFormModal({
                   </div>
 
                   {/* Location */}
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <fieldset className="stack-0">
                       <label htmlFor="property-province">Province</label>
                       <input
@@ -668,7 +662,7 @@ export default function PropertyFormModal({
                     />
                   </fieldset>
 
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <fieldset className="stack-0">
                       <label htmlFor="property-latitude">Latitude</label>
                       <input
@@ -750,7 +744,7 @@ export default function PropertyFormModal({
                               })
                             }
                           />
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-700/84">
+                          <span className="absolute top-1/2 right-3 -translate-y-1/2 text-amber-700/84">
                             m
                           </span>
                         </div>
@@ -763,7 +757,7 @@ export default function PropertyFormModal({
                               ),
                             })
                           }
-                          className="p-2 text-amber-700/84 hover:text-rose-700 transition-colors duration-150"
+                          className="p-2 text-amber-700/84 transition-colors duration-150 hover:text-rose-700"
                           title="Remove this place"
                         >
                           <GoTrash size={18} />
@@ -782,9 +776,7 @@ export default function PropertyFormModal({
                           ],
                         })
                       }
-                      className="flex items-center gap-[1ch] w-fit mx-auto my-4 px-3 py-1.5 text-sm
-                      text-amber-800 bg-amber-200/36 rounded-sm shadow-sm
-                      gen-btn-border btn-hovaction-xs"
+                      className="mx-auto my-4 flex w-fit btn-hovaction-xs items-center gap-[1ch] rounded-sm gen-btn-border bg-amber-200/36 px-3 py-1.5 text-sm text-amber-800 shadow-sm"
                     >
                       <GoPlus size={16} /> Add a place
                     </button>
@@ -828,18 +820,17 @@ function GalleryThumbnail({
   onRemove: () => void;
 }) {
   return (
-    <div className="relative w-20 h-20">
+    <div className="relative h-20 w-20">
       <img
         src={src}
         alt="Interior preview"
         draggable={false}
-        className="w-full h-full object-cover rounded-md border border-amber-200/64"
+        className="h-full w-full rounded-md border border-amber-200/64 object-cover"
       />
       <button
         type="button"
         onClick={onRemove}
-        className="absolute -top-1.5 -right-1.5 p-1 rounded-full
-        bg-amber-800/84 text-amber-50 hover:bg-rose-600/84 transition-colors duration-150"
+        className="absolute -top-1.5 -right-1.5 rounded-full bg-amber-800/84 p-1 text-amber-50 transition-colors duration-150 hover:bg-rose-600/84"
         title="Remove this image"
       >
         <GoX size={12} />

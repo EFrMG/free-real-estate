@@ -45,16 +45,16 @@ export default function ChatPanel({
 
   if (!chats.length) {
     return (
-      <div className="md:sticky md:top-[7.5vh] md:h-full md:max-h-[30dvh] flex flex-col chat-card">
-        <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
+      <div className="chat-card flex flex-col md:sticky md:top-[7.5vh] md:h-full md:max-h-[30dvh]">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-950">
           <span className="text-amber-700">
             <GoComment size={24} />
           </span>
           Messages
         </h2>
 
-        <div className="stack-4 my-auto py-6 text-center">
-          <div className="mx-auto p-1 rounded-full bg-amber-200/48 flex items-center justify-center">
+        <div className="my-auto stack-4 py-6 text-center">
+          <div className="mx-auto flex items-center justify-center rounded-full bg-amber-200/48 p-1">
             <span className="text-2xl opacity-40 select-none">💬</span>
           </div>
           <p className="text-amber-800/74 italic">
@@ -76,9 +76,9 @@ export default function ChatPanel({
   }
 
   return (
-    <div className="md:sticky md:top-[7.5vh] md:h-full md:max-h-[88dvh] flex flex-col gap-4">
-      <div className="shrink-0 chat-card">
-        <h2 className="text-lg font-semibold text-amber-950 mb-4 flex items-center gap-2">
+    <div className="flex flex-col gap-4 md:sticky md:top-[7.5vh] md:h-full md:max-h-[88dvh]">
+      <div className="chat-card shrink-0">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-950">
           <span className="text-amber-700">
             <GoComment size={24} />
           </span>
@@ -92,7 +92,7 @@ export default function ChatPanel({
         />
       </div>
 
-      <div className={`md:min-h-0 flex flex-col chat-card ${thread && "grow"}`}>
+      <div className={`chat-card flex flex-col md:min-h-0 ${thread && "grow"}`}>
         {thread ? (
           <ChatThread thread={thread} currentUserId={currentUserId} />
         ) : (

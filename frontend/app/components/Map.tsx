@@ -47,7 +47,7 @@ export default function Map({
 }: MapProps) {
   return (
     <div
-      className={`md:sticky md:top-[7.5vh] h-[35vh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
+      className={`h-[35vh] md:sticky md:top-[7.5vh] md:h-[${viewportHeight}vh] w-[85%] md:w-[95%] md:mt-${marginTop} mx-auto`}
     >
       <MapContainer
         center={[
@@ -85,22 +85,22 @@ export default function Map({
               <Popup>
                 <div className="min-w-50">
                   <Link to={`/properties/${id}`}>
-                    <h3 className="pb-3 text-base text-center leading-none text-amber-900 font-medium">
+                    <h3 className="pb-3 text-center text-base leading-none font-medium text-amber-900">
                       {title}
                     </h3>
                   </Link>
-                  <div className="md:grid md:grid-cols-2 gap-4">
+                  <div className="gap-4 md:grid md:grid-cols-2">
                     <img
                       src={getAssetUrl(exteriorImage)}
                       alt="Property popover image"
                       draggable={false}
-                      className="max-md:hidden place-self-center w-full h-[calc(max(var(--spacing)*32,100%)-10%)] object-cover rounded-lg"
+                      className="h-[calc(max(var(--spacing)*32,100%)-10%)] w-full place-self-center rounded-lg object-cover max-md:hidden"
                     />
-                    <div className="flex md:stack-0 justify-around items-center text-sm text-gray-600 [&_p]:flex [&_p]:gap-2 [&_p]:my-2!">
+                    <div className="flex items-center justify-around text-sm text-gray-600 md:stack-0 [&_p]:my-2! [&_p]:flex [&_p]:gap-2">
                       <p>
                         {city}, {address}
                       </p>
-                      <div className="flex max-md:flex-col gap-2 md:gap-4 text-gray-500">
+                      <div className="flex gap-2 text-gray-500 max-md:flex-col md:gap-4">
                         <p>
                           <LuBed size={18} /> <b>{bedrooms}</b>
                         </p>

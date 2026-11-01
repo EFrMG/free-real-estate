@@ -45,8 +45,8 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
   const { properties, cities } = loaderData;
 
   const mapFallback = (
-    <div className="md:sticky md:top-[7.5vh] h-[35vh] md:h-[85vh] w-[85%] md:w-[95%] md:mt-24 mx-auto rounded-lg bg-slate-400/36 animate-pulse">
-      <p className="block w-fit mx-auto pt-12 text-lg text-gray-100">
+    <div className="mx-auto h-[35vh] w-[85%] animate-pulse rounded-lg bg-slate-400/36 md:sticky md:top-[7.5vh] md:mt-24 md:h-[85vh] md:w-[95%]">
+      <p className="mx-auto block w-fit pt-12 text-lg text-gray-100">
         Loading Map...
       </p>
     </div>
@@ -79,7 +79,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
   return (
     <main className="gen-main">
       {/* Left column */}
-      <div className="max-md:order-1 gen-left-column">
+      <div className="gen-left-column max-md:order-1">
         <FilterInput cities={cities} />
 
         {properties.map((property) => (

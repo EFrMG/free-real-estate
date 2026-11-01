@@ -13,10 +13,7 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
   return (
     <button
       onClick={() => onSelect(agent.id)}
-      className="group stack-2 items-center w-full h-full max-lg:px-4 max-lg:py-6 p-6 rounded-xl
-      bg-amber-100/28 hover:bg-amber-100/48 border border-amber-200/36
-      shadow-md inset-shadow-sm hover:shadow-lg active:shadow-md
-      btn-hovaction-xs transition-all"
+      className="group stack-2 h-full w-full btn-hovaction-xs items-center rounded-xl border border-amber-200/36 bg-amber-100/28 p-6 shadow-md inset-shadow-sm transition-all hover:bg-amber-100/48 hover:shadow-lg active:shadow-md max-lg:px-4 max-lg:py-6"
     >
       <div className="relative">
         <img
@@ -24,19 +21,11 @@ export default function AgentCard({ agent, onSelect }: AgentCardProps) {
           alt={`${agent.name}'s profile picture`}
           onError={handleProfilePictureError}
           draggable={false}
-          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md
-          border-2 border-amber-50/84 outline-2 outline-amber-300/48
-          group-hover:outline-amber-400/64 transition-all duration-300"
+          className="h-20 w-20 rounded-full border-2 border-amber-50/84 object-cover shadow-md outline-2 outline-amber-300/48 transition-all duration-300 group-hover:outline-amber-400/64 sm:h-24 sm:w-24"
         />
-        <div
-          className="absolute inset-0 rounded-full
-          bg-transparent group-hover:bg-amber-400/12 transition-colors duration-450"
-        />
+        <div className="absolute inset-0 rounded-full bg-transparent transition-colors duration-450 group-hover:bg-amber-400/12" />
       </div>
-      <p
-        className="max-sm:text-sm font-semibold max-w-[15ch]
-        text-amber-950 group-hover:text-amber-800 transition-colors duration-300"
-      >
+      <p className="max-w-[15ch] font-semibold text-amber-950 transition-colors duration-300 group-hover:text-amber-800 max-sm:text-sm">
         {agent.name}
       </p>
     </button>

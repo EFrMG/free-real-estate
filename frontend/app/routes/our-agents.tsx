@@ -166,12 +166,12 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
     <>
       <main className="gen-main">
         {/* Left column */}
-        <div className="max-md:order-1 gen-left-column">
+        <div className="gen-left-column max-md:order-1">
           <hgroup>
-            <h1 className="page-title mt-10 sm:mt-8 md:mt-6 mb-2">
+            <h1 className="page-title mt-10 mb-2 sm:mt-8 md:mt-6">
               Meet Our Agents
             </h1>
-            <p className="text-amber-800/84 tracking-wide">
+            <p className="tracking-wide text-amber-800/84">
               Our experienced team is ready to guide you through every step of
               your real estate journey. Click on an agent to learn more.
             </p>
@@ -184,7 +184,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6"
+                className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6"
               >
                 {agents.map((agent: AgentBasic) => (
                   <AgentCard
@@ -201,7 +201,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <h2 className="mb-2 text-xl text-amber-950 tracking-tight">
+                <h2 className="mb-2 text-xl tracking-tight text-amber-950">
                   {agent?.name ? `${agent.name}'s Listings` : "Agent Listings"}
                 </h2>
                 <p className="mb-6 text-amber-800/74">
@@ -213,7 +213,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                     {[1, 2, 3, 4].map((i) => (
                       <div
                         key={`skeleton-${i}`}
-                        className="h-36 rounded-lg bg-amber-200/28 animate-pulse"
+                        className="h-36 animate-pulse rounded-lg bg-amber-200/28"
                       />
                     ))}
                   </div>
@@ -242,9 +242,9 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
-                    className="w-fit mx-auto px-6 py-12 text-center rounded-xl bg-amber-100/28 border border-dashed border-amber-300/60"
+                    className="mx-auto w-fit rounded-xl border border-dashed border-amber-300/60 bg-amber-100/28 px-6 py-12 text-center"
                   >
-                    <span className="block mb-4 text-3xl opacity-40 select-none">
+                    <span className="mb-4 block text-3xl opacity-40 select-none">
                       🏠
                     </span>
                     <p className="inline-block text-amber-800/74 italic">
@@ -258,7 +258,7 @@ export default function OurAgents({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Right column */}
-        <div className="max-md:order-0 md:p-6 md:bg-amber-100">
+        <div className="max-md:order-0 md:bg-amber-100 md:p-6">
           <AgentDetailPanel
             isLoading={isLoading}
             agent={agent}

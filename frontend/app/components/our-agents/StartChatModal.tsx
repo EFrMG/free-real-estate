@@ -42,9 +42,7 @@ export default function StartChatModal({
     <dialog
       ref={dialogRef}
       onCancel={handleCloseDialog}
-      className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent
-      overflow-hidden border-none outline-none"
+      className="inset-0 h-full max-h-none w-full max-w-none overflow-hidden border-none bg-transparent outline-none backdrop:bg-transparent"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
         {isDialogOpen && (
@@ -53,7 +51,7 @@ export default function StartChatModal({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="flex items-center justify-center w-full h-full relative"
+            className="relative flex h-full w-full items-center justify-center"
           >
             {/* Custom backdrop */}
             <div
@@ -85,9 +83,9 @@ export default function StartChatModal({
                   />
 
                   {fetcher.data?.error ? (
-                    <p className="mt-4 form-error">{fetcher.data.error}</p>
+                    <p className="form-error mt-4">{fetcher.data.error}</p>
                   ) : (
-                    <div className="mt-4 form-message-space" />
+                    <div className="form-message-space mt-4" />
                   )}
 
                   {agentProperties.length ? (
@@ -97,7 +95,7 @@ export default function StartChatModal({
                         you like to ask about?
                       </p>
 
-                      <ul className="max-h-[38dvh] overflow-y-auto stack-2 pr-1">
+                      <ul className="stack-2 max-h-[38dvh] overflow-y-auto pr-1">
                         {agentProperties.map((property) => {
                           const isSelected =
                             property.id === startChatForm.propertyId;
@@ -112,25 +110,23 @@ export default function StartChatModal({
                                   })
                                 }
                                 aria-pressed={isSelected}
-                                className={`w-full flex items-center gap-3 p-2 text-left
-                                rounded-lg border transition-colors duration-150
-                                ${
+                                className={`flex w-full items-center gap-3 rounded-lg border p-2 text-left transition-colors duration-150 ${
                                   isSelected
-                                    ? "bg-amber-200/60 border-amber-300/74"
-                                    : "bg-amber-100/28 border-amber-200/40 hover:bg-amber-100/64"
+                                    ? "border-amber-300/74 bg-amber-200/60"
+                                    : "border-amber-200/40 bg-amber-100/28 hover:bg-amber-100/64"
                                 }`}
                               >
                                 <img
                                   src={getAssetUrl(property.exteriorImage)}
                                   alt=""
                                   draggable={false}
-                                  className="w-16 h-12 shrink-0 rounded-md object-cover shadow-sm"
+                                  className="h-12 w-16 shrink-0 rounded-md object-cover shadow-sm"
                                 />
                                 <div className="min-w-0">
-                                  <p className="text-sm font-medium text-amber-950 line-clamp-1">
+                                  <p className="line-clamp-1 text-sm font-medium text-amber-950">
                                     {property.title}
                                   </p>
-                                  <p className="text-xs text-amber-800/74 line-clamp-1">
+                                  <p className="line-clamp-1 text-xs text-amber-800/74">
                                     {property.province}, {property.city}
                                   </p>
                                 </div>
@@ -141,12 +137,12 @@ export default function StartChatModal({
                       </ul>
                     </>
                   ) : (
-                    <p className="py-6 text-sm text-center text-amber-800/74 italic">
+                    <p className="py-6 text-center text-sm text-amber-800/74 italic">
                       Our agent has no listed properties to discuss about yet.
                     </p>
                   )}
 
-                  <fieldset className="flex flex-row justify-end gap-4 mt-4">
+                  <fieldset className="mt-4 flex flex-row justify-end gap-4">
                     <button
                       type="button"
                       onClick={handleCloseDialog}
@@ -159,8 +155,7 @@ export default function StartChatModal({
                       disabled={
                         !startChatForm.propertyId || fetcher.state !== "idle"
                       }
-                      className="modal-accept-btn
-                      disabled:opacity-74 disabled:cursor-not-allowed"
+                      className="modal-accept-btn disabled:cursor-not-allowed disabled:opacity-74"
                     >
                       {fetcher.state === "idle" ? "Start Chat" : "Opening..."}
                     </button>

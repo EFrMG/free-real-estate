@@ -109,12 +109,8 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
   };
 
   return (
-    <div
-      className="[&_label]:pt-1 [&_label]:px-2 [&_label]:pb-0
-      [&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2
-      [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2"
-    >
-      <h1 className="page-title md:mt-12 text-center font-medium">
+    <div className="[&_input]:pt-0 [&_input]:pr-2 [&_input]:pb-2 [&_label]:px-2 [&_label]:pt-1 [&_label]:pb-0 [&_select]:mr-2 [&_select]:pt-0 [&_select]:pb-2">
+      <h1 className="page-title text-center font-medium md:mt-12">
         Search Results for{" "}
         <span className="font-bold">
           {propertyFilters.location || "all locations"}
@@ -122,8 +118,8 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
       </h1>
 
       <form onSubmit={(e) => handleSearch(e)}>
-        <fieldset className="max-w-[80%] mx-auto my-6 filter-input-group">
-          <label htmlFor="city" className="text-lg pl-2!">
+        <fieldset className="filter-input-group mx-auto my-6 max-w-[80%]">
+          <label htmlFor="city" className="pl-2! text-lg">
             Location
           </label>
           <input
@@ -143,7 +139,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
           </datalist>
         </fieldset>
 
-        <fieldset className="flex gap-2 flex-wrap justify-center items-center my-8 mx-2 md:mx-4">
+        <fieldset className="mx-2 my-8 flex flex-wrap items-center justify-center gap-2 md:mx-4">
           <div className="filter-input-group">
             <label htmlFor="type">Type</label>
             <select
@@ -251,7 +247,7 @@ export default function PropertiesFilterInput({ cities }: FilterInputProps) {
           </div>
           <button
             type="submit"
-            className="px-2 py-2.5 max-h-fit rounded-lg bg-amber-500"
+            className="max-h-fit rounded-lg bg-amber-500 px-2 py-2.5"
           >
             <GoSearch size={38} color="white" />
           </button>

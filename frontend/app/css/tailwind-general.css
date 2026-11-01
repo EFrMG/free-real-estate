@@ -46,32 +46,32 @@
 }
 
 @utility btn-hovaction {
-  @apply hover:scale-110 active:scale-100 transition-transform duration-150;
+  @apply transition-transform duration-150 hover:scale-110 active:scale-100;
 }
 
 @utility btn-hovaction-sm {
-  @apply hover:scale-105 active:scale-100 transition-transform duration-150;
+  @apply transition-transform duration-150 hover:scale-105 active:scale-100;
 }
 
 @utility btn-hovaction-xs {
-  @apply hover:scale-102 active:scale-100 transition-transform duration-150;
+  @apply transition-transform duration-150 hover:scale-102 active:scale-100;
 }
 
 @layer components {
   /* Layout primitives */
   .gen-main {
-    @apply grid md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto max-xs:p-2 max-sm:p-4 max-md:p-6 max-md:my-6 z-5 grow;
+    @apply z-5 mx-auto grid w-full max-w-7xl grow max-md:my-6 max-md:p-6 max-sm:p-4 max-xs:p-2 md:grid-cols-[60%_40%];
   }
 
   /* The md:pb-12 on both column classes is what gives every route the same gap above the viewport edge
    * It can't live on .gen-main as that is the grid container, and every route's right column is a full md:bg-amber-100 that would get an amber-50 strip underneath it
    * Below md:, .gen-main's own max-md:p-6 already applies the bottom padding */
   .gen-left {
-    @apply my-auto md:mr-[18.5%] md:pl-6 md:pb-12;
+    @apply my-auto md:mr-[18.5%] md:pb-12 md:pl-6;
   }
 
   .gen-left-column {
-    @apply p-2 sm:p-4 md:p-6 md:pb-12 stack-12;
+    @apply stack-12 p-2 sm:p-4 md:p-6 md:pb-12;
   }
 
   /* Typography */
@@ -82,20 +82,15 @@
 
   /* Buttons and links */
   .sign-in-btn {
-    @apply w-full mt-4 px-2 py-3 bg-amber-600/94
-    hover:bg-amber-700/94 transition-colors duration-150
-    rounded-md text-slate-50 font-medium shadow-md
-    disabled:opacity-74 disabled:cursor-none;
+    @apply mt-4 w-full rounded-md bg-amber-600/94 px-2 py-3 font-medium text-slate-50 shadow-md transition-colors duration-150 hover:bg-amber-700/94 disabled:cursor-none disabled:opacity-74;
   }
 
   .profile-pencil-btn {
-    @apply p-2 bg-amber-600/94 text-slate-50 rounded-full shadow-lg hover:bg-amber-700/94 transition-colors duration-300;
+    @apply rounded-full bg-amber-600/94 p-2 text-slate-50 shadow-lg transition-colors duration-300 hover:bg-amber-700/94;
   }
 
   .panel-action {
-    @apply flex items-center justify-center gap-[1ch]
-    w-full px-3 py-2.5 text-sm font-medium rounded-lg shadow-sm
-    gen-btn-border btn-hovaction-xs transition-all;
+    @apply flex w-full btn-hovaction-xs items-center justify-center gap-[1ch] rounded-lg gen-btn-border px-3 py-2.5 text-sm font-medium shadow-sm transition-all;
   }
 
   .outside-link {
@@ -113,7 +108,7 @@
 
   /* properties/FilterInput */
   .filter-input-group {
-    @apply stack-0 justify-around px-1 rounded-lg shadow-md shadow-slate-100 border-2 border-amber-500;
+    @apply stack-0 justify-around rounded-lg border-2 border-amber-500 px-1 shadow-md shadow-slate-100;
   }
 
   /* property-item */
@@ -123,18 +118,17 @@
 
   /* user-profile */
   .profile-picture-big {
-    @apply w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-lg border-3 border-amber-50/84 outline-2 outline-amber-300/64;
+    @apply h-24 w-24 rounded-full border-3 border-amber-50/84 object-cover shadow-lg outline-2 outline-amber-300/64 sm:h-28 sm:w-28;
   }
 
   /* user-profile */
   .property-action-btn {
-    @apply p-1.5 bg-amber-700/84 text-amber-50 rounded-full shadow-md
-    hover:bg-amber-800/94 transition-colors duration-150;
+    @apply rounded-full bg-amber-700/84 p-1.5 text-amber-50 shadow-md transition-colors duration-150 hover:bg-amber-800/94;
   }
 
   /* user-profile/ChatPanel */
   .chat-card {
-    @apply p-4 bg-amber-100/60 md:bg-amber-50/60 rounded-xl shadow-md border border-amber-200/40;
+    @apply rounded-xl border border-amber-200/40 bg-amber-100/60 p-4 shadow-md md:bg-amber-50/60;
   }
 
   /* our-agents + user-profile bookmark grids */

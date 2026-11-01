@@ -37,7 +37,7 @@ export default function About() {
           come back to it later.
         </p>
 
-        <section className="stack-4 p-5 rounded-lg bg-amber-100/74 border border-amber-400/28 shadow-md">
+        <section className="stack-4 rounded-lg border border-amber-400/28 bg-amber-100/74 p-5 shadow-md">
           <h2 className="text-xl font-semibold text-amber-950">
             How to Log In Into Existing Accounts
           </h2>
@@ -45,7 +45,7 @@ export default function About() {
             One can{" "}
             <Link
               to="/log-in?mode=login"
-              className="text-amber-700 font-semibold hover:underline"
+              className="font-semibold text-amber-700 hover:underline"
             >
               log in
             </Link>{" "}
@@ -53,7 +53,7 @@ export default function About() {
           </p>
           <p className="text-amber-900/84">
             The password for all of them is{" "}
-            <code className="px-1 py-0.5 rounded bg-amber-200/64 font-mono text-amber-950">
+            <code className="rounded bg-amber-200/64 px-1 py-0.5 font-mono text-amber-950">
               password123
             </code>
             .
@@ -63,20 +63,16 @@ export default function About() {
             {demoAccounts.map(({ email, name, role }) => (
               <li
                 key={email}
-                className="flex flex-wrap justify-between items-baseline gap-x-[1ch] gap-y-1
-                xs:px-3"
+                className="flex flex-wrap items-baseline justify-between gap-x-[1ch] gap-y-1 xs:px-3"
               >
                 <div>
-                  <code className="px-1 rounded bg-amber-200/60 font-mono text-amber-950/74">
+                  <code className="rounded bg-amber-200/60 px-1 font-mono text-amber-950/74">
                     {email}
                   </code>
                 </div>
                 <div className="flex gap-x-[1ch]">
-                  <span className="text-amber-900/74 text-sm">{name}:</span>
-                  <span
-                    className="px-1.5 py-0.5 rounded-full bg-amber-200/64
-                  text-xs font-semibold uppercase tracking-wide text-amber-900"
-                  >
+                  <span className="text-sm text-amber-900/74">{name}:</span>
+                  <span className="rounded-full bg-amber-200/64 px-1.5 py-0.5 text-xs font-semibold tracking-wide text-amber-900 uppercase">
                     {role}
                   </span>
                 </div>
@@ -84,11 +80,11 @@ export default function About() {
             ))}
           </ul>
 
-          <p className="text-amber-900/74 text-sm">
+          <p className="text-sm text-amber-900/74">
             Agent accounts can manage their own listings and profile; user
             accounts can bookmark properties and chat with agents.
           </p>
-          <p className="text-amber-900/74 text-sm">
+          <p className="text-sm text-amber-900/74">
             Everything resets to the original data once a day, so feel free to
             change whatever you like.
           </p>

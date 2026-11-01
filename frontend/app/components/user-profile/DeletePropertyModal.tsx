@@ -34,9 +34,7 @@ export default function DeletePropertyModal({
     <dialog
       ref={dialogRef}
       onCancel={handleCloseDialog}
-      className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent
-      overflow-hidden border-none outline-none"
+      className="inset-0 h-full max-h-none w-full max-w-none overflow-hidden border-none bg-transparent outline-none backdrop:bg-transparent"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
         {isDialogOpen && (
@@ -45,7 +43,7 @@ export default function DeletePropertyModal({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="flex items-center justify-center w-full h-full relative"
+            className="relative flex h-full w-full items-center justify-center"
           >
             {/* Custom backdrop */}
             <div
@@ -67,7 +65,7 @@ export default function DeletePropertyModal({
 
                 <h2 className="modal-title">Delete Listing</h2>
 
-                <fetcher.Form method="POST" className="stack-4 mt-4">
+                <fetcher.Form method="POST" className="mt-4 stack-4">
                   <input type="hidden" name="intent" value="property-delete" />
                   <input
                     type="hidden"
@@ -101,9 +99,7 @@ export default function DeletePropertyModal({
                     <button
                       type="submit"
                       disabled={fetcher.state !== "idle"}
-                      className="px-5 py-2 bg-rose-600/94 text-white font-medium
-                      rounded-md shadow-md hover:bg-rose-800/94
-                      transition-colors duration-150 disabled:opacity-74"
+                      className="rounded-md bg-rose-600/94 px-5 py-2 font-medium text-white shadow-md transition-colors duration-150 hover:bg-rose-800/94 disabled:opacity-74"
                     >
                       {fetcher.state !== "idle" ? "Deleting..." : "Delete"}
                     </button>

@@ -18,7 +18,7 @@ function MessageTime({ createdAt }: { createdAt: string }) {
     <time
       dateTime={createdAt}
       suppressHydrationWarning
-      className="block mt-1 text-xs leading-none opacity-lesser"
+      className="mt-1 block text-xs leading-none opacity-lesser"
     >
       {new Date(createdAt).toLocaleTimeString(undefined, {
         hour: "2-digit",
@@ -40,15 +40,13 @@ function MessageBubble({
   return (
     <div className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[80%] px-3 py-2 rounded-lg shadow-sm text-sm
-        ${isPending ? "opacity-less" : ""}
-        ${
+        className={`max-w-[80%] rounded-lg px-3 py-2 text-sm shadow-sm ${isPending ? "opacity-less" : ""} ${
           isMine
-            ? "bg-amber-600/94 text-amber-50 rounded-br-xs"
-            : "bg-amber-50 text-amber-950 border border-amber-200/64 rounded-bl-xs"
+            ? "rounded-br-xs bg-amber-600/94 text-amber-50"
+            : "rounded-bl-xs border border-amber-200/64 bg-amber-50 text-amber-950"
         }`}
       >
-        <p className="whitespace-pre-wrap wrap-break-word">{message.text}</p>
+        <p className="wrap-break-word whitespace-pre-wrap">{message.text}</p>
         <MessageTime createdAt={message.createdAt} />
       </div>
     </div>
@@ -101,30 +99,30 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
   }
 
   return (
-    <div className="h-full max-md:max-h-[52dvh] stack-3">
+    <div className="stack-3 h-full max-md:max-h-[52dvh]">
       {/* Who and what the conversation is about */}
-      <div className="shrink-0 flex items-center gap-3">
+      <div className="flex shrink-0 items-center gap-3">
         <img
           src={getAssetUrl(thread.otherUser.profilePicture)}
           onError={handleProfilePictureError}
           alt=""
           draggable={false}
-          className="w-12 h-12 shrink-0 rounded-full object-cover shadow-sm"
+          className="h-12 w-12 shrink-0 rounded-full object-cover shadow-sm"
         />
         <div className="min-w-0">
-          <p className="font-medium text-amber-950 line-clamp-1">
+          <p className="line-clamp-1 font-medium text-amber-950">
             {thread.otherUser.name}
           </p>
           <Link
             to={`/properties/${thread.property.id}`}
-            className="text-sm text-amber-800/74 underline decoration-amber-700/48 line-clamp-1"
+            className="line-clamp-1 text-sm text-amber-800/74 underline decoration-amber-700/48"
           >
             {thread.property.title}
           </Link>
         </div>
       </div>
 
-      <div className="grow min-h-0 overflow-y-auto stack-2 pr-1 md:overscroll-contain custom-scrollbar">
+      <div className="custom-scrollbar stack-2 min-h-0 grow overflow-y-auto pr-1 md:overscroll-contain">
         {thread.messages.length || pendingText ? (
           <>
             {thread.messages.map((message) => (
@@ -171,15 +169,13 @@ export default function ChatThread({ thread, currentUserId }: ChatThreadProps) {
             autoComplete="off"
             placeholder="Type a message..."
             aria-label={`Message ${thread.otherUser.name}`}
-            className="input-form grow min-w-0 py-2!"
+            className="input-form min-w-0 grow py-2!"
           />
           <button
             type="submit"
             disabled={!draft.trim()}
             title="Send message"
-            className="p-2.5 bg-amber-600/94 text-slate-50 rounded-full shadow-md
-            hover:bg-amber-700/94 transition-colors duration-150
-            disabled:opacity-74 disabled:cursor-not-allowed"
+            className="rounded-full bg-amber-600/94 p-2.5 text-slate-50 shadow-md transition-colors duration-150 hover:bg-amber-700/94 disabled:cursor-not-allowed disabled:opacity-74"
           >
             <GoPaperAirplane size={16} />
           </button>

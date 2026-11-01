@@ -34,37 +34,37 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <h1 className="page-title text-3xl">
           Find the place of your dreams at unmatched discounts
         </h1>
-        <p className="max-md:p-1 text-lg text-gray-800/84">
+        <p className="text-lg text-gray-800/84 max-md:p-1">
           Aquiring a place to live the joy of life should not be as expensive as
           life is in the end. We provide the best places at a price that might
           as well not be real.
         </p>
-        <h2 className="w-fit ml-auto max-md:mr-4 max-md:p-1 text-xl text-amber-800">
+        <h2 className="ml-auto w-fit text-xl text-amber-800 max-md:mr-4 max-md:p-1">
           Get your deal today!
         </h2>
 
         <SearchInput cities={cities} />
 
-        <div className="flex justify-center gap-8 max-sm:flex-wrap pt-12 lg:pt-16">
+        <div className="flex justify-center gap-8 pt-12 max-sm:flex-wrap lg:pt-16">
           <hgroup>
-            <span className="block font-semibold text-center text-xl">3</span>
-            <h2 className="text-lg text-center text-gray-800/84">
+            <span className="block text-center text-xl font-semibold">3</span>
+            <h2 className="text-center text-lg text-gray-800/84">
               Awarded Industry Prices
             </h2>
           </hgroup>
           <hgroup>
-            <span className="block font-semibold text-center text-xl">
+            <span className="block text-center text-xl font-semibold">
               25<span className="opacity-lesser">+</span>
             </span>
-            <h2 className="text-lg text-center text-gray-800/84">
+            <h2 className="text-center text-lg text-gray-800/84">
               Years of Experience
             </h2>
           </hgroup>
           <hgroup>
-            <span className="block font-semibold text-center text-xl">
+            <span className="block text-center text-xl font-semibold">
               200<span className="opacity-lesser">+</span>
             </span>
-            <h2 className="text-lg text-center text-gray-800/84">
+            <h2 className="text-center text-lg text-gray-800/84">
               Properties Ready
             </h2>
           </hgroup>

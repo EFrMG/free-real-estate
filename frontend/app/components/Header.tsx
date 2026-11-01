@@ -59,7 +59,7 @@ function UserLink({
       className={isBurger ? "sm:hidden" : "hidden sm:inline-block"}
     >
       <div className="flex items-center gap-2">
-        <span className="min-w-0 max-w-[16ch] text-center font-normal line-clamp-1">
+        <span className="line-clamp-1 max-w-[16ch] min-w-0 text-center font-normal">
           {user.name}
         </span>
         <div className="relative shrink-0">
@@ -68,16 +68,14 @@ function UserLink({
             onError={handleProfilePictureError}
             alt=""
             draggable={false}
-            className="w-12 h-12 rounded-full object-cover"
+            className="h-12 w-12 rounded-full object-cover"
           />
           {unreadSenders > 0 && (
             <span
               title={`${unreadSenders} ${unreadSenders === 1 ? "person is" : "people are"} waiting on a reply`}
-              className="absolute top-[-0.75ch] left-[-0.5ch]
-                    px-1.5 py-1 bg-rose-700 rounded-full
-                    text-sm text-yellow-50 leading-none font-bold"
+              className="absolute top-[-0.75ch] left-[-0.5ch] rounded-full bg-rose-700 px-1.5 py-1 text-sm leading-none font-bold text-yellow-50"
             >
-              <span className="translate-y-px inline-block">
+              <span className="inline-block translate-y-px">
                 {unreadSenders}
               </span>
             </span>
@@ -111,24 +109,24 @@ export default function Header() {
   }, [isBurgerOpen]);
 
   return (
-    <header className="max-sm:bg-amber-100 relative z-50 grid grid-cols-[65%_35%] md:grid-cols-[60%_40%] max-w-7xl w-full mx-auto">
-      <div className="max-sm:bg-amber-100 bg-amber-50 z-1">
-        <div className="flex items-center gap-4 lg:gap-6 px-2 py-4">
+    <header className="relative z-50 mx-auto grid w-full max-w-7xl grid-cols-[65%_35%] max-sm:bg-amber-100 md:grid-cols-[60%_40%]">
+      <div className="z-1 bg-amber-50 max-sm:bg-amber-100">
+        <div className="flex items-center gap-4 px-2 py-4 lg:gap-6">
           <Link to="/" className="flex items-center gap-2 max-sm:ml-2">
             <GoHome size={38} />
-            <span className="hidden lg:inline-block self-end max-sm:inline-block text-lg leading-7">
+            <span className="hidden self-end text-lg leading-7 max-sm:inline-block lg:inline-block">
               FreeRealEstate
             </span>
           </Link>
 
-          <nav className="md:self-end max-sm:hidden">
-            <ul className="flex md:gap-2 text-base font-medium leading-6">
+          <nav className="max-sm:hidden md:self-end">
+            <ul className="flex text-base leading-6 font-medium md:gap-2">
               {headerLinks.map((link: NavLinks) => (
                 <li key={`nav-link-${link.key}`} className="text-nowrap">
                   <NavLink
                     to={`/${link.key}`}
                     className={({ isActive }) =>
-                      `inline-block px-2 pt-2 transition-all duration-175 ${isActive ? "text-emerald-800 scale-105" : ""}`
+                      `inline-block px-2 pt-2 transition-all duration-175 ${isActive ? "scale-105 text-emerald-800" : ""}`
                     }
                   >
                     {link.name}
@@ -141,7 +139,7 @@ export default function Header() {
       </div>
 
       {/* Login buttons */}
-      <div className="flex items-center justify-end sm:justify-around gap-4 md:gap-6 sm:bg-amber-100">
+      <div className="flex items-center justify-end gap-4 sm:justify-around sm:bg-amber-100 md:gap-6">
         <div className="space-x-2 md:space-x-6">
           {isUser ? (
             <UserLink
@@ -154,8 +152,7 @@ export default function Header() {
               <Link
                 key={link.key}
                 to={`/${link.key}`}
-                className={`px-4 py-2 text-base hidden sm:inline-block
-              ${link.key === "log-in" ? "" : "bg-amber-300 rounded-sm"}`}
+                className={`hidden px-4 py-2 text-base sm:inline-block ${link.key === "log-in" ? "" : "rounded-sm bg-amber-300"}`}
               >
                 {link.name}
               </Link>
@@ -169,8 +166,7 @@ export default function Header() {
           aria-expanded={isBurgerOpen}
           aria-controls="burger-nav"
           aria-label={isBurgerOpen ? "Close menu" : "Open menu"}
-          className={`hidden max-sm:block mr-2 z-50
-          ${isBurgerOpen && "fixed"}`}
+          className={`z-50 mr-2 hidden max-sm:block ${isBurgerOpen && "fixed"}`}
         >
           <RiMenuUnfold4Fill
             size={38}
@@ -183,20 +179,15 @@ export default function Header() {
         <div
           onClick={closeBurger}
           aria-hidden="true"
-          className={`fixed inset-0 bg-black/28 sm:hidden z-30
-          transition-opacity duration-500 ease-out-swift
-          ${isBurgerOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+          className={`fixed inset-0 z-30 bg-black/28 transition-opacity duration-500 ease-out-swift sm:hidden ${isBurgerOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
         />
 
         <nav
           id="burger-nav"
           inert={!isBurgerOpen}
-          className={`fixed top-0 right-0 bottom-0
-          bg-amber-500 text-white sm:hidden z-40
-          transition-transform duration-500 ease-out-swift
-          ${!isBurgerOpen ? "translate-x-full" : "translate-x-0"}`}
+          className={`fixed top-0 right-0 bottom-0 z-40 bg-amber-500 text-white transition-transform duration-500 ease-out-swift sm:hidden ${!isBurgerOpen ? "translate-x-full" : "translate-x-0"}`}
         >
-          <ul className="stack-6 pt-24 px-12 text-lg font-medium">
+          <ul className="stack-6 px-12 pt-24 text-lg font-medium">
             {headerLinks.map((link: NavLinks) => (
               <li key={`nav-link-${link.key}`}>
                 <Link to={`/${link.key}`} onClick={closeBurger}>

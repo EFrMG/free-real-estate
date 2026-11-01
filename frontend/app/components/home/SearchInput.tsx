@@ -43,33 +43,30 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
   };
 
   return (
-    <div className="pt-8 lg:pt-12 px-2">
-      <div className="*:px-6 *:py-2 *:border-2 *:border-amber-500 *:focus:outline-0">
+    <div className="px-2 pt-8 lg:pt-12">
+      <div className="*:border-2 *:border-amber-500 *:px-6 *:py-2 *:focus:outline-0">
         <button
           onClick={() => updateQuery({ type: "any" })}
-          className={`[border-right-style:none]! [border-bottom-style:none]! rounded-tl-lg
-          ${searchQuery.type === "any" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
+          className={`rounded-tl-lg [border-right-style:none]! [border-bottom-style:none]! ${searchQuery.type === "any" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
         >
           Any
         </button>
         <button
           onClick={() => updateQuery({ type: "buy" })}
-          className={`[border-left-style:none]! [border-right-style:none]! [border-bottom-style:none]!
-          ${searchQuery.type === "buy" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
+          className={`[border-right-style:none]! [border-bottom-style:none]! [border-left-style:none]! ${searchQuery.type === "buy" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
         >
           Buy
         </button>
         <button
           onClick={() => updateQuery({ type: "rent" })}
-          className={`[border-left-style:none]! [border-bottom-style:none]! rounded-tr-lg
-          ${searchQuery.type === "rent" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
+          className={`rounded-tr-lg [border-bottom-style:none]! [border-left-style:none]! ${searchQuery.type === "rent" ? "bg-amber-500 text-white" : "bg-amber-50"}`}
         >
           Rent
         </button>
       </div>
       <form
         onSubmit={handleSearch}
-        className="flex max-sm:flex-wrap rounded-lg shadow-2xl shadow-slate-200/84 *:max-sm:w-[80%] *:min-h-16 *:pl-2 *:border-2 *:border-amber-500"
+        className="flex rounded-lg shadow-2xl shadow-slate-200/84 *:min-h-16 *:border-2 *:border-amber-500 *:pl-2 max-sm:flex-wrap *:max-sm:w-[80%]"
       >
         <input
           type="text"
@@ -78,7 +75,7 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
           list="home-city-suggestions"
           value={searchQuery.location}
           onChange={(e) => updateQuery({ location: e.target.value })}
-          className="sm:[border-right-style:none]! sm:rounded-bl-lg max-sm:rounded-tr-lg bg-amber-50"
+          className="bg-amber-50 max-sm:rounded-tr-lg sm:rounded-bl-lg sm:[border-right-style:none]!"
         />
         <datalist id="home-city-suggestions">
           {cities?.map((city) => (
@@ -98,7 +95,7 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
               minPrice: e.target.value ? +e.target.value : undefined,
             })
           }
-          className="sm:[border-right-style:none]! bg-amber-50"
+          className="bg-amber-50 sm:[border-right-style:none]!"
         />
 
         <input
@@ -113,12 +110,12 @@ export default function HomeSearchInput({ cities }: HomeSearchInputProps) {
               maxPrice: e.target.value ? +e.target.value : undefined,
             })
           }
-          className="sm:[border-right-style:none]! max-sm:rounded-bl-lg bg-amber-50"
+          className="bg-amber-50 max-sm:rounded-bl-lg sm:[border-right-style:none]!"
         />
 
         <button
           type="submit"
-          className="px-2! py-2 rounded-tr-lg rounded-br-lg max-sm:w-fit! bg-amber-500"
+          className="rounded-tr-lg rounded-br-lg bg-amber-500 px-2! py-2 max-sm:w-fit!"
         >
           <GoSearch size={38} color="white" />
         </button>

@@ -130,13 +130,11 @@ const LogInForm = ({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
-      <h1 className="page-title mb-2">
-        {titleText}
-      </h1>
-      <p className="text-amber-800/84 mb-8">{paragraphText}</p>
+      <h1 className="page-title mb-2">{titleText}</h1>
+      <p className="mb-8 text-amber-800/84">{paragraphText}</p>
       <fetcher.Form
         method="post"
-        className="stack-6 p-6 rounded-lg bg-amber-100/74 shadow-lg form-label"
+        className="form-label stack-6 rounded-lg bg-amber-100/74 p-6 shadow-lg"
       >
         {children}
       </fetcher.Form>
@@ -158,7 +156,7 @@ export default function LogIn() {
   return (
     <main className="gen-main">
       <div className="gen-left sign-in-wrapper">
-        <div className="max-w-md w-full mx-auto">
+        <div className="mx-auto w-full max-w-md">
           <AnimatePresence mode="wait">
             {mode === "login" ? (
               <LogInForm
@@ -199,11 +197,11 @@ export default function LogIn() {
                   {isLoading ? "Logging in..." : "Log In"}
                 </button>
 
-                <p className="text-center text-amber-900/74 mt-4">
+                <p className="mt-4 text-center text-amber-900/74">
                   Don't have an account?{" "}
                   <Link
                     to="/log-in?mode=signup"
-                    className="text-amber-700 font-semibold hover:underline"
+                    className="font-semibold text-amber-700 hover:underline"
                   >
                     Sign Up
                   </Link>
@@ -262,11 +260,11 @@ export default function LogIn() {
                     {isLoading ? "Signing up..." : "Sign Up"}
                   </button>
 
-                  <p className="text-center text-amber-900/74 mt-4">
+                  <p className="mt-4 text-center text-amber-900/74">
                     Already have an account?{" "}
                     <Link
                       to="/log-in?mode=login"
-                      className="text-amber-700 font-semibold hover:underline"
+                      className="font-semibold text-amber-700 hover:underline"
                     >
                       Log In
                     </Link>

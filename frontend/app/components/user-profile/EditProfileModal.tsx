@@ -50,7 +50,9 @@ export default function EditProfileModal({
         compressed = await compressImage(file);
       } catch {
         e.target.value = "";
-        setCompressionError("Could not process this image. Please choose another file.");
+        setCompressionError(
+          "Could not process this image. Please choose another file.",
+        );
         return;
       } finally {
         setIsCompressing(false);
@@ -87,9 +89,7 @@ export default function EditProfileModal({
       onCancel={(e) => {
         handleCloseDialog(e);
       }}
-      className="inset-0 w-full h-full max-w-none max-h-none
-      backdrop:bg-transparent bg-transparent
-      overflow-hidden border-none outline-none"
+      className="inset-0 h-full max-h-none w-full max-w-none overflow-hidden border-none bg-transparent outline-none backdrop:bg-transparent"
     >
       <AnimatePresence onExitComplete={() => dialogRef.current?.close()}>
         {isDialogOpen && (
@@ -98,7 +98,7 @@ export default function EditProfileModal({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="flex items-center justify-center w-full h-full relative"
+            className="relative flex h-full w-full items-center justify-center"
           >
             {/* Custom backdrop */}
             <div
@@ -126,27 +126,26 @@ export default function EditProfileModal({
                 <fetcher.Form
                   method="PUT"
                   encType="multipart/form-data"
-                  className="space-y-4 mt-4"
+                  className="mt-4 space-y-4"
                 >
                   <input type="hidden" name="intent" value="profile-change" />
 
                   {/* Picture preview + upload */}
                   <fieldset className="flex flex-col items-center gap-3">
-                    <div className="relative group">
+                    <div className="group relative">
                       <div className="overflow-hidden rounded-full">
                         <img
                           src={getAssetUrl(profileState.profilePicture)}
                           alt="Profile picture preview"
                           onError={handleProfilePictureError}
                           onClick={() => fileRef.current?.click()}
-                          className="profile-picture-big cursor-pointer
-                        group-hover:scale-105 transition-transform duration-300"
+                          className="profile-picture-big cursor-pointer transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <button
                         type="button"
                         onClick={() => fileRef.current?.click()}
-                        className="absolute bottom-0 right-0 profile-pencil-btn"
+                        className="profile-pencil-btn absolute right-0 bottom-0"
                       >
                         <GoPencil size={14} />
                       </button>
@@ -162,16 +161,20 @@ export default function EditProfileModal({
                     />
 
                     <p className="text-xs text-amber-700/94">
-                      Click the pencil to upload a new photo. Images are compressed before upload; the site allows 50 images and 50 MB total.
+                      Click the pencil to upload a new photo. Images are
+                      compressed before upload; the site allows 50 images and 50
+                      MB total.
                     </p>
                   </fieldset>
 
                   {(compressionError || fetcher.data?.error) && (
-                    <p role="alert" className="text-sm text-red-700">{compressionError ?? fetcher.data.error}</p>
+                    <p role="alert" className="text-sm text-red-700">
+                      {compressionError ?? fetcher.data.error}
+                    </p>
                   )}
 
                   {/* Name input */}
-                  <fieldset className="stack-0 form-label">
+                  <fieldset className="form-label stack-0">
                     <label htmlFor="edit-name">Display Name</label>
                     <input
                       id="edit-name"
@@ -187,7 +190,7 @@ export default function EditProfileModal({
 
                   {user.role === "agent" && (
                     <>
-                      <fieldset className="stack-0 form-label">
+                      <fieldset className="form-label stack-0">
                         <label htmlFor="edit-phone-number">Phone Number:</label>
                         <input
                           id="edit-phone-number"
@@ -201,7 +204,7 @@ export default function EditProfileModal({
                         />
                       </fieldset>
 
-                      <fieldset className="stack-0 form-label">
+                      <fieldset className="form-label stack-0">
                         <label htmlFor="edit-biography">Biography</label>
                         <textarea
                           id="edit-biography"
@@ -224,7 +227,11 @@ export default function EditProfileModal({
                     >
                       Cancel
                     </button>
-                    <button type="submit" disabled={isCompressing} className="modal-accept-btn">
+                    <button
+                      type="submit"
+                      disabled={isCompressing}
+                      className="modal-accept-btn"
+                    >
                       {isCompressing ? "Preparing photo..." : "Save Changes"}
                     </button>
                   </fieldset>
