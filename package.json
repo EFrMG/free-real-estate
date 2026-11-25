@@ -13,6 +13,7 @@
     "typeck": "pnpm --filter \"*\" --parallel run typecheck",
     "typeck:fe": "pnpm --filter @free-real-estate/frontend run typecheck",
     "typeck:be": "pnpm --filter @free-real-estate/node-drizzle run typecheck",
+    "test": "pnpm --filter @free-real-estate/node-drizzle run test",
     "format:fe": "pnpm --filter @free-real-estate/frontend run format",
     "format:check:fe": "pnpm --filter @free-real-estate/frontend run format:check",
     "build:fe": "pnpm --filter @free-real-estate/frontend run build",
@@ -24,5 +25,6 @@
     "generate:be": "pnpm --filter @free-real-estate/node-drizzle run generate",
     "migrate:be:local": "pnpm --filter @free-real-estate/node-drizzle run migrate:local",
     "migrate:be:remote": "pnpm --filter @free-real-estate/node-drizzle run migrate:remote"
-  }
+  },
+  "packageManager": "pnpm@11.21.0"
 }
