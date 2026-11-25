@@ -12,6 +12,7 @@ import useDialog from "~/hooks/useDialog";
 import useObjectState from "~/hooks/useObjectState";
 import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 import forwardCookies from "~/utils/forwardCookies";
+import { getAuth } from "~/utils/auth";
 import apiErrorMessage from "~/utils/apiErrorMessage";
 import { API_URL } from "~/utils/apiUrl";
 import { mergeMeta } from "~/utils/meta";
@@ -46,17 +47,15 @@ export function meta({ matches }: Route.MetaArgs) {
   });
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const cookieHeader = request.headers.get("Cookie");
+export async function loader({ request, context }: Route.LoaderArgs) {
+  // Shared with the root loader: one /auth/me per request, its cookies forwarded once by authMiddleware
+  const { user, cookie } = await getAuth(context);
 
-  const userRes = await fetch(API_URL + "/api/auth/me", {
-    headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-  });
+  if (!user) return redirect("/log-in");
 
-  if (!userRes) return redirect("/log-in");
-
-  const user: UserProfileData = await userRes.json();
   const userId = user.id;
+  // Carries any session /auth/me just rotated, so none of the calls below races to rotate the same refresh token
+  const headers = { Cookie: cookie };
 
   // The open conversation, if any, is carried by the URL rather than by state
   const selectedChatId = new URL(request.url).searchParams.get("chat");
@@ -64,21 +63,16 @@ export async function loader({ request }: Route.LoaderArgs) {
   const [userPropertiesRes, userBookmarksRes, userChatsRes, chatThreadRes] =
     await Promise.all([
       fetch(`${API_URL}/api/users/${userId}/properties`),
-      fetch(`${API_URL}/api/users/${userId}/bookmarks`, {
-        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-      }),
-      fetch(API_URL + "/api/chats", {
-        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-      }),
+      fetch(`${API_URL}/api/users/${userId}/bookmarks`, { headers }),
+      fetch(API_URL + "/api/chats", { headers }),
       selectedChatId
         ? fetch(`${API_URL}/api/chats/${selectedChatId}/messages`, {
-            headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
+            headers,
           })
         : null,
     ]);
 
-  // Properties are public and carry no cookie, so they never lose the rotation race;
-  // a failure there is a genuine backend problem, not a stale refresh token.
+  // Properties are public and carry no cookie, so a failure there is a genuine backend problem
   if (!userPropertiesRes.ok) {
     throw new Response("Failed to fetch user properties", { status: 500 });
   }
@@ -100,14 +94,12 @@ export async function loader({ request }: Route.LoaderArgs) {
     ? await chatThreadRes.json()
     : null;
 
-  // WARN: A failed request may carry cookie-clearing headers (its refresh token was already rotated by a sibling call); those are only forwarded when it succeeded.
-  // See ../../../docs/REFRESH_TOKEN_ROTATION_CONCURRENCY.md
+  // WARN: A failed request may carry cookie-clearing headers, so only successful ones are forwarded. With the rotated cookie above they normally set none at all.
+  // See ../../../docs/refresh-token-rotation-concurrency.md
   return data(
     { user, userProperties, userBookmarks, userChats, chatThread },
     {
       headers: forwardCookies(
-        userRes,
-        userPropertiesRes,
         userBookmarksRes.ok ? userBookmarksRes : null,
         userChatsRes.ok ? userChatsRes : null,
         chatThreadRes?.ok ? chatThreadRes : null,

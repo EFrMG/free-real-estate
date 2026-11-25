@@ -13,6 +13,7 @@ import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
 import ClientOnly from "~/components/ClientOnly";
 import PropertyGallery from "~/components/property-item/Gallery";
 import forwardCookies from "~/utils/forwardCookies";
+import { getAuth } from "~/utils/auth";
 import { API_URL } from "~/utils/apiUrl";
 import { mergeMeta } from "~/utils/meta";
 
@@ -24,7 +25,7 @@ import {
 } from "react-icons/go";
 import { LiaHandshake } from "react-icons/lia";
 
-import type { PropertyData, UserBasic, UserProfile } from "~/data/generalData";
+import type { PropertyData, UserBasic } from "~/data/generalData";
 
 const Map = lazy(() => import("~/components/Map"));
 
@@ -41,9 +42,8 @@ export function meta({ matches, data }: Route.MetaArgs) {
   });
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
+export async function loader({ params, context }: Route.LoaderArgs) {
   const { id } = params;
-  const cookie = request.headers.get("Cookie") || "";
 
   // Property data
   const propertyRes = await fetch(`${API_URL}/api/properties/${id}`);
@@ -59,26 +59,18 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   // User agent poster (of the property listing)
   let userPoster: UserBasic | null = null;
-  let userPosterRes: Response | null = null;
 
   if (property.userId) {
-    userPosterRes = await fetch(`${API_URL}/api/users/${property.userId}`);
+    const userPosterRes = await fetch(
+      `${API_URL}/api/users/${property.userId}`,
+    );
     if (userPosterRes.ok) {
       userPoster = await userPosterRes.json();
     }
   }
 
-  // User profile
-  let user: UserProfile | null = null;
-
-  const userRes = await fetch(API_URL + "/api/auth/me", {
-    method: "GET",
-    headers: { Cookie: cookie },
-  });
-
-  if (userRes.ok) {
-    user = await userRes.json();
-  }
+  // The user comes from the request's shared /auth/me call (see authMiddleware), not a call of this loader's own
+  const { user, cookie } = await getAuth(context);
 
   // User bookmarks
   let userBookmarks: PropertyData[] | null = null;
@@ -98,15 +90,11 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
   }
 
+  // A failed request may carry cookie-clearing headers, so only a successful one is forwarded
   return data(
     { property, userPoster, userBookmarks },
     {
-      headers: forwardCookies(
-        propertyRes,
-        userPosterRes,
-        userRes,
-        userBookmarksRes,
-      ),
+      headers: forwardCookies(userBookmarksRes?.ok ? userBookmarksRes : null),
     },
   );
 }
@@ -114,22 +102,16 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 /* TODO: optimistic UI for the bookmark button
  * Although, if there is no suitable place to show errors in the present layout this would also necessitate a popover,
  * for which I have no other use yet other than indicating a successful login */
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action({ request, params, context }: Route.ActionArgs) {
   const { id: propertyId } = params;
 
   const formData = await request.formData();
   const intent = formData.get("intent");
 
-  const cookie = request.headers.get("Cookie") || "";
+  // authMiddleware forwards any rotation from this /auth/me call, so the responses below only add their own cookies
+  const { user, cookie } = await getAuth(context);
 
-  const userRes = await fetch(API_URL + "/api/auth/me", {
-    method: "GET",
-    headers: { Cookie: cookie },
-  });
-
-  if (!userRes.ok) return new Response("Unauthorized", { status: 401 });
-
-  const user = await userRes.json();
+  if (!user) return new Response("Unauthorized", { status: 401 });
 
   if (intent === "start-chat") {
     const chatRes = await fetch(API_URL + "/api/chats", {
@@ -145,16 +127,13 @@ export async function action({ request, params }: Route.ActionArgs) {
     });
 
     if (!chatRes.ok) {
-      return data(
-        { error: "We could not open that conversation." },
-        { headers: forwardCookies(userRes) },
-      );
+      return data({ error: "We could not open that conversation." });
     }
 
     const { chatId } = await chatRes.json();
 
     return redirect(`/user-profile/${user.id}?chat=${chatId}`, {
-      headers: forwardCookies(userRes, chatRes),
+      headers: forwardCookies(chatRes),
     });
   }
 
@@ -170,7 +149,7 @@ export async function action({ request, params }: Route.ActionArgs) {
         body: JSON.stringify({ propertyId }),
       },
     );
-    return data(null, { headers: forwardCookies(userRes, bookmarkRes) });
+    return data(null, { headers: forwardCookies(bookmarkRes) });
   } else if (intent === "remove-bookmark") {
     const removeRes = await fetch(
       `${API_URL}/api/users/${user.id}/bookmarks/${propertyId}`,
@@ -179,10 +158,10 @@ export async function action({ request, params }: Route.ActionArgs) {
         headers: { Cookie: cookie },
       },
     );
-    return data(null, { headers: forwardCookies(userRes, removeRes) });
+    return data(null, { headers: forwardCookies(removeRes) });
   }
 
-  return data(null, { headers: forwardCookies(userRes) });
+  return data(null);
 }
 
 export default function PropertyItem({ loaderData }: Route.ComponentProps) {

@@ -1,4 +1,4 @@
-import type { PropertyData } from "~/data/generalData";
+import type { PropertyListItem } from "@free-real-estate/shared";
 
 import { Link } from "react-router";
 import getAssetUrl from "~/utils/getAssetUrl";
@@ -8,7 +8,7 @@ import { LuBed, LuBath } from "react-icons/lu";
 
 type PropertyCardProps = {
   property: Pick<
-    PropertyData,
+    PropertyListItem,
     | "id"
     | "transactionType"
     | "title"

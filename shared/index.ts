@@ -24,12 +24,36 @@ export interface UserProfile extends UserBasic {
   biography?: string | null;
 }
 
+// Shape returned by GET /auth/me: the signed-in user's profile plus the header badge
+export interface CurrentUser extends UserProfile {
+  // Distinct people with messages this user hasn't read yet
+  unreadSenders: number;
+}
+
 export type AgentProfileData = OptionalNullable<
   InferSelectModel<typeof schema.agentProfiles>
 >;
 
 export type PropertyData = OptionalNullable<
   InferSelectModel<typeof schema.properties>
+>;
+
+// A row of GET /properties: only what the listing cards and the map read, so the JSON columns and longDescription aren't decoded and re-encoded for every listing
+export type PropertyListItem = Pick<
+  PropertyData,
+  | "id"
+  | "transactionType"
+  | "title"
+  | "description"
+  | "exteriorImage"
+  | "province"
+  | "city"
+  | "address"
+  | "bedrooms"
+  | "bathrooms"
+  | "price"
+  | "latitude"
+  | "longitude"
 >;
 
 export type ChatData = OptionalNullable<InferSelectModel<typeof schema.chats>>;
@@ -63,6 +87,14 @@ export interface ChatSummary {
 // A single conversation with its messages, as returned by GET /chats/:id/messages
 export interface ChatThreadData extends ChatSummary {
   messages: MessageData[];
+}
+
+// One poll tick of the profile page, as returned by GET /chats/poll?chat=<id>
+// `thread` is null when no chat was asked for or the user doesn't take part in it
+export interface ChatPollData {
+  chats: ChatSummary[];
+  unreadSenders: number;
+  thread: ChatThreadData | null;
 }
 
 // TODO: Blog section

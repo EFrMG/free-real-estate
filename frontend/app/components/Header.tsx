@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useRouteLoaderData } from "react-router";
 
 import getAssetUrl, { handleProfilePictureError } from "~/utils/getAssetUrl";
+import useChatPoll from "~/hooks/useChatPoll";
 
 import { GoHome } from "react-icons/go";
 import { RiMenuUnfold4Fill } from "react-icons/ri";
@@ -90,7 +91,10 @@ export default function Header() {
   const rootData = useRouteLoaderData("root");
   const user = rootData?.user ?? null;
 
-  const unreadSenders: number = rootData?.unreadSenders ?? 0;
+  // The chat panel's poll keeps the badge live; root data takes over again whenever it is the newer of the two
+  const { data: poll } = useChatPoll(rootData);
+  const unreadSenders: number =
+    poll?.unreadSenders ?? rootData?.unreadSenders ?? 0;
   const isUser = !!user;
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);

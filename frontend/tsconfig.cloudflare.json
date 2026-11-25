@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["workers/**/*", "worker-configuration.d.ts"],
+  "include": [
+    "workers/**/*",
+    "worker-configuration.d.ts",
+    ".react-router/types/+future.ts"
+  ],
   "compilerOptions": {
     "composite": true,
     "strict": true,

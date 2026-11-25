@@ -5,45 +5,26 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  data,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 
 import Header from "~/components/Header";
-import forwardCookies from "~/utils/forwardCookies";
-import { API_URL } from "~/utils/apiUrl";
+import { authMiddleware, getAuth } from "~/utils/auth";
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const cookieHeader = request.headers.get("Cookie");
+export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
 
-  try {
-    const authRes = await fetch(API_URL + "/api/auth/me", {
-      headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-    });
+export async function loader({ context }: Route.LoaderArgs) {
+  // Anonymous visitors (no auth cookie) never reach the backend; the user and the badge arrive in one /auth/me call whose cookies authMiddleware forwards
+  const { user } = await getAuth(context);
 
-    if (authRes.ok) {
-      const user = await authRes.json();
+  if (!user) return null;
 
-      // The badge counts people waiting on a reply, not individual messages
-      const unreadRes = await fetch(API_URL + "/api/chats/unread-count", {
-        headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
-      });
+  // The badge counts people waiting on a reply, not individual messages
+  const { unreadSenders, ...profile } = user;
 
-      const unreadSenders = unreadRes.ok ? (await unreadRes.json()).count : 0;
-
-      // A failed 'unread' request may carry cookie-clearing headers (its refresh token was already rotated by the call above), we only forward it when it succeeded
-      return data(
-        { user, unreadSenders },
-        { headers: forwardCookies(authRes, unreadRes.ok ? unreadRes : null) },
-      );
-    }
-  } catch (error) {
-    console.error(error); // The backend should handle this on requireAuth regardless
-  }
-
-  return null;
+  return { user: profile, unreadSenders };
 }
 
 export const meta: Route.MetaFunction = ({ location }) => {

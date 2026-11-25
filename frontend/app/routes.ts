@@ -9,4 +9,6 @@ export default [
   route("properties", "routes/properties.tsx"),
   route("properties/:id", "routes/property-item.tsx"),
   route("user-profile/:id", "routes/user-profile.tsx"),
+  // Resource route (loader only) polled by the chat panel
+  route("chat-updates", "routes/chat-updates.ts"),
 ] satisfies RouteConfig;

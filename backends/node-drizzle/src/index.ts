@@ -11,7 +11,6 @@ import {
   like,
   asc,
   desc,
-  inArray,
 } from "drizzle-orm";
 import { z } from "zod";
 
@@ -40,8 +39,12 @@ import {
   clearAuthCookies,
 } from "./auth.ts";
 
-import selectUserChats from "./utils/selectUserChats.ts";
-import toChatSummary from "./utils/toChatSummary.ts";
+import selectUserChats, {
+  listChatSummaries,
+  selectChatMessages,
+  selectChatSummaries,
+} from "./utils/selectUserChats.ts";
+import countUnreadSenders from "./utils/countUnreadSenders.ts";
 import { ClientError } from "./utils/clientError.ts";
 import uploadImage, { isFilledFile } from "./utils/uploadImage.ts";
 import readPropertyForm from "./utils/readPropertyForm.ts";
@@ -51,10 +54,12 @@ import { hashPassword, verifyPassword } from "./password.ts";
 import type {
   AgentProfileData,
   UserBasic,
-  UserProfile,
+  CurrentUser,
   ChatSummary,
   ChatThreadData,
+  ChatPollData,
   MessageData,
+  PropertyListItem,
 } from "@free-real-estate/shared";
 
 const app = new Hono<AppEnv>();
@@ -99,6 +104,23 @@ api.use(
 
 // Properties --.
 
+// The columns GET /properties returns, keyed exactly by PropertyListItem so the two can't drift apart
+const propertyListColumns = {
+  id: properties.id,
+  transactionType: properties.transactionType,
+  title: properties.title,
+  description: properties.description,
+  exteriorImage: properties.exteriorImage,
+  province: properties.province,
+  city: properties.city,
+  address: properties.address,
+  bedrooms: properties.bedrooms,
+  bathrooms: properties.bathrooms,
+  price: properties.price,
+  latitude: properties.latitude,
+  longitude: properties.longitude,
+} satisfies Record<keyof PropertyListItem, unknown>;
+
 // GET all properties while filtering
 api.get("/properties", async (c) => {
   const db = c.var.db;
@@ -141,11 +163,11 @@ api.get("/properties", async (c) => {
   }
 
   const result = await db
-    .select()
+    .select(propertyListColumns)
     .from(properties)
     .where(and(...filters));
 
-  return c.json(result);
+  return c.json(result satisfies PropertyListItem[]);
 });
 
 // GET single property
@@ -500,7 +522,10 @@ api.get("/auth/me", requireAuth, async (c) => {
 
   if (!user) return c.json({ error: "User not found." }, 404);
 
-  return c.json(user satisfies UserProfile);
+  // Carried here so the frontend's root loader needs a single call for the header, user and badge alike
+  const unreadSenders = await countUnreadSenders(db, session.id);
+
+  return c.json({ ...user, unreadSenders } satisfies CurrentUser);
 });
 
 // Users --.
@@ -783,62 +808,11 @@ api.delete("/users/:id/bookmarks/:propertyId", requireAuth, async (c) => {
 
 // Chats --.
 
-// GET the number of people with unread messages
-api.get("/chats/unread-count", requireAuth, async (c) => {
-  const db = c.var.db;
-  const session = c.get("user") as UserSession;
-
-  const senders = await db
-    .selectDistinct({ senderId: messages.senderId })
-    .from(messages)
-    .innerJoin(
-      chatParticipants,
-      and(
-        eq(chatParticipants.chatId, messages.chatId),
-        eq(chatParticipants.userId, session.id),
-      ),
-    )
-    .where(
-      and(
-        ne(messages.senderId, session.id),
-        // ISO 8601 sorts lexicographically, so a string compare is chronological
-        gt(messages.createdAt, chatParticipants.lastReadAt),
-      ),
-    );
-
-  return c.json({ count: senders.length });
-});
-
 // GET every conversation of the authenticated user, most recent first
 api.get("/chats", requireAuth, async (c) => {
-  const db = c.var.db;
   const session = c.get("user") as UserSession;
 
-  const rows = await selectUserChats(db, session.id).orderBy(
-    desc(chats.updatedAt),
-  );
-
-  if (!rows.length) return c.json([] satisfies ChatSummary[]);
-
-  // One extra query for every chat at once, rather than one per chat
-  const chatMessages = await db
-    .select()
-    .from(messages)
-    .where(
-      inArray(
-        messages.chatId,
-        rows.map((row) => row.id),
-      ),
-    )
-    .orderBy(asc(messages.createdAt));
-
-  const result = rows.map((row) =>
-    toChatSummary(
-      row,
-      chatMessages.filter((message) => message.chatId === row.id),
-      session.id,
-    ),
-  );
+  const result = await listChatSummaries(c.var.db, session.id);
 
   return c.json(result satisfies ChatSummary[]);
 });
@@ -850,24 +824,42 @@ api.get("/chats/:id/messages", requireAuth, async (c) => {
   const chatId = Number(c.req.param("id"));
 
   // Non-participants get a 404 rather than a 403 for chats to stay unenumerable
-  const row = await selectUserChats(db, session.id)
+  const summary = await selectChatSummaries(db, session.id)
     .where(eq(chats.id, chatId))
     .get();
 
-  if (!row) return c.json({ error: "Chat not found" }, 404);
+  if (!summary) return c.json({ error: "Chat not found" }, 404);
 
-  const chatMessages = await db
-    .select()
-    .from(messages)
-    .where(eq(messages.chatId, chatId))
-    .orderBy(asc(messages.createdAt));
+  const chatMessages = await selectChatMessages(db, chatId);
 
-  const result = {
-    ...toChatSummary(row, chatMessages, session.id),
-    messages: chatMessages,
-  };
+  const result = { ...summary, messages: chatMessages };
 
   return c.json(result satisfies ChatThreadData);
+});
+
+// GET everything the open profile page refreshes on each poll tick in one request: the chat list, the header badge, and the open thread (?chat=<id>)
+api.get("/chats/poll", requireAuth, async (c) => {
+  const db = c.var.db;
+  const session = c.get("user") as UserSession;
+  const chatId = Number(c.req.query("chat")) || null;
+
+  // The history is fetched alongside the list and only kept if the list proves the user takes part in that chat
+  const [chatList, unreadSenders, chatMessages] = await Promise.all([
+    listChatSummaries(db, session.id),
+    countUnreadSenders(db, session.id),
+    chatId ? selectChatMessages(db, chatId) : null,
+  ]);
+
+  // Same rule as the 404 on /chats/:id/messages: a chat the user isn't part of yields no thread
+  const summary = chatList.find((chat) => chat.id === chatId);
+  const thread =
+    summary && chatMessages ? { ...summary, messages: chatMessages } : null;
+
+  return c.json({
+    chats: chatList,
+    unreadSenders,
+    thread,
+  } satisfies ChatPollData);
 });
 
 const startChatSchema = z.object({

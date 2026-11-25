@@ -2,7 +2,7 @@ import { scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
 
 const SCRYPT_COST = 16_384;
 const SCRYPT_BLOCK_SIZE = 8;
-const SCRYPT_PARALLELISM = 5;
+const SCRYPT_PARALLELISM = 1;
 const KEY_LENGTH = 32;
 
 function toBase64(bytes: Uint8Array): string {

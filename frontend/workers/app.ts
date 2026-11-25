@@ -1,13 +1,14 @@
-import { createRequestHandler } from "react-router";
+import {
+  createContext,
+  createRequestHandler,
+  RouterContextProvider,
+} from "react-router";
 
-declare module "react-router" {
-  export interface AppLoadContext {
-    cloudflare: {
-      env: Env;
-      ctx: ExecutionContext;
-    };
-  }
-}
+// With middleware enabled, loaders and actions receive a RouterContextProvider rather than a plain load-context object; the Worker's bindings stay reachable through this context
+export const cloudflareContext = createContext<{
+  env: Env;
+  ctx: ExecutionContext;
+}>();
 
 const requestHandler = createRequestHandler(
   () => import("virtual:react-router/server-build"),
@@ -16,8 +17,9 @@ const requestHandler = createRequestHandler(
 
 export default {
   fetch(request, env, ctx) {
-    return requestHandler(request, {
-      cloudflare: { env, ctx },
-    });
+    const context = new RouterContextProvider();
+    context.set(cloudflareContext, { env, ctx });
+
+    return requestHandler(request, context);
   },
 } satisfies ExportedHandler<Env>;

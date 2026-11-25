@@ -1,15 +1,16 @@
 import type { ChatSummary, ChatThreadData } from "@free-real-estate/shared";
 
+import { useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 
-import usePollingRevalidation from "~/hooks/usePollingRevalidation";
+import useChatPoll from "~/hooks/useChatPoll";
 
 import ChatList from "./ChatList";
 import ChatThread from "./ChatThread";
 
 import { GoComment } from "react-icons/go";
 
-// Cheap enough for a handful of REST calls, short enough to feel conversational
+// Short enough to feel conversational; each tick is one frontend and one backend request
 const POLLING_INTERVAL_MS = 8000;
 
 interface ChatPanelProps {
@@ -19,14 +20,38 @@ interface ChatPanelProps {
 }
 
 export default function ChatPanel({
-  chats,
-  thread,
+  chats: loaderChats,
+  thread: loaderThread,
   currentUserId,
 }: ChatPanelProps) {
-  usePollingRevalidation(POLLING_INTERVAL_MS);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedChatId = Number(searchParams.get("chat")) || null;
+
+  // Poll results win only while newer than the loader data, and the thread only when it is the selected chat's, so switching chats never flashes the previous thread
+  const { fetcher, data: poll } = useChatPoll(loaderChats, loaderThread);
+  const chats = poll?.chats ?? loaderChats;
+  const thread =
+    poll && poll.chatId === selectedChatId ? poll.thread : loaderThread;
+
+  // Refs so the interval reads the latest fetcher and selection without being rebuilt each render
+  const fetcherRef = useRef(fetcher);
+  const selectedChatRef = useRef(selectedChatId);
+  fetcherRef.current = fetcher;
+  selectedChatRef.current = selectedChatId;
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      if (fetcherRef.current.state !== "idle") return;
+
+      const chatId = selectedChatRef.current;
+      fetcherRef.current.load(
+        `/chat-updates${chatId ? `?chat=${chatId}` : ""}`,
+      );
+    }, POLLING_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   function selectChat(chatId: number) {
     setSearchParams(

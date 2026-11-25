@@ -96,17 +96,15 @@ describe("chat participant checks", () => {
     const outsiderCookie = await sessionCookie(outsider);
 
     const list = await call("/api/chats", { cookie: outsiderCookie });
-    const unread = await call("/api/chats/unread-count", {
-      cookie: outsiderCookie,
-    });
-    const agentUnread = await call("/api/chats/unread-count", {
+    const me = await call("/api/auth/me", { cookie: outsiderCookie });
+    const agentMe = await call("/api/auth/me", {
       cookie: await sessionCookie(agent),
     });
 
     expect(await list.json()).toEqual([]);
-    expect(await unread.json()).toEqual({ count: 0 });
+    expect(await me.json()).toMatchObject({ unreadSenders: 0 });
     // Positive control: the real recipient does have one unread sender
-    expect(await agentUnread.json()).toEqual({ count: 1 });
+    expect(await agentMe.json()).toMatchObject({ unreadSenders: 1 });
   });
 
   it("an outsider cannot start a chat about a listing the named agent does not manage", async () => {

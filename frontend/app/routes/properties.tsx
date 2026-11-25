@@ -1,5 +1,5 @@
 import type { Route } from "./+types/properties";
-import type { PropertyData } from "@free-real-estate/shared";
+import type { PropertyListItem } from "@free-real-estate/shared";
 
 import { lazy, Suspense } from "react";
 
@@ -27,7 +27,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
   }
 
-  const properties: PropertyData[] = await propertiesRes.json();
+  const properties: PropertyListItem[] = await propertiesRes.json();
   const cities: string[] = await citiesRes.json();
 
   return { properties, cities };
@@ -63,7 +63,7 @@ export default function Properties({ loaderData }: Route.ComponentProps) {
       address,
       latitude,
       longitude,
-    }: PropertyData) => ({
+    }: PropertyListItem) => ({
       id,
       title,
       exteriorImage,

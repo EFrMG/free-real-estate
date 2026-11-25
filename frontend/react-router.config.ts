@@ -6,5 +6,7 @@ export default {
   ssr: true,
   future: {
     v8_viteEnvironmentApi: true,
+    // Root middleware shares one /api/auth/me call between every loader and action of a request (see app/utils/auth.ts)
+    v8_middleware: true,
   },
 } satisfies Config;

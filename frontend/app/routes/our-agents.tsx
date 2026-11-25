@@ -7,6 +7,7 @@ import { useFetcher, useRouteLoaderData, redirect } from "react-router";
 
 import useDialog from "~/hooks/useDialog";
 import forwardCookies from "~/utils/forwardCookies";
+import { getAuth } from "~/utils/auth";
 import { API_URL } from "~/utils/apiUrl";
 import { mergeMeta } from "~/utils/meta";
 
@@ -50,21 +51,16 @@ export async function loader() {
   return { agents };
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request, context }: Route.ActionArgs) {
   const formData = await request.formData();
 
   // Opening a chat hands the user over to their profile, where the panel lives
   if (formData.get("intent") === "start-chat") {
-    const cookie = request.headers.get("Cookie") ?? "";
-
-    const userRes = await fetch(API_URL + "/api/auth/me", {
-      headers: { Cookie: cookie },
-    });
+    // Shared /auth/me call; authMiddleware forwards any rotation it caused
+    const { user, cookie } = await getAuth(context);
 
     // We need an actual user to send messages
-    if (!userRes.ok) return redirect("/log-in");
-
-    const user = await userRes.json();
+    if (!user) return redirect("/log-in");
 
     const chatRes = await fetch(API_URL + "/api/chats", {
       method: "POST",
@@ -85,7 +81,7 @@ export async function action({ request }: Route.ActionArgs) {
     const { chatId } = await chatRes.json();
 
     return redirect(`/user-profile/${user.id}?chat=${chatId}`, {
-      headers: forwardCookies(userRes, chatRes),
+      headers: forwardCookies(chatRes),
     });
   }
 

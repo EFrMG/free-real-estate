@@ -250,7 +250,7 @@ curl http://localhost:8787/cdn-cgi/local/scheduled
 
 In order of relevant importance:
 
-- **Session Refresh Concurrency**: Refresh token rotation currently misbehaves when a single route loader fires several authenticated requests in parallel. The problem, the mitigation in place and the candidate fixes are documented in [the refresh token rotation document](/docs/REFRESH_TOKEN_ROTATION_CONCURRENCY.md).
+- **Session Refresh Concurrency**: Refresh token rotation used to misbehave when one page load fired several authenticated requests in parallel. The frontend now rotates at most once per request, but separate concurrent requests can still race, and the refresh cookie's `/api` path keeps it from reaching the frontend at all. The problem, what is in place and the candidate fixes are documented in [the refresh token rotation document](/docs/refresh-token-rotation-concurrency.md).
 - **Backend Diversification**: Implementing the same API specifications in Go to compare performance and developer experience could be very interesting from a certain perspective.
 - **Messaging System**: What remains could be making delivery real-time instead of polled, plus niceties such as an emoji picker, attachments, ability to edit and delete messages, and typing indicators.
 - **Blogs**: A blog feature with rich text support. I am delaying this for a good while.
