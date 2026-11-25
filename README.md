@@ -240,11 +240,15 @@ pnpm run dev
 1. Creates database tables according to the [schema](/shared/src/schema.ts).
 2. Starts the Cloudflare backend Worker and frontend in parallel. The backend's daily demo reset is handled by its Cron Trigger; its data fixture remains linked from [the shared general data file](/backends/node-drizzle/src/db/generalDataSeed.ts).
 
-To load the demo data locally, invoke the scheduled handler after `pnpm run dev` is running:
+To load the demo data locally, which also clears local R2 uploads:
 
 ```bash
-curl http://localhost:8787/cdn-cgi/local/scheduled
+pnpm seed:be
+# Or, with the dev server running
+pnpm seed:be:http
 ```
+
+This starts a temporary local Worker and invokes the same scheduled handler the daily reset uses.
 
 ## 3. Future Considerations
 

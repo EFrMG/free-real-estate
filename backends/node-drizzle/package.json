@@ -13,7 +13,9 @@
     "deploy": "wrangler deploy",
     "generate": "drizzle-kit generate",
     "migrate:local": "wrangler d1 migrations apply DB --local",
-    "migrate:remote": "wrangler d1 migrations apply DB --remote"
+    "migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "seed": "node scripts/seed-local.mjs",
+    "seed:http": "node scripts/seed-local.mjs --http"
   },
   "dependencies": {
     "@free-real-estate/shared": "workspace:*",

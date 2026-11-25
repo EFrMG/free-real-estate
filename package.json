@@ -24,7 +24,9 @@
     "deploy:be": "pnpm --filter @free-real-estate/node-drizzle run deploy",
     "generate:be": "pnpm --filter @free-real-estate/node-drizzle run generate",
     "migrate:be:local": "pnpm --filter @free-real-estate/node-drizzle run migrate:local",
-    "migrate:be:remote": "pnpm --filter @free-real-estate/node-drizzle run migrate:remote"
+    "migrate:be:remote": "pnpm --filter @free-real-estate/node-drizzle run migrate:remote",
+    "seed:be": "pnpm --filter @free-real-estate/node-drizzle run seed",
+    "seed:be:http": "pnpm --filter @free-real-estate/node-drizzle run seed:http"
   },
   "packageManager": "pnpm@11.21.0"
 }
